@@ -1,8 +1,8 @@
 package ru.grishagin.model.map;
 
 public class Map {
-    private int xSize = 20;
-    private  int ySize = 8;
+    private int xSize = 32;
+    private  int ySize = 32;
     private MapCell[][] map = new MapCell[ySize][xSize];
     
     public Map(){

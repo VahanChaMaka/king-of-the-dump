@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.grishagin.model.map.Map;
+import ru.grishagin.utils.UIManager;
 
 public class View{
 
@@ -13,7 +14,7 @@ public class View{
     private OrthographicCamera camera;
     private BitmapFont font;
     private SpriteBatch batch;
-    //private MapInputController controller;
+    private MapInputController controller;
 
     public View(){
 
@@ -25,12 +26,12 @@ public class View{
 
         //map = new ViewMap(GameModel.getInstance().getCurrentMap(), batch);
         map = new ViewMap(new Map(), batch);
-        /*persView = new PersView(batch);
+        //persView = new PersView(batch);
         controller = new MapInputController(camera, map);
-        controller.putInMapBounds();*/
+        controller.putInMapBounds();
 
-        //UIManager.getInstance().getInputMultiplexer().addProcessor(controller);
-        //Gdx.input.setInputProcessor(UIManager.getInstance().getInputMultiplexer());
+        UIManager.getInstance().getInputMultiplexer().addProcessor(controller);
+        Gdx.input.setInputProcessor(UIManager.getInstance().getInputMultiplexer());
     }
 
     public ViewMap getMap() {

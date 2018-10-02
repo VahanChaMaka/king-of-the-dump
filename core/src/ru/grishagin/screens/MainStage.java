@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import ru.grishagin.utils.UIManager;
 
 public class MainStage extends Stage {
 
@@ -43,9 +44,9 @@ public class MainStage extends Stage {
         super.act(delta);
     }
 
-    /*@Override
+    @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         return UIManager.getInstance().isInputDisabled() || super.touchDown(screenX, screenY, pointer, button);
-    }*/
+    }
 }
 

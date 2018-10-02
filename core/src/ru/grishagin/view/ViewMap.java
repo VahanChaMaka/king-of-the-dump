@@ -58,5 +58,22 @@ public class ViewMap {
         renderer.setView(camera);
         renderer.render();
     }
+
+    public int getHeight(){
+        if(isOrtho()) {
+            return innerMap.getySize() * TILE_X_SIZE;
+        } else {
+            return innerMap.getySize() * TILE_Y_SIZE;
+        }
+    }
+
+    public int getWidth(){
+        return innerMap.getxSize() * TILE_X_SIZE;
+    }
+
+    public boolean isOrtho(){
+        //return innerMap.isGlobal();
+        return false;
+    }
 }
 
