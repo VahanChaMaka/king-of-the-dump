@@ -5,7 +5,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import ru.grishagin.model.ClickHandler;
+import ru.grishagin.model.GameModel;
 import ru.grishagin.model.map.Map;
+import ru.grishagin.systems.RenderingSystem;
 import ru.grishagin.utils.UIManager;
 
 public class View{
@@ -26,8 +29,9 @@ public class View{
 
         //map = new ViewMap(GameModel.getInstance().getCurrentMap(), batch);
         map = new ViewMap(new Map(), batch);
+        GameModel.instance.engine.addSystem(new RenderingSystem(batch));
         //persView = new PersView(batch);
-        controller = new MapInputController(camera, map);
+        controller = new MapInputController(camera, map, new ClickHandler(GameModel.instance.engine));
         controller.putInMapBounds();
 
         UIManager.getInstance().getInputMultiplexer().addProcessor(controller);

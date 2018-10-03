@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import ru.grishagin.model.GameModel;
 import ru.grishagin.utils.UIManager;
 
 public class MainStage extends Stage {
@@ -41,6 +42,7 @@ public class MainStage extends Stage {
     @Override
     public void act(float delta) {
         //GameController.INSTANCE.update(delta);
+        GameModel.instance.engine.update(delta);
         super.act(delta);
     }
 

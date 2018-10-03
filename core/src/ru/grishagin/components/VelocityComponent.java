@@ -2,10 +2,13 @@ package ru.grishagin.components;
 
 import com.badlogic.ashley.core.Component;
 
-public class SpeedComponent implements Component {
+public class VelocityComponent implements Component {
+    public float x;
+    public float y;
+
     public float speed;
 
-    public SpeedComponent(float speed) {
+    public VelocityComponent(float speed) {
         this.speed = speed;
     }
 }

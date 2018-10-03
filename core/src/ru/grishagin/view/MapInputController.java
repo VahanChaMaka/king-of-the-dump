@@ -3,6 +3,7 @@ package ru.grishagin.view;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import ru.grishagin.model.ClickHandler;
 import ru.grishagin.ui.toolbar.BottomToolbar;
 import ru.grishagin.utils.UIManager;
 
@@ -12,13 +13,15 @@ public class MapInputController extends InputAdapter {
     final Vector3 last = new Vector3(-1, -1, -1);
     final Vector3 delta = new Vector3();
 
+    private ClickHandler clickHandler;
     private ViewMap map;
 
     private boolean isTouchedDown = false;
 
-    public MapInputController(OrthographicCamera camera, ViewMap map) {
+    public MapInputController(OrthographicCamera camera, ViewMap map, ClickHandler clickHandler) {
         this.camera = camera;
         this.map = map;
+        this.clickHandler = clickHandler;
     }
 
     @Override
@@ -146,5 +149,6 @@ public class MapInputController extends InputAdapter {
         ////TEST OUTPUT BLOCK END
 
         //GameController.INSTANCE.movePersTo(tileX, tileY);
+        clickHandler.onClick(tileX, tileY);
     }
 }
