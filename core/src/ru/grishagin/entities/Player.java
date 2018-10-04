@@ -14,7 +14,6 @@ public class Player extends Entity {
         add(new PlayerControlled());
         add(new PositionComponent(1, 3));
         add(new VelocityComponent(0.1f));
-        add(new DirectionComponent());
         add(new TextureComponent(new TextureRegion(AssetManager.instance.getTexture("player.png"))));
     }
 }

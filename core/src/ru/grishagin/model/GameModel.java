@@ -3,6 +3,7 @@ package ru.grishagin.model;
 import com.badlogic.ashley.core.Engine;
 import ru.grishagin.entities.Chest;
 import ru.grishagin.entities.Player;
+import ru.grishagin.systems.InteractionSystem;
 import ru.grishagin.systems.MovementSystem;
 import ru.grishagin.systems.RenderingSystem;
 
@@ -20,6 +21,7 @@ public class GameModel {
 
     private void initSystems(){
         engine.addSystem(new MovementSystem());
+        engine.addSystem(new InteractionSystem());
     }
 
     private void initBasicEntities(){

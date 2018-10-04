@@ -71,6 +71,8 @@ public class MovementSystem extends IteratingSystem {
                 //pers have stopped, back to normal time
                 timer.setScaleFactor(Timer.NORMAL_SCALE);
             }*/
+        } else {
+            entity.remove(DirectionComponent.class);
         }
     }
 }

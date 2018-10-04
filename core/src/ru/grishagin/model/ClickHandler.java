@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import ru.grishagin.components.DirectionComponent;
+import ru.grishagin.components.InteractionComponent;
 import ru.grishagin.components.InteractiveComponent;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.tags.PlayerControlled;
@@ -20,16 +21,14 @@ public class ClickHandler {
 
     //internal game coords already
     public void onClick(float x, float y){
-        clearInteractions();
+        //clearInteractions();
+        Entity player = engine.getEntitiesFor(Family.all(PlayerControlled.class).get()).first();
 
         Entity entity = getEntity(x, y);
         if(entity != null){
-            //interact with item
-            //HOW????
+            player.add(new InteractionComponent(entity));
         } else { //move player
-            Entity player = engine.getEntitiesFor(Family.all(PlayerControlled.class).get()).first();
-            player.getComponent(DirectionComponent.class).x = x;
-            player.getComponent(DirectionComponent.class).y = y;
+            player.add(new DirectionComponent(x, y));
         }
     }
     
@@ -49,7 +48,7 @@ public class ClickHandler {
     private void clearInteractions(){
         ComponentMapper<InteractiveComponent> im = ComponentMapper.getFor(InteractiveComponent.class);
         for (Entity entity : engine.getEntitiesFor(Family.all(InteractiveComponent.class).get())) {
-            im.get(entity).isActive = false;
+
         }
     }
 }

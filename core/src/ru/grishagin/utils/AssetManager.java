@@ -13,7 +13,13 @@ public class AssetManager {
 
     public TextureRegion getTileTexture(int id){
         Texture tileSet = getTexture("tiles/grassland_tiles.png");
-        return new TextureRegion(tileSet, 64, 32);
+        if(id == 0) {
+            return new TextureRegion(tileSet, 64, 32);
+        } else if(id == 1) {
+            return new TextureRegion(tileSet, 64, 32,64, 32);
+        } else {
+            return new TextureRegion(tileSet, 128, 32,64, 32);
+        }
     }
 
     public Texture getTexture(String name){

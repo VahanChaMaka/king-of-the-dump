@@ -9,7 +9,7 @@ public class Map {
         int id = 0;
         for (int i = 0; i < ySize; i++) {
             for (int j = 0; j < xSize; j++) {
-                map[i][j] = new MapCell(id++, 0);
+                map[i][j] = new MapCell(id++, id%3);
             }
         }
     }
