@@ -6,6 +6,8 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import ru.grishagin.components.PositionComponent;
@@ -16,6 +18,7 @@ public class RenderingSystem extends SortedIteratingSystem {
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
 
+    private boolean isoMode = true;
     private Batch batch;
 
     public RenderingSystem(Batch batch){
@@ -27,18 +30,22 @@ public class RenderingSystem extends SortedIteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         Vector3 renderPosition = new Vector3();
         PositionComponent position = pm.get(entity);
-        /*if(GameModel.getInstance().getCurrentMap().isGlobal()) {//non-isometric view
-            renderPosition.x = posX;
-            renderPosition.y = posY;
-        } else {//Isometric view*/
+        if(isoMode) {//Isometric view
             int posY = -(int) (position.x * 32);
             int posX = (int) (position.y * 32);
             renderPosition.x = (posX - posY);
             renderPosition.y = (posX + posY) / 2;
-        //}
+        } else {//non-isometric view
+            renderPosition.x = position.x;
+            renderPosition.y = position.y;
+        }
+
+        TextureRegion textureRegion = tm.get(entity).region;
+        Vector2 offset = tm.get(entity).offset;
 
         batch.begin();
-        batch.draw(tm.get(entity).region, renderPosition.x - 16, renderPosition.y, 32, 32);
+        batch.draw(textureRegion, renderPosition.x + offset.x, renderPosition.y + offset.y,
+                textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
         batch.end();
     }
 }

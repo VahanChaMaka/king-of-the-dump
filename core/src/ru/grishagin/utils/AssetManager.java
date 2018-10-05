@@ -1,8 +1,11 @@
 package ru.grishagin.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +32,15 @@ public class AssetManager {
             Texture newTexture = new Texture(name);
             textures.put(name, newTexture);
             return newTexture;
+        }
+    }
+
+    public Map<String, Map<String, Object>> readFromJson(String jsonName){
+        try {
+            return new ObjectMapper().readValue(Gdx.files.internal(jsonName).file(), HashMap.class);
+        } catch (IOException exception){
+            System.out.println("Error while reading " + jsonName + "!");
+            throw new RuntimeException(exception);
         }
     }
 
