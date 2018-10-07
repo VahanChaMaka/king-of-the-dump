@@ -2,6 +2,7 @@ package ru.grishagin.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,16 +14,42 @@ public class AssetManager {
     public static final AssetManager instance = new AssetManager();
 
     private Map<String, Texture> textures = new HashMap<>();
+    TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
 
-    public TextureRegion getTileTexture(int id){
-        Texture tileSet = getTexture("tiles/grassland_tiles.png");
+    public TextureRegion getTileTexture(int id) {
+        TextureRegion region = null;
+        TextureAtlas.AtlasRegion atlasRegion = tilesAtlas.findRegion(String.valueOf(id));
+        if(atlasRegion != null){
+            //probable performance problems, consider caching
+            region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
+                    atlasRegion.getRegionWidth(), atlasRegion.getRegionHeight());
+        } else {
+            //try to load directly from file
+            try {
+                region = new TextureRegion(getTexture("tiles/" + String.valueOf(id) + ".png"));
+            } catch (Exception e){
+                System.out.println("Warning! There is no tile with id " + id);
+            }
+
+            if(region == null) {
+                atlasRegion = tilesAtlas.findRegion(String.valueOf("1"));
+                region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
+                        atlasRegion.getRegionWidth(), atlasRegion.getRegionHeight());
+            }
+        }
+
+        return region;
+
+        //return null;
+
+        /*Texture tileSet = getTexture("tiles/grassland_tiles.png");
         if(id == 0) {
             return new TextureRegion(tileSet, 64, 32);
         } else if(id == 1) {
             return new TextureRegion(tileSet, 64, 32,64, 32);
         } else {
             return new TextureRegion(tileSet, 128, 32,64, 32);
-        }
+        }*/
     }
 
     public Texture getTexture(String name){

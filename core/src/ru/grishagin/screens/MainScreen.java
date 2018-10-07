@@ -13,8 +13,8 @@ public class MainScreen extends ScreenAdapter {
     //public static final int WIDTH = 1280;
     //public static final int HEIGHT = 720;
 
-    private final int WIDTH = 200;
-    private final int HEIGHT = 100;
+    private final int WIDTH = 1024;
+    private final int HEIGHT = 600;
 
     private Stage stage;
 

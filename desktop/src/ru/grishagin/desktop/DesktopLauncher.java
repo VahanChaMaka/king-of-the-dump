@@ -2,11 +2,17 @@ package ru.grishagin.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import ru.grishagin.Game;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new Game(), config);
+
+		String inputDir = "tmp_sources";
+		String outputDir = "tiles";
+		String packFileName = "tileset";
+		//TexturePacker.process(inputDir, outputDir, packFileName);
 	}
 }

@@ -27,6 +27,12 @@ public class RenderingSystem extends SortedIteratingSystem {
     }
 
     @Override
+    public void update(float deltaTime) {
+        forceSort();
+        super.update(deltaTime);
+    }
+
+    @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Vector3 renderPosition = new Vector3();
         PositionComponent position = pm.get(entity);
@@ -40,12 +46,12 @@ public class RenderingSystem extends SortedIteratingSystem {
             renderPosition.y = position.y;
         }
 
-        TextureRegion textureRegion = tm.get(entity).region;
+        TextureComponent textureComponent = tm.get(entity);
         Vector2 offset = tm.get(entity).offset;
 
         batch.begin();
-        batch.draw(textureRegion, renderPosition.x + offset.x, renderPosition.y + offset.y,
-                textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+        batch.draw(textureComponent.region, renderPosition.x + offset.x, renderPosition.y + offset.y,
+                textureComponent.renderingSize.x, textureComponent.renderingSize.y);
         batch.end();
     }
 }

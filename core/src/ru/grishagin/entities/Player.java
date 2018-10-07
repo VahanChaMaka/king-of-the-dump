@@ -13,7 +13,8 @@ public class Player extends Entity {
         add(new VelocityComponent(0.1f));
         add(new InventoryComponent());
 
-        TextureComponent textureComponent = new TextureComponent(new TextureRegion(AssetManager.instance.getTexture("player.png")));
+        TextureComponent textureComponent = new TextureComponent(
+                new TextureRegion(AssetManager.instance.getTexture("player.png")), 32, 32);
         textureComponent.offset.x = -16;
         add(textureComponent);
     }

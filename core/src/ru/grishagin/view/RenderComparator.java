@@ -26,9 +26,9 @@ public class RenderComparator implements Comparator<Entity> {
             return -1;
         } else {
             if(ay > by){
-                return 1;
-            } else {
                 return -1;
+            } else {
+                return 1;
             }
         }
     }

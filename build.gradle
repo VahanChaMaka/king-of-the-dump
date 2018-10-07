@@ -117,7 +117,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        
+        compile "com.fasterxml.jackson.core:jackson-databind:2.9.5"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     }
 }
 

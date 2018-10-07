@@ -28,8 +28,10 @@ public class View{
         batch = new SpriteBatch();
 
         //map = new ViewMap(GameModel.getInstance().getCurrentMap(), batch);
-        map = new ViewMap(new Map(), batch);
-        GameModel.instance.engine.addSystem(new RenderingSystem(batch));
+        //map = new ViewMap(new Map(), batch);
+        map = new RenderingEngine(batch, new Map(), GameModel.instance.engine);
+
+        //GameModel.instance.engine.addSystem(new RenderingSystem(batch));
         //persView = new PersView(batch);
         controller = new MapInputController(camera, map, new ClickHandler(GameModel.instance.engine));
         controller.putInMapBounds();
