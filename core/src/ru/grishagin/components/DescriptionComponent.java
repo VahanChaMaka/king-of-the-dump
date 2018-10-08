@@ -1,8 +1,9 @@
 package ru.grishagin.components;
 
-import java.awt.*;
 
-public class DescriptionComponent extends Component {
+import com.badlogic.ashley.core.Component;
+
+public class DescriptionComponent implements Component {
     public String description;
 
     public DescriptionComponent(String description) {

@@ -39,29 +39,32 @@ public class RenderingEngine extends ViewMap{
 
         for (int i = 0; i < map.getxSize() ; i++) {
             for (int j = map.getySize() - 1; j >= 0; j--) {
-                drawCell(getTexturesOnTile(i, j),i, j);
+                draw(AssetManager.instance.getTileTexture(map.getCell(i, j).getTypeId()), i, j);
+            }
+        }
+
+        for (int i = 0; i < map.getxSize() ; i++) {
+            for (int j = map.getySize() - 1; j >= 0; j--) {
+                drawCellObjects(i, j);
             }
         }
     }
 
     //sort and return all drawable objects is cell
-    private List<TextureRegion> getTexturesOnTile(int x, int y){
-        List<TextureRegion> textures = new ArrayList<>();
-
-        textures.add(AssetManager.instance.getTileTexture(map.getCell(x, y).getTypeId())); //basic tile texture
+    private void drawCellObjects(int x, int y){
 
         ImmutableArray<Entity> allDrawables = engine.getEntitiesFor(Family.all(TextureComponent.class, PositionComponent.class).get());
         for (int i = 0; i < allDrawables.size(); i++) {
             Entity entity = allDrawables.get(i);
-            if((int)pm.get(entity).x == x && (int)pm.get(entity).y == y){
-                textures.add(tm.get(entity).region);
+            float objectX = pm.get(entity).x;
+            float objectY = pm.get(entity).y;
+            if((int)objectX == x && (int)objectY == y){
+                draw(tm.get(entity).region, objectX, objectY);
             }
         }
-
-        return textures;
     }
 
-    private void drawCell(List<TextureRegion> textures, int x, int y){
+    private void draw(TextureRegion texture, float x, float y){
         Vector3 renderPosition = new Vector3();
         if(isoMode) {//Isometric view
             int posY = -(int) (x * 32);
@@ -77,9 +80,7 @@ public class RenderingEngine extends ViewMap{
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        for (int i = 0; i < textures.size(); i++) {
-            batch.draw(textures.get(i), renderPosition.x, renderPosition.y);
-        }
+        batch.draw(texture, renderPosition.x, renderPosition.y);
         batch.end();
     }
 }

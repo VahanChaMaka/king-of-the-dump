@@ -7,5 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InventoryComponent implements Component {
-    List<Entity> items = new LinkedList<>();
+    public List<Entity> items = new LinkedList<>();
+    public int maxWeight;
+
+    public InventoryComponent(int maxWeight) {
+        this.maxWeight = maxWeight;
+    }
 }

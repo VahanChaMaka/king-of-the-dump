@@ -15,4 +15,16 @@ public class InventorySystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         //TODO: update items in each inventory
     }
+
+    public void addItem(Entity target, Entity item){
+
+    }
+
+    public void destroyItem(Entity target){
+
+    }
+
+    public void transferItem(Entity source, Entity target){
+
+    }
 }

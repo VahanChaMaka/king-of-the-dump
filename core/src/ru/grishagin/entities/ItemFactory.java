@@ -3,7 +3,10 @@ package ru.grishagin.entities;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
+import ru.grishagin.components.DescriptionComponent;
 import ru.grishagin.components.NameComponent;
+import ru.grishagin.components.items.ConsumableComponent;
+import ru.grishagin.components.items.WeightComponent;
 import ru.grishagin.utils.AssetManager;
 
 import java.util.Map;
@@ -11,6 +14,9 @@ import java.util.Map;
 public class ItemFactory {
     private static final String ITEMS = "properties/items.json";
     private static final String NAME = "name";
+    private static final String DESCRIPTION = "descripton";
+    private static final String WEIGHT = "weight";
+    private static final String CONSUMABLE = "consumable";
 
     public static Entity getItem(int id){
         Map<String, Map<String, Object>> items = AssetManager.instance.readFromJson(ITEMS);
@@ -32,6 +38,12 @@ public class ItemFactory {
         switch (componentName){
             case NAME:
                 return new NameComponent((String) rawComponentData);
+            case DESCRIPTION:
+                return new DescriptionComponent((String) rawComponentData);
+            case WEIGHT:
+                return new WeightComponent((Integer) rawComponentData);
+            case CONSUMABLE:
+                return new ConsumableComponent();
             default:
                 throw new Exception("Loading item's components failed!");
         }

@@ -10,7 +10,6 @@ import ru.grishagin.components.InteractionComponent;
 import ru.grishagin.components.InteractiveComponent;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.tags.PlayerControlled;
-import ru.grishagin.entities.Player;
 
 public class ClickHandler {
     private Engine engine;
