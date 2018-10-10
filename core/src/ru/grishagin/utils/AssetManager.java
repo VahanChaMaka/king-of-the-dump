@@ -39,17 +39,6 @@ public class AssetManager {
         }
 
         return region;
-
-        //return null;
-
-        /*Texture tileSet = getTexture("tiles/grassland_tiles.png");
-        if(id == 0) {
-            return new TextureRegion(tileSet, 64, 32);
-        } else if(id == 1) {
-            return new TextureRegion(tileSet, 64, 32,64, 32);
-        } else {
-            return new TextureRegion(tileSet, 128, 32,64, 32);
-        }*/
     }
 
     public Texture getTexture(String name){

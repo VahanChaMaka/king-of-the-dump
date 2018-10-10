@@ -1,0 +1,49 @@
+{
+  "0": {
+    "walkable": true
+  },
+
+  "1": {
+    "walkable": true
+  },
+
+  "2": {
+    "walkable": true
+  },
+
+  "3": {
+    "walkable": true
+  },
+
+  "4": {
+    "walkable": true
+  },
+
+  "5": {
+    "walkable": true
+  },
+
+  "6": {
+    "walkable": true
+  },
+
+  "7": {
+    "walkable": true
+  },
+
+  "8": {
+    "walkable": true
+  },
+
+  "9": {
+    "walkable": true
+  },
+
+  "11": {
+    "walkable": true
+  },
+
+  "34": {
+    "walkable": false
+  }
+}

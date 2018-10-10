@@ -3,9 +3,18 @@ package ru.grishagin.model.map;
 public class Map {
     private int xSize = 32;
     private  int ySize = 32;
-    private MapCell[][] map = new MapCell[ySize][xSize];
-    
-    public Map(){
+    MapCell[][] map;
+
+    public Map(int xSize, int ySize) {
+        this.xSize = xSize;
+        this.ySize = ySize;
+
+         map = new MapCell[ySize][xSize];
+    }
+
+    private Map(){
+        map = new MapCell[ySize][xSize];
+
         int id = 0;
         for (int i = 0; i < ySize; i++) {
             for (int j = 0; j < xSize; j++) {

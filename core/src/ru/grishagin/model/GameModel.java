@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import ru.grishagin.components.InventoryComponent;
 import ru.grishagin.entities.EntityFactory;
 import ru.grishagin.entities.ItemFactory;
+import ru.grishagin.model.map.Map;
+import ru.grishagin.model.map.MapFactory;
 import ru.grishagin.systems.InteractionSystem;
 import ru.grishagin.systems.InventorySystem;
 import ru.grishagin.systems.MovementSystem;
@@ -14,12 +16,15 @@ public class GameModel {
 
     public final Engine engine;
     public final InventorySystem inventorySystem = new InventorySystem();
+    private Map currentMap;
 
     private GameModel(){
         engine = new Engine();
         initSystems();
         initBasicEntities();
         loadObjects();
+
+        currentMap = MapFactory.loadMap();
     }
 
     private void initSystems(){
@@ -38,5 +43,7 @@ public class GameModel {
         engine.addEntity(chest);
     }
 
-
+    public Map getCurrentMap() {
+        return currentMap;
+    }
 }

@@ -1,8 +1,17 @@
 {
+  "0": {
+    "name": "Грязная вода",
+    "description": "",
+    "weight": 500,
+    "consumable": {
+
+    }
+  },
+
   "1": {
     "name": "Чистая вода",
     "description": "",
-    "weight": 0.5,
+    "weight": 500,
     "consumable": {
 
     }

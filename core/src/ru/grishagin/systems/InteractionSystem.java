@@ -24,8 +24,8 @@ public class InteractionSystem extends IteratingSystem {
         InteractionComponent interactionAim = interactionMapper.get(entity);
         PositionComponent interactionAimPosition = pm.get(interactionAim.aim);
         PositionComponent interactorPosition = pm.get(entity);
-        if(Math.abs(interactionAimPosition.x - interactorPosition.x) > 1
-                || Math.abs(interactionAimPosition.y - interactorPosition.y) > 1){ //too far from interaction aim, need to go closer
+        if(Math.abs((int)interactionAimPosition.x - (int)interactorPosition.x) > 1
+                || Math.abs((int)interactionAimPosition.y - (int)interactorPosition.y) > 1){ //too far from interaction aim, need to go closer
             entity.add(new DirectionComponent(interactionAimPosition.x, interactionAimPosition.y));
         } else {
             interactiveMapper.get(interactionAim.aim).action.execute(entity, interactionAim.aim);

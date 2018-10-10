@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.grishagin.model.ClickHandler;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.model.map.Map;
+import ru.grishagin.model.map.MapFactory;
 import ru.grishagin.systems.RenderingSystem;
 import ru.grishagin.utils.UIManager;
 
@@ -29,7 +30,7 @@ public class View{
 
         //map = new ViewMap(GameModel.getInstance().getCurrentMap(), batch);
         //map = new ViewMap(new Map(), batch);
-        map = new RenderingEngine(batch, new Map(), GameModel.instance.engine);
+        map = new RenderingEngine(batch, GameModel.instance.getCurrentMap(), GameModel.instance.engine);
 
         //GameModel.instance.engine.addSystem(new RenderingSystem(batch));
         //persView = new PersView(batch);

@@ -1,12 +1,17 @@
 package ru.grishagin.systems;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Vector2;
 import ru.grishagin.components.DirectionComponent;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.VelocityComponent;
+import ru.grishagin.components.tags.ImpassableComponent;
+import ru.grishagin.model.GameModel;
 
 public class MovementSystem extends IteratingSystem {
 
@@ -24,8 +29,12 @@ public class MovementSystem extends IteratingSystem {
         PositionComponent position = pm.get(entity);
         VelocityComponent velocity = vm.get(entity);
 
-        position.x += velocity.x * deltaTime;
-        position.y += velocity.y * deltaTime;
+        if(canMakeStep(position, velocity, deltaTime)) {
+            position.x += velocity.x * deltaTime;
+            position.y += velocity.y * deltaTime;
+        } else {
+            entity.remove(DirectionComponent.class);
+        }
     }
 
     private void setVelocity(Entity entity){
@@ -55,6 +64,7 @@ public class MovementSystem extends IteratingSystem {
                 }
             } else {
                 position.x = direction.x;
+                stop(entity);
             }
 
             if (direction.y != position.y && (int) ((direction.y - position.y) / velocity.y) != 0) {
@@ -65,6 +75,7 @@ public class MovementSystem extends IteratingSystem {
                 }
             } else {
                 position.y = direction.y;
+                stop(entity);
             }
 
             /*if(position.x == direction.x && position.y == direction.y){
@@ -72,7 +83,29 @@ public class MovementSystem extends IteratingSystem {
                 timer.setScaleFactor(Timer.NORMAL_SCALE);
             }*/
         } else {
-            entity.remove(DirectionComponent.class);
+            stop(entity);
         }
+    }
+
+    private void stop(Entity entity){
+        entity.remove(DirectionComponent.class);
+    }
+
+    private boolean canMakeStep(PositionComponent position, VelocityComponent velocity, float delta){
+        int nextCellx = (int)(position.x + velocity.x*delta);
+        int nextCelly = (int)(position.y + velocity.y*delta);
+
+
+        //is there any entity blocking pass
+        ImmutableArray<Entity> impassableObjects = getEngine().getEntitiesFor(Family.all(ImpassableComponent.class).get());
+        for (int i = 0; i < impassableObjects.size(); i++) {
+            if (pm.get(impassableObjects.get(i)).x == nextCellx &&
+                    pm.get(impassableObjects.get(i)).y == nextCelly){
+                return false;
+            }
+        }
+
+        //if there is no blocking entities check cell
+        return GameModel.instance.getCurrentMap().getCell(nextCellx, nextCelly).isWalkable();
     }
 }

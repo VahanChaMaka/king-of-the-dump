@@ -39,12 +39,13 @@ public class RenderingEngine extends ViewMap{
 
         for (int i = 0; i < map.getxSize() ; i++) {
             for (int j = map.getySize() - 1; j >= 0; j--) {
-                draw(AssetManager.instance.getTileTexture(map.getCell(i, j).getTypeId()), i, j);
+                //draw(AssetManager.instance.getTileTexture(map.getCell(i, j).getTypeId()), i, j, 0, 0);
             }
         }
 
         for (int i = 0; i < map.getxSize() ; i++) {
             for (int j = map.getySize() - 1; j >= 0; j--) {
+                draw(AssetManager.instance.getTileTexture(map.getCell(i, j).getTypeId()), i, j, 0, 0);
                 drawCellObjects(i, j);
             }
         }
@@ -58,13 +59,15 @@ public class RenderingEngine extends ViewMap{
             Entity entity = allDrawables.get(i);
             float objectX = pm.get(entity).x;
             float objectY = pm.get(entity).y;
+            float offsetX = tm.get(entity).offset.x;
+            float offsetY = tm.get(entity).offset.y;
             if((int)objectX == x && (int)objectY == y){
-                draw(tm.get(entity).region, objectX, objectY);
+                draw(tm.get(entity).region, objectX, objectY, offsetX, offsetY);
             }
         }
     }
 
-    private void draw(TextureRegion texture, float x, float y){
+    private void draw(TextureRegion texture, float x, float y, float offsetX, float offsetY){
         Vector3 renderPosition = new Vector3();
         if(isoMode) {//Isometric view
             int posY = -(int) (x * 32);
@@ -80,7 +83,7 @@ public class RenderingEngine extends ViewMap{
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        batch.draw(texture, renderPosition.x, renderPosition.y);
+        batch.draw(texture, renderPosition.x + offsetX, renderPosition.y+offsetY);
         batch.end();
     }
 }

@@ -27,7 +27,7 @@ public class ClickHandler {
         if(entity != null){
             player.add(new InteractionComponent(entity));
         } else { //move player
-            player.add(new DirectionComponent(x, y));
+            player.add(new DirectionComponent((int)x + 0.5f, (int)y + 0.5f));
         }
     }
     
