@@ -15,7 +15,7 @@ public class EntityFactory {
         Entity entity = new Entity();
         entity.add(new PlayerControlled());
         entity.add(new PositionComponent(x, y));
-        entity.add(new VelocityComponent(0.1f));
+        entity.add(new VelocityComponent(5f));
         entity.add(new InventoryComponent(100000));
 
         TextureComponent textureComponent = new TextureComponent(

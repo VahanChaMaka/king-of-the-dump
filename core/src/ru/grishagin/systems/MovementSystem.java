@@ -25,16 +25,17 @@ public class MovementSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        setVelocity(entity);
         PositionComponent position = pm.get(entity);
         VelocityComponent velocity = vm.get(entity);
 
-        if(canMakeStep(position, velocity, deltaTime)) {
-            position.x += velocity.x * deltaTime;
-            position.y += velocity.y * deltaTime;
+        if(canMakeStep(position, dm.get(entity))) {
+            setVelocity(entity);
         } else {
-            entity.remove(DirectionComponent.class);
+            stop(entity);
         }
+
+        position.x += velocity.x*deltaTime;
+        position.y += velocity.y*deltaTime;
     }
 
     private void setVelocity(Entity entity){
@@ -56,26 +57,22 @@ public class MovementSystem extends IteratingSystem {
             velocity.x = velocity.speed * cos;
             velocity.y = velocity.speed * sin;
 
-            if (position.x != direction.x && (int) ((direction.x - position.x) / velocity.x) != 0) {
-                if (direction.x - position.x > 0) {
-                    position.x += velocity.x;
-                } else if (direction.x - position.x < 0) {
-                    position.x -= velocity.x;
+            if (Math.abs(direction.x - position.x) > 0.1f) {
+                if (direction.x - position.x < 0) {
+                    velocity.x = -velocity.x;
                 }
             } else {
                 position.x = direction.x;
-                stop(entity);
+                velocity.x = 0;
             }
 
-            if (direction.y != position.y && (int) ((direction.y - position.y) / velocity.y) != 0) {
-                if (direction.y - position.y > 0) {
-                    position.y += velocity.y;
-                } else if (direction.y - position.y < 0) {
-                    position.y -= velocity.y;
+            if (Math.abs(direction.y - position.y) > 0.1f) {
+                if (direction.y - position.y < 0) {
+                    velocity.y = -velocity.y;
                 }
             } else {
                 position.y = direction.y;
-                stop(entity);
+                velocity.y = 0;
             }
 
             /*if(position.x == direction.x && position.y == direction.y){
@@ -89,12 +86,31 @@ public class MovementSystem extends IteratingSystem {
 
     private void stop(Entity entity){
         entity.remove(DirectionComponent.class);
+        VelocityComponent velocity = vm.get(entity);
+        velocity.x = 0;
+        velocity.y = 0;
     }
 
-    private boolean canMakeStep(PositionComponent position, VelocityComponent velocity, float delta){
-        int nextCellx = (int)(position.x + velocity.x*delta);
-        int nextCelly = (int)(position.y + velocity.y*delta);
+    private boolean canMakeStep(PositionComponent position, DirectionComponent direction){
+        int nextCelly;
+        int nextCellx;
 
+        //calculate next cell to visit
+        if((int)direction.x - (int)position.x > 0){
+            nextCellx = (int)position.x + 1;
+        } else if((int)direction.x - (int)position.x < 0){
+            nextCellx = (int)position.x - 1;
+        } else {
+            nextCellx = (int)position.x;
+        }
+
+        if((int)direction.y - (int)position.y> 0){
+            nextCelly = (int)position.y + 1;
+        } else if((int)direction.y - (int)position.y < 0){
+            nextCelly = (int)position.y - 1;
+        } else {
+            nextCelly = (int)position.y;
+        }
 
         //is there any entity blocking pass
         ImmutableArray<Entity> impassableObjects = getEngine().getEntitiesFor(Family.all(ImpassableComponent.class).get());
