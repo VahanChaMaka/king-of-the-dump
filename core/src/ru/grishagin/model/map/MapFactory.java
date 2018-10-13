@@ -11,8 +11,18 @@ public class MapFactory {
         for (int i = 0; i < ySize; i++) {
             for (int j = 0; j < xSize; j++) {
                 if(j > 1 && j < 10 && i == 10){
-                    map.map[i][j] = new MapCell(id++, 34);
-                } else {
+                    if(Math.random() > 0.5) {
+                        map.map[i][j] = new MapCell(id++, 34);
+                    } else {
+                        map.map[i][j] = new MapCell(id++, 38);
+                    }
+                } else if(i > 1 && i < 10 && j == 2) {
+                    if(Math.random() > 0.5) {
+                        map.map[i][j] = new MapCell(id++, 33);
+                    } else {
+                        map.map[i][j] = new MapCell(id++, 37);
+                    }
+                } else{
                     map.map[i][j] = new MapCell(id++, (int)(Math.random()*32 +1));
                 }
             }

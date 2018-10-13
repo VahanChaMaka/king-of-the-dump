@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import ru.grishagin.model.GameModel;
+import ru.grishagin.ui.CentralPanel;
+import ru.grishagin.ui.toolbar.BottomToolbar;
 import ru.grishagin.utils.UIManager;
 
 public class MainStage extends Stage {
@@ -21,11 +23,11 @@ public class MainStage extends Stage {
         Table stageLayout = new Table();
         stageLayout.setFillParent(true);
 
-        //centralPanel = new CentralPanel();
-        //UIManager.getInstance().putPanel(UIManager.CENTRAL_PANEL, centralPanel);
-        //stageLayout.add(centralPanel).expand().fill();
+        centralPanel = new CentralPanel();
+        UIManager.getInstance().putPanel(UIManager.CENTRAL_PANEL, centralPanel);
+        stageLayout.add(centralPanel).expand().fill();
 
-        //bottomToolbar = new BottomToolbar();
+        bottomToolbar = new BottomToolbar();
         stageLayout.row();
         //stageLayout.add(bottomToolbar).bottom().right().height(BottomToolbar.TOOLBAR_HEIGHT).fill();
 

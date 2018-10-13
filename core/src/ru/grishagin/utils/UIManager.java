@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UIManager {
-    private static UIManager instance;
+    public static final UIManager instance = new UIManager();
     private Map<String, Actor> UIcomponents = new HashMap<>();
     private InputMultiplexer inputMultiplexer = new InputMultiplexer();
     private Map<String, Stage> stages = new HashMap<>();
@@ -51,15 +51,6 @@ public class UIManager {
 
     public InputMultiplexer getInputMultiplexer() {
         return inputMultiplexer;
-    }
-
-    public static UIManager getInstance(){
-        if (instance != null){
-            return instance;
-        } else{
-            instance = new UIManager();
-            return instance;
-        }
     }
 
     public boolean isMenuOpened() {

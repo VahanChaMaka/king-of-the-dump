@@ -14,11 +14,16 @@ public class AssetManager {
     public static final AssetManager instance = new AssetManager();
 
     private Map<String, Texture> textures = new HashMap<>();
-    TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
+    private Map<String, TextureRegion> regions = new HashMap<>();
+    private Map<String, TextureAtlas> atlases = new HashMap<>();
+    //TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
+
+    private static String TILES_ATLAS = "tiles/tileset.atlas";
+    private static String DAYR_UI_ATLAS = "ui/DayR/DayRSkin.atlas";
 
     public TextureRegion getTileTexture(int id) {
         TextureRegion region = null;
-        TextureAtlas.AtlasRegion atlasRegion = tilesAtlas.findRegion(String.valueOf(id));
+        TextureAtlas.AtlasRegion atlasRegion = getAtlas(TILES_ATLAS).findRegion(String.valueOf(id));
         if(atlasRegion != null){
             //probable performance problems, consider caching
             region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
@@ -32,7 +37,7 @@ public class AssetManager {
             }
 
             if(region == null) {
-                atlasRegion = tilesAtlas.findRegion(String.valueOf("1"));
+                atlasRegion = getAtlas(TILES_ATLAS).findRegion(String.valueOf("1"));
                 region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
                         atlasRegion.getRegionWidth(), atlasRegion.getRegionHeight());
             }
@@ -48,6 +53,39 @@ public class AssetManager {
             Texture newTexture = new Texture(name);
             textures.put(name, newTexture);
             return newTexture;
+        }
+    }
+
+    public TextureRegion getUITexture(String name){
+        if (regions.containsKey(name)) {
+            return regions.get(name);
+        } else{
+            TextureRegion region = null;
+            //try to find texture in atlases
+            TextureAtlas.AtlasRegion atlasRegion = getAtlas(DAYR_UI_ATLAS).findRegion(name);
+            if(atlasRegion != null){
+                region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
+                        atlasRegion.getRegionWidth(), atlasRegion.getRegionHeight());
+            }
+            //if texture was not found, try to load from file
+            if(region == null) {
+                //TODO: refactor to load texture only once and use textures map
+                Texture texture = new Texture(name); //TODO: image can ba placed in different folders
+                texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);//set filter to smooth scaling
+                region = new TextureRegion(texture);
+                regions.put(name, region);
+            }
+            return region;
+        }
+    }
+
+    private TextureAtlas getAtlas(String name){
+        if (atlases.containsKey(name)){
+            return atlases.get(name);
+        } else {
+            TextureAtlas atlas = new TextureAtlas(name);
+            atlases.put(name, atlas);
+            return atlas;
         }
     }
 
