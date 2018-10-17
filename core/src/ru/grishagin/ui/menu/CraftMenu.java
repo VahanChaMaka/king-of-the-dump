@@ -8,12 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import ru.grishagin.Craft.CraftWizardInterface;
-import ru.grishagin.Craft.Recipes;
-import ru.grishagin.GameModel;
-import ru.grishagin.Items.Item;
-import ru.grishagin.ui.Utils.AssetManager;
-import ru.grishagin.ui.Utils.LayoutUtils;
+import ru.grishagin.model.GameModel;
 
 import java.util.Set;
 
@@ -22,7 +17,7 @@ import java.util.Set;
  */
 public class CraftMenu extends BasicMenu {
 
-    private Table itemsGrid = new Table();
+    /*private Table itemsGrid = new Table();
     private CraftWizardInterface craftWizard = GameModel.getInstance().getCraftWizard();
     private static final int ITEM_GRID_SIZE = 4;
 
@@ -100,5 +95,5 @@ public class CraftMenu extends BasicMenu {
         layout.debugAll();
         rightContainer.setActor(layout);
         rightContainer.fill();
-    }
+    }*/
 }

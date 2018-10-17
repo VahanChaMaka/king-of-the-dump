@@ -128,7 +128,7 @@ public class BottomToolbar extends Container {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 CentralPanel centralPanel = (CentralPanel) (UIManager.instance.getPanel(UIManager.CENTRAL_PANEL));
-                centralPanel.setActor(new CraftMenu());
+                //centralPanel.setActor(new CraftMenu());
                 UIManager.instance.setMenuOpened(true);
                 checkButton(BottomToolbar.CRAFT_BTN_NAME);
             }

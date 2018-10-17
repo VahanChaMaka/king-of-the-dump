@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import ru.grishagin.components.NameComponent;
 
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class InventoryMenu extends BasicMenu {
                 public void clicked(InputEvent event, float x, float y) {
                     //rightContainer.setActor(createItemInfoPanel(item));
                     setItemInfoPanel(item);
-                    System.out.println(item.getName());
+                    System.out.println(item.getComponent(NameComponent.class));
                 }
             });
         }
