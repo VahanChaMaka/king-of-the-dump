@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import ru.grishagin.components.InventoryComponent;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.ui.CentralPanel;
 import ru.grishagin.utils.AssetManager;
@@ -42,7 +43,7 @@ public class BottomToolbar extends Container {
         layout.add(statPanel).fill().expand();
         layout.add(createToolbarButtonGroup()).right().width(250);
 
-        setBackground(new TextureRegionDrawable(AssetManager.instance.getTextureRegion(AssetManager.UI_BACKGROUND)));
+        setBackground(new TextureRegionDrawable(AssetManager.instance.getUITexture(AssetManager.UI_BACKGROUND)));
 
         setActor(layout);
         align(Align.right);
@@ -54,7 +55,7 @@ public class BottomToolbar extends Container {
         Table layout = new Table();
         layout.defaults().pad(5);
         LayoutUtils.applyButtonSize(layout.defaults());
-        layout.setBackground(new TextureRegionDrawable(AssetManager.instance.getTextureRegion(BTN_GROUP_BACKGROUND)));
+        layout.setBackground(new TextureRegionDrawable(AssetManager.instance.getUITexture(BTN_GROUP_BACKGROUND)));
         //layout.debugAll();
 
         layout.add(createInventoryButton());
@@ -67,12 +68,12 @@ public class BottomToolbar extends Container {
     }
 
     private Button createInventoryButton(){
-        Button button = new TextButton(INVENTORY_BTN_NAME, AssetManager.instance.getSkin(AssetManager.SIMPLE_SKIN), "checkable");
+        Button button = new TextButton(INVENTORY_BTN_NAME, AssetManager.instance.getDefaultSkin(), "checkable");
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 CentralPanel centralPanel = (CentralPanel) (UIManager.instance.getPanel(UIManager.CENTRAL_PANEL));
-                InventoryMenu menu = new InventoryMenu(GameModel.instance.getPers().getInventory());//TODO: consider to add it in the UI manager rather than create new instance
+                InventoryMenu menu = new InventoryMenu(GameModel.instance.getPlayer().getComponent(InventoryComponent.class).items);//TODO: consider to add it in the UI manager rather than create new instance
                 menu.setPersInfoPanel();
                 centralPanel.setActor(menu);
                 UIManager.instance.setMenuOpened(true);
@@ -84,11 +85,11 @@ public class BottomToolbar extends Container {
     }
 
     private Button createDiscoveryButton(){
-        Button button = new TextButton(DISCOVERY_BTN_NAME, AssetManager.instance.getSkin(AssetManager.SIMPLE_SKIN), "checkable");
+        Button button = new TextButton(DISCOVERY_BTN_NAME, AssetManager.instance.getDefaultSkin(), "checkable");
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(GameModel.instance.getCurrentMap().isGlobal() &&
+                /*if(GameModel.instance.getCurrentMap().isGlobal() &&
                         (GameModel.instance.getCurrentCell().isExit())){
                     GameController.INSTANCE.changeToLocal();
                     checkButton(UNCHECK_ALL);
@@ -99,7 +100,7 @@ public class BottomToolbar extends Container {
                     centralPanel.setActor(menu);
                     UIManager.instance.setMenuOpened(true);
                     checkButton(BottomToolbar.DISCOVERY_BTN_NAME);
-                }
+                }*/
             }
         });
         buttons.put(DISCOVERY_BTN_NAME, button);
@@ -107,7 +108,7 @@ public class BottomToolbar extends Container {
     }
 
     private Button createPersInfoButton(){
-        Button button = new TextButton(PERS_BTN_NAME, AssetManager.instance.getSkin(AssetManager.SIMPLE_SKIN), "checkable");
+        Button button = new TextButton(PERS_BTN_NAME, AssetManager.instance.getDefaultSkin(), "checkable");
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -122,7 +123,7 @@ public class BottomToolbar extends Container {
     }
 
     private Button createCraftButton(){
-        Button button = new TextButton(CRAFT_BTN_NAME, AssetManager.instance.getSkin(AssetManager.SIMPLE_SKIN), "checkable");
+        Button button = new TextButton(CRAFT_BTN_NAME, AssetManager.instance.getDefaultSkin(), "checkable");
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -137,7 +138,7 @@ public class BottomToolbar extends Container {
     }
 
     private Button createJournalButton(){
-        Button button = new TextButton(JOURNAL_BTN_NAME, AssetManager.instance.getSkin(AssetManager.SIMPLE_SKIN), "checkable");
+        Button button = new TextButton(JOURNAL_BTN_NAME, AssetManager.instance.getDefaultSkin(), "checkable");
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -152,7 +153,7 @@ public class BottomToolbar extends Container {
     }
 
     private Actor createConsole(){
-        Console console = new Console(GameModel.instance.getDate());
+        Console console = new Console(GameModel.instance.date);
 
         UIManager.instance.putPanel(UIManager.CONSOLE, console);
         return console;

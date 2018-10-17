@@ -2,7 +2,9 @@ package ru.grishagin.model;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import ru.grishagin.components.InventoryComponent;
+import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.entities.EntityFactory;
 import ru.grishagin.entities.ItemFactory;
 import ru.grishagin.model.map.Map;
@@ -11,14 +13,20 @@ import ru.grishagin.systems.InteractionSystem;
 import ru.grishagin.systems.InventorySystem;
 import ru.grishagin.systems.MovementSystem;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class GameModel {
     public static final GameModel instance = new GameModel();
 
+    public final Calendar date;
     public final Engine engine;
     public final InventorySystem inventorySystem = new InventorySystem();
     private Map currentMap;
 
     private GameModel(){
+        date = new GregorianCalendar(2030, 5, 3, 19, 32, 18);
+
         engine = new Engine();
         initSystems();
         initBasicEntities();
@@ -45,5 +53,9 @@ public class GameModel {
 
     public Map getCurrentMap() {
         return currentMap;
+    }
+
+    public Entity getPlayer(){
+        return engine.getEntitiesFor(Family.all(PlayerControlled.class).get()).first();
     }
 }

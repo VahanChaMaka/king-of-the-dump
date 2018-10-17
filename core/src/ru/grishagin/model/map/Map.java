@@ -5,6 +5,7 @@ public class Map {
     private  int ySize = 32;
     MapCell[][] map;
 
+
     public Map(int xSize, int ySize) {
         this.xSize = xSize;
         this.ySize = ySize;
@@ -42,5 +43,9 @@ public class Map {
         } else {
             return null;
         }
+    }
+
+    public boolean isGlobal(){
+        return false;
     }
 }

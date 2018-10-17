@@ -2,8 +2,10 @@ package ru.grishagin.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -16,10 +18,13 @@ public class AssetManager {
     private Map<String, Texture> textures = new HashMap<>();
     private Map<String, TextureRegion> regions = new HashMap<>();
     private Map<String, TextureAtlas> atlases = new HashMap<>();
+    private Map<String, Skin> skins = new HashMap<>();
     //TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
 
     private static String TILES_ATLAS = "tiles/tileset.atlas";
-    private static String DAYR_UI_ATLAS = "ui/DayR/DayRSkin.atlas";
+    private static String DAYR_UI = "ui/DayR/DayRSkin";
+
+    public static final String UI_BACKGROUND = "old_paper.jpg";
 
     public TextureRegion getTileTexture(int id) {
         TextureRegion region = null;
@@ -61,8 +66,8 @@ public class AssetManager {
             return regions.get(name);
         } else{
             TextureRegion region = null;
-            //try to find texture in atlases
-            TextureAtlas.AtlasRegion atlasRegion = getAtlas(DAYR_UI_ATLAS).findRegion(name);
+            //try to find texture in atlas
+            TextureAtlas.AtlasRegion atlasRegion = getAtlas(DAYR_UI).findRegion(name);
             if(atlasRegion != null){
                 region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
                         atlasRegion.getRegionWidth(), atlasRegion.getRegionHeight());
@@ -83,7 +88,7 @@ public class AssetManager {
         if (atlases.containsKey(name)){
             return atlases.get(name);
         } else {
-            TextureAtlas atlas = new TextureAtlas(name);
+            TextureAtlas atlas = new TextureAtlas(name + ".atlas");
             atlases.put(name, atlas);
             return atlas;
         }
@@ -91,11 +96,30 @@ public class AssetManager {
 
     public Map<String, Map<String, Object>> readFromJson(String jsonName){
         try {
-            return new ObjectMapper().readValue(Gdx.files.internal(jsonName).file(), HashMap.class);
+            return new ObjectMapper().readValue(Gdx.files.internal(jsonName).read(), HashMap.class);
         } catch (IOException exception){
             System.out.println("Error while reading " + jsonName + "!");
             throw new RuntimeException(exception);
         }
+    }
+
+    //skin name should be the same as texture atlas
+    public Skin getSkin(String name){
+        if (skins.containsKey(name)){
+            return skins.get(name);
+        } else {
+            Skin skin = new Skin();
+            BitmapFont font = FontGenerator.generate();
+            skin.add("imperial12", font);
+            skin.addRegions(getAtlas(name));
+            skin.load(Gdx.files.internal(DAYR_UI + ".json"));
+            skins.put(name, skin);
+            return skin;
+        }
+    }
+
+    public Skin getDefaultSkin(){
+        return getSkin(DAYR_UI);
     }
 
 

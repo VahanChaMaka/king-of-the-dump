@@ -1,5 +1,6 @@
 package ru.grishagin.ui.menu;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -7,11 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import ru.grishagin.Items.Item;
-import ru.grishagin.Items.ItemType;
-import ru.grishagin.Pers.Inventory;
-import ru.grishagin.ui.Utils.AssetManager;
-import ru.grishagin.ui.Utils.LayoutUtils;
 
 import java.util.List;
 
@@ -22,27 +18,27 @@ public class InventoryMenu extends BasicMenu {
     public static final String PAGER_BUTTON_IMAGE = "icon_back";
     public static final String PAGER_BUTTON_PRESSED_IMAGE = "icon_back_over";
 
-    private Inventory items;
-    private ItemType filter = ItemType.ALL;
+    private List<Entity> items;
+    //private ItemType filter = ItemType.ALL;
     private int page = 1;
 
     private Table itemsGrid = new Table();
 
     private static final int ITEM_GRID_SIZE = 4;
 
-    public InventoryMenu(Inventory items){
+    public InventoryMenu(List<Entity> items){
         super();
         this.items = items;
         createMainLayout();
     }
 
     public void setDiscoveryPanel(){
-        rightContainer.setActor(new ru.grishagin.ui.actors.menus.DiscoveryPanel());
+        rightContainer.setActor(new DiscoveryPanel());
         rightContainer.fill();
     }
 
-    public void setItemInfoPanel(Item item){
-        rightContainer.setActor(new ru.grishagin.ui.actors.menus.ItemDescription(item, items.getPlacement()));
+    public void setItemInfoPanel(Entity item){
+        //rightContainer.setActor(new ItemDescription(item, items.getPlacement()));
         rightContainer.fill();
     }
 
@@ -65,7 +61,8 @@ public class InventoryMenu extends BasicMenu {
         itemsGrid.pad(2);
         itemsGrid.defaults().pad(2);
 
-        List<Item> itemsToShow = items.getItemList(filter);
+        //List<Entity> itemsToShow = items.getItemList(filter);
+        List<Entity> itemsToShow = items;
 
         int i = (page - 1)*ITEM_GRID_SIZE*ITEM_GRID_SIZE;
         int sizeOnPage;
@@ -75,9 +72,9 @@ public class InventoryMenu extends BasicMenu {
             sizeOnPage = ITEM_GRID_SIZE*ITEM_GRID_SIZE;
         }
         for (; i < sizeOnPage; i++) {
-            Item item = itemsToShow.get(i);
+            Entity item = itemsToShow.get(i);
 
-            Actor icon = ru.grishagin.ui.actors.menus.ItemIcon.getItemIcon(item);
+            Actor icon = ItemIcon.getItemIcon(item);
 
             if(i%ITEM_GRID_SIZE == 0 && i != 0){
                 itemsGrid.row();

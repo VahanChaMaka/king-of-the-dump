@@ -1,5 +1,6 @@
 package ru.grishagin.ui.menu;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -9,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import ru.grishagin.Items.Item;
-import ru.grishagin.ui.Utils.AssetManager;
 
 /**
  * Created by Admin on 15.08.2017.
@@ -21,7 +20,7 @@ public class ItemIcon extends Actor {
 
     private ItemIcon(){}
 
-    public static Actor getItemIcon(Item item){
+    public static Actor getItemIcon(Entity item){
         //create container anyway. If item=null container should be returned without any image
         Container icon = new Container<Image>();
         icon.background(new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(ITEM_BACKGROUND)));
