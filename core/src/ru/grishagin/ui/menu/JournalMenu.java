@@ -1,19 +1,14 @@
 package ru.grishagin.ui.menu;
 
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import ru.grishagin.GameModel;
-import ru.grishagin.quest.Quest;
-import ru.grishagin.quest.QuestController;
-import ru.grishagin.quest.QuestStage;
-import ru.grishagin.ui.Utils.AssetManager;
-import ru.grishagin.ui.Utils.LayoutUtils;
+import ru.grishagin.utils.AssetManager;
 
 /**
  * Created by Admin on 07.08.2018.
  */
 public class JournalMenu extends BasicMenu {
 
-    public JournalMenu() {
+    /*public JournalMenu() {
         super();
         createMainLayout();
     }
@@ -22,10 +17,10 @@ public class JournalMenu extends BasicMenu {
     protected Table createLeftPanel() {
         Table layout = super.createLeftPanel();
 
-        Tree questTree = new Tree(AssetManager.getInstance().getDefaultSkin());
+        Tree questTree = new Tree(AssetManager.instance.getDefaultSkin());
         LayoutUtils.applyTreeIconSize(questTree);
 
-        QuestController questController = GameModel.getInstance().getQuestController();
+        QuestController questController = GameModel.instance.getQuestController();
         for (Quest quest : questController.getActiveQuests()) {
             questTree.add(makeOneQuest(quest));
         }
@@ -36,12 +31,12 @@ public class JournalMenu extends BasicMenu {
     }
 
     private Tree.Node makeOneQuest(Quest quest){
-        Tree.Node questNode = new Tree.Node(new Label(quest.getTitle(), AssetManager.getInstance().getDefaultSkin())); //main node with quest name
+        Tree.Node questNode = new Tree.Node(new Label(quest.getTitle(), AssetManager.instance.getDefaultSkin())); //main node with quest name
 
         //draw all complete and currently active stages
         for (QuestStage stage : quest.getStages()) {
             Container container = new Container();
-            Label label = new Label(stage.toString(), AssetManager.getInstance().getDefaultSkin());
+            Label label = new Label(stage.toString(), AssetManager.instance.getDefaultSkin());
             label.setWrap(true);
             container.setActor(label);
             container.fill();
@@ -52,7 +47,7 @@ public class JournalMenu extends BasicMenu {
         }
 
         return questNode;
-    }
+    }*/
 
 
 }

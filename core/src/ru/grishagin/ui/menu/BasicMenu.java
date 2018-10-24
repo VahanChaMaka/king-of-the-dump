@@ -14,6 +14,8 @@ import ru.grishagin.utils.UIManager;
  * Created by Admin on 14.01.2018.
  */
 public class BasicMenu extends Table {
+    private static final String CLOSE_BUTTON = "ui/icon_close.png";
+
     protected Table leftPanel;
     protected Table itemsFilterToolbar;
     protected Table rightPanel;
@@ -60,7 +62,7 @@ public class BasicMenu extends Table {
         itemInfoPanel.debugAll();
         itemInfoPanel.pad(10);
 
-        ImageButton closeButton = new ImageButton(new TextureRegionDrawable(AssetManager.instance.getUITexture(AssetManager.CLOSE_BUTTON)));
+        ImageButton closeButton = new ImageButton(new TextureRegionDrawable(AssetManager.instance.getUITexture(CLOSE_BUTTON)));
         closeButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

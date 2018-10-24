@@ -3,17 +3,19 @@ package ru.grishagin.ui.toolbar;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import ru.grishagin.ui.IConsole;
-import ru.grishagin.ui.Utils.AssetManager;
+import ru.grishagin.utils.AssetManager;
 
 import java.util.Calendar;
 
-import static ru.grishagin.ui.actors.toolbar.BottomToolbar.BTN_GROUP_BACKGROUND;
+import static ru.grishagin.ui.toolbar.BottomToolbar.BTN_GROUP_BACKGROUND;
 
 /**
  * Created by Admin on 23.01.2018.
  */
-public class Console extends Container implements IConsole{
+public class Console extends Container{
+
+    public static final String CONSOLE_BACKGROUND = "screen.png";
+
     private Calendar calendar;
 
     private Label time;
@@ -26,8 +28,8 @@ public class Console extends Container implements IConsole{
     public Console(Calendar calendar){
         this.calendar = calendar;
 
-        time = new Label(getTime(), AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
-        date = new Label(getDate(), AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+        time = new Label(getTime(), AssetManager.instance.getDefaultSkin());
+        date = new Label(getDate(), AssetManager.instance.getDefaultSkin());
 
         innerLayout.add(time);
         innerLayout.add(date);
@@ -39,8 +41,8 @@ public class Console extends Container implements IConsole{
         innerLayout.add(scrollPane).fill().expand().colspan(2);
 
         innerLayout.padTop(5).padBottom(5).padLeft(15).padRight(15);
-        innerLayout.background(new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(AssetManager.CONSOLE_BACKGROUND)));
-        background(new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(BTN_GROUP_BACKGROUND)));
+        innerLayout.background(new TextureRegionDrawable(AssetManager.instance.getUITexture(CONSOLE_BACKGROUND)));
+        background(new TextureRegionDrawable(AssetManager.instance.getUITexture(BTN_GROUP_BACKGROUND)));
 
         setActor(innerLayout);
         pad(7);
@@ -79,9 +81,8 @@ public class Console extends Container implements IConsole{
         return builder.toString();
     }
 
-    @Override
     public void printMessage(String message){
-        messageTray.addActor(new Label(message, AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN)));
+        messageTray.addActor(new Label(message, AssetManager.instance.getDefaultSkin()));
         scrollPane.layout();
         scrollPane.scrollTo(0, 0, 0, 0);
     }

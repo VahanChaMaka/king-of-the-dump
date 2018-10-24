@@ -3,17 +3,12 @@ package ru.grishagin.ui.menu;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import ru.grishagin.GameModel;
-import ru.grishagin.Timer;
-import ru.grishagin.ui.UIManager;
-import ru.grishagin.ui.Utils.AssetManager;
-import ru.grishagin.ui.actors.ActionProgressBar;
 
 /**
  * Created by Admin on 27.09.2017.
  */
 public class DiscoveryPanel extends Container {
-    private Cell cell;
+    /*private Cell cell;
     Table layout = new Table();
     private ActionProgressBar progressBar = UIManager.getInstance().getProgressBar();
 
@@ -79,5 +74,5 @@ public class DiscoveryPanel extends Container {
         addCellInfo();
         addButtons();
         ((InventoryMenu)UIManager.getInstance().getPanel(UIManager.CURRENT_INVENTORY_MENU)).updateItemGrid();
-    }
+    }*/
 }

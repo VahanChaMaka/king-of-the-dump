@@ -26,7 +26,6 @@ public class AssetManager {
     private static String DAYR_UI = "ui/DayR/DayRSkin";
 
     public static final String UI_BACKGROUND = "old_paper.jpg";
-    public static final String CLOSE_BUTTON = "ui/icon_close.png";
 
     public TextureRegion getTileTexture(int id) {
         TextureRegion region = null;

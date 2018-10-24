@@ -6,20 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import ru.grishagin.GameModel;
-import ru.grishagin.Items.Food.Food;
-import ru.grishagin.Items.Item;
-import ru.grishagin.Pers.Inventory;
-import ru.grishagin.controller.GameController;
-import ru.grishagin.ui.UIManager;
-import ru.grishagin.ui.Utils.AssetManager;
-import ru.grishagin.ui.Utils.LayoutUtils;
 
 /**
  * Created by Admin on 10.09.2017.
  */
 public class ItemDescription extends Container {
-    private Item item;
+    /*private Item item;
     private int placement;
 
     Label itemDescription;
@@ -45,7 +37,7 @@ public class ItemDescription extends Container {
         UIManager.getInstance().putPanel(UIManager.ITEM_INFO, this);
     }
 
-    /*
+    *//*
      *This method adds buttons
      * which allow to make actions with current item.
      *
@@ -55,7 +47,7 @@ public class ItemDescription extends Container {
      *
      * For example:
      * A bread could be thrown away (general Item) and could be eaten (as Food)
-     */
+     *//*
     private void addItemActionsButtons(){
         TextButton throwOrPickButton = new TextButton("", AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
         if(placement == Inventory.ON_GROUND){
@@ -177,6 +169,6 @@ public class ItemDescription extends Container {
 
     public void updateItemDescription(){
         itemDescription.setText(item.toString());
-    }
+    }*/
 
 }
