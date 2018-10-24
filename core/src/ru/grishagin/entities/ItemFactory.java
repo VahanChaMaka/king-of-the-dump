@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
 import ru.grishagin.components.DescriptionComponent;
 import ru.grishagin.components.NameComponent;
+import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.components.items.ConsumableComponent;
 import ru.grishagin.components.items.WeightComponent;
 import ru.grishagin.utils.AssetManager;
@@ -36,6 +37,7 @@ public class ItemFactory {
             for (Map.Entry<String, Object> rawComponents : rawItem.entrySet()) {
                 newItem.add(makeComponent(rawComponents.getKey(), rawComponents.getValue()));
             }
+            newItem.add(new TypeIdComponent(id));
         } catch (Exception e){
             System.out.println("Warning! Couldn't parse item: " + e.getMessage());
         }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import ru.grishagin.components.NameComponent;
+import ru.grishagin.utils.AssetManager;
 
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class InventoryMenu extends BasicMenu {
 
         //fill empty cells
         for (; i < ITEM_GRID_SIZE*ITEM_GRID_SIZE*page; i++){
-            Actor icon = ru.grishagin.ui.actors.menus.ItemIcon.getItemIcon(null);
+            Actor icon = ItemIcon.getItemIcon(null);
 
             if(i%ITEM_GRID_SIZE == 0 && i != 0){
                 itemsGrid.row();
@@ -116,15 +117,15 @@ public class InventoryMenu extends BasicMenu {
         toolbar.debugAll();
         toolbar.defaults().pad(3);
 
-        for (ItemType itemType : ItemType.values()) {
+        /*for (ItemType itemType : ItemType.values()) {
             LayoutUtils.applyButtonSize(toolbar.add(createFilterButton(itemType)));
             toolbar.row();
-        }
+        }*/
 
         return toolbar;
     }
 
-    private Button createFilterButton(ItemType itemType){
+    /*private Button createFilterButton(ItemType itemType){
         TextButton button = new TextButton(itemType.toString(), AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN), "checkable");
         button.addListener(new ClickListener(){
             @Override
@@ -135,12 +136,13 @@ public class InventoryMenu extends BasicMenu {
             }
         });
         return button;
-    }
+    }*/
 
     public void updateItemGrid(){
-        for (Actor actor : itemsFilterToolbar.getChildren()) {
+        //set filter button checked
+        /*for (Actor actor : itemsFilterToolbar.getChildren()) {
             ((Button) actor).setChecked(((TextButton)actor).getText().toString().equals(filter.toString()));
-        }
+        }*/
         itemsGrid.clear();
         itemsGrid = createItemsGrid();
     }
@@ -148,9 +150,9 @@ public class InventoryMenu extends BasicMenu {
     private Table createPager(int itemsFullSize){
         Table layout = new Table();
 
-        Sprite previousPageSprite = new Sprite(AssetManager.getInstance().getTextureRegion(PAGER_BUTTON_IMAGE));
+        Sprite previousPageSprite = new Sprite(AssetManager.instance.getUITexture(PAGER_BUTTON_IMAGE));
         previousPageSprite.flip(true, false);
-        Sprite previousPageSpritePressed = new Sprite(AssetManager.getInstance().getTextureRegion(PAGER_BUTTON_PRESSED_IMAGE));
+        Sprite previousPageSpritePressed = new Sprite(AssetManager.instance.getUITexture(PAGER_BUTTON_PRESSED_IMAGE));
         previousPageSpritePressed.flip(true, false);
         ImageButton previousPage = new ImageButton(new TextureRegionDrawable(previousPageSprite),
                 new TextureRegionDrawable(previousPageSpritePressed));
@@ -169,10 +171,10 @@ public class InventoryMenu extends BasicMenu {
             fullPageAmount--;
         }
         final int finalFullPageAmount = fullPageAmount;
-        Label currentPage = new Label(page + "/" + fullPageAmount, AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+        Label currentPage = new Label(page + "/" + fullPageAmount, AssetManager.instance.getDefaultSkin());
 
-        ImageButton nextPage = new ImageButton(new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(PAGER_BUTTON_IMAGE)),
-                new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(PAGER_BUTTON_PRESSED_IMAGE)));
+        ImageButton nextPage = new ImageButton(new TextureRegionDrawable(AssetManager.instance.getUITexture(PAGER_BUTTON_IMAGE)),
+                new TextureRegionDrawable(AssetManager.instance.getUITexture(PAGER_BUTTON_PRESSED_IMAGE)));
         nextPage.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

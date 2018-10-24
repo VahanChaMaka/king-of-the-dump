@@ -22,6 +22,7 @@ public class AssetManager {
     //TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
 
     private static String TILES_ATLAS = "tiles/tileset.atlas";
+    private static String ICONS_ATLAS = "icons/icons.atlas";
     private static String DAYR_UI = "ui/DayR/DayRSkin";
 
     public static final String UI_BACKGROUND = "old_paper.jpg";
@@ -84,6 +85,32 @@ public class AssetManager {
             return region;
         }
     }
+
+    public TextureRegion getIcon(int id){
+        TextureRegion region = null;
+        TextureAtlas.AtlasRegion atlasRegion = getAtlas(ICONS_ATLAS).findRegion(String.valueOf(id));
+        if(atlasRegion != null){
+            //probable performance problems, consider caching
+            region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
+                    atlasRegion.getRegionWidth(), atlasRegion.getRegionHeight());
+        } else {
+            //try to load directly from file
+            try {
+                region = new TextureRegion(getTexture("icons/" + String.valueOf(id) + ".png"));
+            } catch (Exception e){
+                System.out.println("Warning! There is no icon with id " + id);
+            }
+
+            /*if(region == null) {
+                atlasRegion = getAtlas(ICONS_ATLAS).findRegion(String.valueOf("1"));
+                region = new TextureRegion(atlasRegion.getTexture(), atlasRegion.getRegionX(), atlasRegion.getRegionY(),
+                        atlasRegion.getRegionWidth(), atlasRegion.getRegionHeight());
+            }*/
+        }
+
+        return region;
+    }
+
 
     private TextureAtlas getAtlas(String name){
         if (atlases.containsKey(name)){

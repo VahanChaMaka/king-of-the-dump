@@ -10,6 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import ru.grishagin.components.NameComponent;
+import ru.grishagin.components.TypeIdComponent;
+import ru.grishagin.utils.AssetManager;
 
 /**
  * Created by Admin on 15.08.2017.
@@ -23,10 +26,10 @@ public class ItemIcon extends Actor {
     public static Actor getItemIcon(Entity item){
         //create container anyway. If item=null container should be returned without any image
         Container icon = new Container<Image>();
-        icon.background(new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(ITEM_BACKGROUND)));
+        icon.background(new TextureRegionDrawable(AssetManager.instance.getUITexture(ITEM_BACKGROUND)));
 
         if(item != null) {
-            String name = item.getName();
+            String name = item.getComponent(NameComponent.class).name;
             String[] words = name.split(" ");
             name = "";
             for (String word : words) {
@@ -37,24 +40,24 @@ public class ItemIcon extends Actor {
             icon.addListener(new ClickListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    (icon).background(new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(ITEM_BACKGROUND_DOWN)));
+                    (icon).background(new TextureRegionDrawable(AssetManager.instance.getUITexture(ITEM_BACKGROUND_DOWN)));
                     return super.touchDown(event, x, y, pointer, button);
                 }
 
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                    (icon).background(new TextureRegionDrawable(AssetManager.getInstance().getTextureRegion(ITEM_BACKGROUND)));
+                    (icon).background(new TextureRegionDrawable(AssetManager.instance.getUITexture(ITEM_BACKGROUND)));
                     super.touchUp(event, x, y, pointer, button);
                 }
             });
 
             //fill container
-            if (item.getIconPath() != null) {
-                TextureRegion texture = AssetManager.getInstance().getTextureRegion(item.getIconPath());
+            TextureRegion texture = AssetManager.instance.getIcon(item.getComponent(TypeIdComponent.class).id);
+            if (texture != null) {
                 icon.setActor(new Image(texture));
                 icon.size(50, 50);
             } else {//if item has no image, create simple text button
-                Label label = new Label(name, AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+                Label label = new Label(name, AssetManager.instance.getDefaultSkin());
                 float scale = 55 / label.getWidth();
                 if (scale > 1) {
                     scale = 1;
