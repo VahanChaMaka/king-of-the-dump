@@ -3,6 +3,7 @@ package ru.grishagin.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ru.grishagin.components.*;
+import ru.grishagin.components.stats.*;
 import ru.grishagin.components.tags.ImpassableComponent;
 import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.model.actions.TransferAction;
@@ -17,6 +18,13 @@ public class EntityFactory {
         entity.add(new PositionComponent(x, y));
         entity.add(new VelocityComponent(5f));
         entity.add(new InventoryComponent(100000));
+
+        entity.add(new HealthComponent(100));
+        entity.add(new HungerComponent());
+        entity.add(new ThirstComponent());
+        entity.add(new FatigueComponent());
+        entity.add(new RadDoseComponent());
+        entity.add(new ToxicityDoseComponent());
 
         TextureComponent textureComponent = new TextureComponent(
                 new TextureRegion(AssetManager.instance.getTexture("player.png")), 32, 32);

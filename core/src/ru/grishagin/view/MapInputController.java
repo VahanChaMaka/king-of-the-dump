@@ -26,7 +26,7 @@ public class MapInputController extends InputAdapter {
 
     @Override
     public boolean touchDragged (int x, int y, int pointer) {
-        if (UIManager.getInstance().isInputDisabled()){
+        if (UIManager.instance.isInputDisabled()){
             return true;
         } else {
             isTouchedDown = false;
@@ -96,7 +96,7 @@ public class MapInputController extends InputAdapter {
 
     @Override
     public boolean touchUp (int x, int y, int pointer, int button) {
-        if (UIManager.getInstance().isInputDisabled()){
+        if (UIManager.instance.isInputDisabled()){
             return true;
         } else {
             last.set(-1, -1, -1);
@@ -109,7 +109,7 @@ public class MapInputController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (UIManager.getInstance().isInputDisabled()){
+        if (UIManager.instance.isInputDisabled()){
             return true;
         } else {
             isTouchedDown = true;

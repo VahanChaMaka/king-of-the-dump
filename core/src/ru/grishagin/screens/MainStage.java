@@ -24,7 +24,7 @@ public class MainStage extends Stage {
         stageLayout.setFillParent(true);
 
         centralPanel = new CentralPanel();
-        UIManager.getInstance().putPanel(UIManager.CENTRAL_PANEL, centralPanel);
+        UIManager.instance.putPanel(UIManager.CENTRAL_PANEL, centralPanel);
         stageLayout.add(centralPanel).expand().fill();
 
         bottomToolbar = new BottomToolbar();
@@ -50,7 +50,7 @@ public class MainStage extends Stage {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return UIManager.getInstance().isInputDisabled() || super.touchDown(screenX, screenY, pointer, button);
+        return UIManager.instance.isInputDisabled() || super.touchDown(screenX, screenY, pointer, button);
     }
 }
 

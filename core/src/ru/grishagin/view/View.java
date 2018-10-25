@@ -37,8 +37,8 @@ public class View{
         controller = new MapInputController(camera, map, new ClickHandler(GameModel.instance.engine));
         controller.putInMapBounds();
 
-        UIManager.getInstance().getInputMultiplexer().addProcessor(controller);
-        Gdx.input.setInputProcessor(UIManager.getInstance().getInputMultiplexer());
+        UIManager.instance.getInputMultiplexer().addProcessor(controller);
+        Gdx.input.setInputProcessor(UIManager.instance.getInputMultiplexer());
     }
 
     public ViewMap getMap() {
