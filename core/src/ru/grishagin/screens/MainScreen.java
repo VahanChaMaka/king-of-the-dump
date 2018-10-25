@@ -22,14 +22,14 @@ public class MainScreen extends ScreenAdapter {
         Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
         Viewport viewport = new ScreenViewport();
         stage = new MainStage(viewport);
-        UIManager.getInstance().getInputMultiplexer().addProcessor(stage);
+        UIManager.instance.getInputMultiplexer().addProcessor(stage);
 
         //if any UI is opened consume all input events and do not let them to reach map
         stage.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return UIManager.getInstance().isMenuOpened() ||
-                        y < UIManager.getInstance().getPanel(UIManager.BOTTOM_TOOLBAR).getHeight();
+                return UIManager.instance.isMenuOpened() ||
+                        y < UIManager.instance.getPanel(UIManager.BOTTOM_TOOLBAR).getHeight();
             }
         });
     }

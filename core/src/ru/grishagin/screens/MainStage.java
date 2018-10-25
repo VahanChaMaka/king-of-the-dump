@@ -18,7 +18,7 @@ public class MainStage extends Stage {
     public MainStage(Viewport viewPort){
         this.setViewport(viewPort);
 
-        loadDefaultSkin();
+        //loadDefaultSkin();
 
         Table stageLayout = new Table();
         stageLayout.setFillParent(true);
@@ -29,12 +29,12 @@ public class MainStage extends Stage {
 
         bottomToolbar = new BottomToolbar();
         stageLayout.row();
-        //stageLayout.add(bottomToolbar).bottom().right().height(BottomToolbar.TOOLBAR_HEIGHT).fill();
+        stageLayout.add(bottomToolbar).bottom().right().height(BottomToolbar.TOOLBAR_HEIGHT).fill();
 
         //stageLayout.debugAll();
         addActor(stageLayout);
 
-        //UIManager.getInstance().putStage(UIManager.MAIN_STAGE, this);
+        UIManager.instance.putStage(UIManager.MAIN_STAGE, this);
     }
 
     private void loadDefaultSkin(){

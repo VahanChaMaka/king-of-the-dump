@@ -14,7 +14,7 @@ import static ru.grishagin.ui.toolbar.BottomToolbar.BTN_GROUP_BACKGROUND;
  */
 public class Console extends Container{
 
-    public static final String CONSOLE_BACKGROUND = "screen.png";
+    public static final String CONSOLE_BACKGROUND = "ui/screen.png";
 
     private Calendar calendar;
 

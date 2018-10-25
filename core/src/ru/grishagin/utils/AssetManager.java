@@ -21,11 +21,11 @@ public class AssetManager {
     private Map<String, Skin> skins = new HashMap<>();
     //TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
 
-    private static String TILES_ATLAS = "tiles/tileset.atlas";
-    private static String ICONS_ATLAS = "icons/icons.atlas";
+    private static String TILES_ATLAS = "tiles/tileset";
+    private static String ICONS_ATLAS = "icons/icons";
     private static String DAYR_UI = "ui/DayR/DayRSkin";
 
-    public static final String UI_BACKGROUND = "old_paper.jpg";
+    public static final String UI_BACKGROUND = "ui/old_paper.jpg";
 
     public TextureRegion getTileTexture(int id) {
         TextureRegion region = null;
