@@ -1,30 +1,54 @@
 package ru.grishagin.ui.menu;
 
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import ru.grishagin.components.DescriptionComponent;
+import ru.grishagin.components.NameComponent;
+import ru.grishagin.components.TypeIdComponent;
+import ru.grishagin.components.items.*;
+import ru.grishagin.components.tags.PlayerControlled;
+import ru.grishagin.entities.ItemFactory;
+import ru.grishagin.model.GameModel;
+import ru.grishagin.model.map.MapFactory;
+import ru.grishagin.systems.InventorySystem;
+import ru.grishagin.utils.AssetManager;
+import ru.grishagin.utils.LayoutUtils;
+import ru.grishagin.utils.UIManager;
+
+import java.util.Map;
 
 /**
  * Created by Admin on 10.09.2017.
  */
 public class ItemDescription extends Container {
-    /*private Item item;
-    private int placement;
+    private ComponentMapper<NameComponent> nm = ComponentMapper.getFor(NameComponent.class);
+    private ComponentMapper<DescriptionComponent> dm = ComponentMapper.getFor(DescriptionComponent.class);
+    private ComponentMapper<AmountComponent> am = ComponentMapper.getFor(AmountComponent.class);
 
-    Label itemDescription;
-    Table layout;
+    private Entity item;
+    private Entity owner;
+    private Entity transferTarget;
 
-    public ItemDescription(Item item, int placement){
+    private Label itemDescription;
+    private Table layout;
+    private ItemInfoSupport parent;
+
+    public ItemDescription(Entity item, Entity owner, Entity transferTarget, ItemInfoSupport parent){
         this.item = item;
-        this.placement = placement;
+        this.owner = owner;
+        this.transferTarget = transferTarget;
+        this.parent = parent;
 
         layout = new Table();
         layout.debugAll();
 
-        itemDescription = new Label(item.toString(), AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+        itemDescription = new Label(item.toString(), AssetManager.instance.getDefaultSkin());
         itemDescription.setWrap(true);
 
         layout.add(itemDescription).expand().fill();
@@ -34,10 +58,10 @@ public class ItemDescription extends Container {
 
         setActor(layout);
         fill();
-        UIManager.getInstance().putPanel(UIManager.ITEM_INFO, this);
+        UIManager.instance.putPanel(UIManager.ITEM_INFO, this);
     }
 
-    *//*
+    /*
      *This method adds buttons
      * which allow to make actions with current item.
      *
@@ -47,37 +71,39 @@ public class ItemDescription extends Container {
      *
      * For example:
      * A bread could be thrown away (general Item) and could be eaten (as Food)
-     *//*
+     */
     private void addItemActionsButtons(){
-        TextButton throwOrPickButton = new TextButton("", AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
-        if(placement == Inventory.ON_GROUND){
-            throwOrPickButton.setText("Поднять");
-            throwOrPickButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    GameController.INSTANCE.pickUpItem(item);
-                }
-            });
-        }else {
+        TextButton throwOrPickButton = new TextButton("", AssetManager.instance.getDefaultSkin());
+        if(owner.getComponent(PlayerControlled.class) != null){
+            throwOrPickButton.setText("Забрать");
+        } else if(transferTarget != null) {
+            throwOrPickButton.setText("Положить");
+        } else {
             throwOrPickButton.setText("Выбросить");
-            throwOrPickButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    GameController.INSTANCE.throwItemAway(item);
-                }
-            });
+            //TODO: set transferTarget to current cell!
         }
+        throwOrPickButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                GameModel.instance.inventorySystem.transferItem(owner, transferTarget,
+                        item.getComponent(TypeIdComponent.class).id);
+                parent.update();
+            }
+        });
+
         layout.row();
         LayoutUtils.applyButtonSize(layout.add(throwOrPickButton));
 
-        if(item.getAmount() > 1) {
-            TextButton throwOrPickAllButton = new TextButton("", AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+
+        //probably no need to special button for this, may be choose amount like in Skyrim or split like in Underrail
+        /*if(item.getAmount() > 1) {
+            TextButton throwOrPickAllButton = new TextButton("", AssetManager.instance.getDefaultSkin());
             if(placement == Inventory.ON_GROUND){
                 throwOrPickAllButton.setText("Поднять все");
                 throwOrPickAllButton.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        GameController.INSTANCE.pickAllUp(item);
+                        //GameController.INSTANCE.pickAllUp(item);
                     }
                 });
             } else {
@@ -91,21 +117,23 @@ public class ItemDescription extends Container {
             }
             layout.row();
             LayoutUtils.applyButtonSize(layout.add(throwOrPickAllButton));
-        }
+        }*/
 
-        if(item instanceof Food){
-            TextButton consumeButton = new TextButton("", AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+        if(item.getComponent(ConsumableComponent.class) != null){
+            TextButton consumeButton = new TextButton("", AssetManager.instance.getDefaultSkin());
 
-            if(((Food) item).getFoodType() == Food.DRINKABLE){
+            if(item.getComponent(DrinkTag.class) != null){
                 consumeButton.setText("Выпить");
-            } else if(((Food) item).getFoodType() == Food.EATABLE){
+            } else if(item.getComponent(FoodTag.class) != null){
                 consumeButton.setText("Съесть");
+            } else {
+                consumeButton.setText("Использовать");
             }
 
             consumeButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    GameController.INSTANCE.consume(item, placement);
+                    //GameController.INSTANCE.consume(item, placement);
                 }
             });
 
@@ -113,23 +141,23 @@ public class ItemDescription extends Container {
             LayoutUtils.applyButtonSize(layout.add(consumeButton));
         }
 
-        if(item.isDestroyable() && item.isDestroyableManually()){
-            TextButton destroyButton = new TextButton("Разобрать", AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+        if(item.getComponent(DestroyableComponent.class) != null && item.getComponent(DestroyableComponent.class).isDestroyableManually){
+            TextButton destroyButton = new TextButton("Разобрать", AssetManager.instance.getDefaultSkin());
             destroyButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                   GameController.INSTANCE.destroyItem(item, placement);
+                   //GameController.INSTANCE.destroyItem(item, placement);
                 }
             });
 
             StringBuilder components = new StringBuilder("\nКомпоненты:");
-            for (String s:
-                    item.getDestroyResult().keySet()) {
-                components.append("\n" + "- " + s);
+            for (Map<String, Object> component:
+                    ItemFactory.getDestroyResult(item.getComponent(TypeIdComponent.class).id)) {
+                components.append("\n" + "- " + ItemFactory.getItemName((Integer)component.get(ItemFactory.ID))); //key is item id
+                components.append(": " + component.get(ItemFactory.AMOUNT));
             }
-            components.append("");
 
-            Label componentsAfterDestroyLabel = new Label(components.toString(), AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+            Label componentsAfterDestroyLabel = new Label(components.toString(), AssetManager.instance.getDefaultSkin());
 
             layout.row();
             layout.add(componentsAfterDestroyLabel);
@@ -137,15 +165,15 @@ public class ItemDescription extends Container {
             LayoutUtils.applyButtonSize(layout.add(destroyButton));
         }
 
-        if(item.getName().equals("Грязная вода")){
-            if(GameModel.getInstance().getCurrentCell().getItems().containsWithName("Костер")){
-                GameModel.getInstance().getPers().pickUp(GameModel.getInstance().getCurrentCell().pickUp("Костер", 1));//take a FirePlace coz CraftWizard works with items in pers's inventory only
+        /*if(item.getName().equals("Грязная вода")){
+            if(GameModel.instance.getCurrentCell().getItems().containsWithName("Костер")){
+                GameModel.instance.getPers().pickUp(GameModel.instance.getCurrentCell().pickUp("Костер", 1));//take a FirePlace coz CraftWizard works with items in pers's inventory only
             }
 
-            Label boilLabelComponents = new Label("\n" + GameModel.getInstance().getCraftWizard().compareRecipeAndAvailableComponents("Чистая вода"),
-                    AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+            Label boilLabelComponents = new Label("\n" + GameModel.instance.getCraftWizard().compareRecipeAndAvailableComponents("Чистая вода"),
+                    AssetManager.instance.getDefaultSkin());
 
-            TextButton boilButton = new TextButton("Кипятить", AssetManager.getInstance().getSkin(AssetManager.SIMPLE_SKIN));
+            TextButton boilButton = new TextButton("Кипятить", AssetManager.instance.getDefaultSkin());
             boilButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -154,21 +182,21 @@ public class ItemDescription extends Container {
             });
 
 
-            boilButton.setDisabled(GameModel.getInstance().getCraftWizard().checkRequirementsForName("Чистая вода"));
+            boilButton.setDisabled(GameModel.instance.getCraftWizard().checkRequirementsForName("Чистая вода"));
 
-            if(GameModel.getInstance().getPers().getInventory().containsWithName("Костер")) {
-                GameModel.getInstance().getCurrentCell().catchThrown(GameModel.getInstance().getPers().throwAway("Костер", 1));//return the FirePlace back on the ground
+            if(GameModel.instance.getPers().getInventory().containsWithName("Костер")) {
+                GameModel.instance.getCurrentCell().catchThrown(GameModel.instance.getPers().throwAway("Костер", 1));//return the FirePlace back on the ground
             }
 
             layout.row();
             layout.add(boilLabelComponents);
             layout.row();
             LayoutUtils.applyButtonSize(layout.add(boilButton));
-        }
+        }*/
     }
 
     public void updateItemDescription(){
         itemDescription.setText(item.toString());
-    }*/
+    }
 
 }

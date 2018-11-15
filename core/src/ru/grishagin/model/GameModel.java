@@ -46,8 +46,9 @@ public class GameModel {
     }
 
     private void loadObjects(){
-        Entity chest = EntityFactory.makeChest(10, 10);
+        Entity chest = EntityFactory.makeChest(1, 2);
         inventorySystem.addItem(chest, ItemFactory.getItem(0));
+        inventorySystem.addItem(chest, ItemFactory.getItem(1001));
         engine.addEntity(chest);
     }
 

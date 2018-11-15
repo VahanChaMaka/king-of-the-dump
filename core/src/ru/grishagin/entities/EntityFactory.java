@@ -14,6 +14,7 @@ public class EntityFactory {
 
     public static Entity makePlayer(int x, int y){
         Entity entity = new Entity();
+        entity.add(new NameComponent("Player"));
         entity.add(new PlayerControlled());
         entity.add(new PositionComponent(x, y));
         entity.add(new VelocityComponent(5f));

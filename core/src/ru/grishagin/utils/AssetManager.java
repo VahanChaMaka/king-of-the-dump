@@ -22,7 +22,7 @@ public class AssetManager {
     //TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
 
     private static String TILES_ATLAS = "tiles/tileset";
-    private static String ICONS_ATLAS = "icons/icons";
+    private static String ICONS_ATLAS = "ui/icons/icons";
     private static String DAYR_UI = "ui/DayR/DayRSkin";
 
     public static final String UI_BACKGROUND = "ui/old_paper.jpg";

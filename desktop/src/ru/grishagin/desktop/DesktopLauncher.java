@@ -8,6 +8,7 @@ import ru.grishagin.Game;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "King of the Dump";
 		new LwjglApplication(new Game(), config);
 
 		String inputDir = "tmp_sources";

@@ -16,7 +16,7 @@ public class MainStage extends Stage {
     private Container bottomToolbar;
 
     public MainStage(Viewport viewPort){
-        this.setViewport(viewPort);
+        super(viewPort);
 
         //loadDefaultSkin();
 

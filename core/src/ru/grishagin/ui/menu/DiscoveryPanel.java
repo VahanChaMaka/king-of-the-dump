@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 /**
  * Created by Admin on 27.09.2017.
  */
+
+@Deprecated
 public class DiscoveryPanel extends Container {
     /*private Cell cell;
     Table layout = new Table();

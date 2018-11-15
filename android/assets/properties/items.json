@@ -19,5 +19,42 @@
 
   "2": {
 
+  },
+
+  "101": {
+    "name": "Металлолом",
+    "description": "",
+    "weight": 500
+  },
+
+  "102": {
+    "name": "Консервная банка",
+    "description": "",
+    "weight": 100
+  },
+
+  "103": {
+    "name": "Радиодетали",
+    "description": "",
+    "weight": 50
+  },
+
+  "1001": {
+    "name": "Телевизор",
+    "description": "",
+    "weight": 5000,
+    "destroyable": {
+      "destroyableManually": true,
+      "components": [
+        {
+          "id": 101,
+          "amount": 1
+        },
+        {
+          "id": 103,
+          "amount": 3
+        }
+      ]
+    }
   }
 }

@@ -1,15 +1,23 @@
 package ru.grishagin.utils;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import ru.grishagin.components.InventoryComponent;
+import ru.grishagin.model.GameModel;
+import ru.grishagin.ui.CentralPanel;
+import ru.grishagin.ui.menu.InventoryMenu;
+import ru.grishagin.ui.menu.TransferMenu;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class UIManager {
     public static final UIManager instance = new UIManager();
-    private Map<String, Actor> UIcomponents = new HashMap<>();
+    private Map<String, WidgetGroup> UIcomponents = new HashMap<>();
     private InputMultiplexer inputMultiplexer = new InputMultiplexer();
     private Map<String, Stage> stages = new HashMap<>();
     //ActionProgressBar progressBar;
@@ -29,11 +37,11 @@ public class UIManager {
     private UIManager(){
     }
 
-    public Actor getPanel(String name){
+    public WidgetGroup getPanel(String name){
         return UIcomponents.get(name);
     }
 
-    public void putPanel(String name, Actor panel){
+    public void putPanel(String name, WidgetGroup panel){
         UIcomponents.put(name, panel);
     }
 
@@ -68,6 +76,15 @@ public class UIManager {
 
     public void setInputDisabled(boolean inputDisabled) {
         isInputDisabled = inputDisabled;
+    }
+
+    public void openTransferWindow(Entity target, Entity player){
+        Container centralPanel = (Container) getPanel(CENTRAL_PANEL);
+
+        //TODO: consider to add it in the UI manager rather than create new instance
+        TransferMenu menu = new TransferMenu(target, player);
+        centralPanel.setActor(menu);
+        setMenuOpened(true);
     }
 
     /*public ActionProgressBar getProgressBar(){
