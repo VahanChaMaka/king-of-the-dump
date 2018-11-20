@@ -14,11 +14,11 @@ public class MapInputController extends InputAdapter {
     final Vector3 delta = new Vector3();
 
     private ClickHandler clickHandler;
-    private ViewMap map;
+    private TiledRenderingEngine map;
 
     private boolean isTouchedDown = false;
 
-    public MapInputController(OrthographicCamera camera, ViewMap map, ClickHandler clickHandler) {
+    public MapInputController(OrthographicCamera camera, TiledRenderingEngine map, ClickHandler clickHandler) {
         this.camera = camera;
         this.map = map;
         this.clickHandler = clickHandler;
@@ -133,8 +133,8 @@ public class MapInputController extends InputAdapter {
             _y = (2 * y - x) / 2;
 
             //yes, tileX = -_y/32. Screen and game coordinates are twisted
-            tileX = -((float)_y)/ViewMap.TILE_Y_SIZE;
-            tileY = ((float)_x)/ViewMap.TILE_Y_SIZE;
+            tileX = -((float)_y)/map.getTileHeight();
+            tileY = ((float)_x)/map.getTileHeight();//some magic
         //}
 
 

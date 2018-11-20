@@ -3,26 +3,23 @@ package ru.grishagin.systems;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 import ru.grishagin.components.PositionComponent;
-import ru.grishagin.components.TextureComponent;
+import ru.grishagin.components.SpriteComponent;
 import ru.grishagin.view.RenderComparator;
 
 public class RenderingSystem extends SortedIteratingSystem {
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
+    private ComponentMapper<SpriteComponent> tm = ComponentMapper.getFor(SpriteComponent.class);
 
     private boolean isoMode = true;
     private Batch batch;
 
     public RenderingSystem(Batch batch){
-        super(Family.all(PositionComponent.class, TextureComponent.class).get(), new RenderComparator());
+        super(Family.all(PositionComponent.class, SpriteComponent.class).get(), new RenderComparator());
         this.batch = batch;
     }
 
@@ -46,12 +43,12 @@ public class RenderingSystem extends SortedIteratingSystem {
             renderPosition.y = position.y;
         }
 
-        TextureComponent textureComponent = tm.get(entity);
+        SpriteComponent spriteComponent = tm.get(entity);
         Vector2 offset = tm.get(entity).offset;
 
         batch.begin();
-        batch.draw(textureComponent.region, renderPosition.x + offset.x, renderPosition.y + offset.y,
-                textureComponent.renderingSize.x, textureComponent.renderingSize.y);
+        batch.draw(spriteComponent.sprite, renderPosition.x + offset.x, renderPosition.y + offset.y,
+                spriteComponent.sprite.getWidth(), spriteComponent.sprite.getHeight());
         batch.end();
     }
 }

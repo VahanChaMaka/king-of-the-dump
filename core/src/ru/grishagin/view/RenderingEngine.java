@@ -1,22 +1,8 @@
 package ru.grishagin.view;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
-import ru.grishagin.components.PositionComponent;
-import ru.grishagin.components.TextureComponent;
-import ru.grishagin.model.map.Map;
-import ru.grishagin.utils.AssetManager;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class RenderingEngine extends ViewMap{
-    ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
+@Deprecated
+public class RenderingEngine{
+    /*ComponentMapper<SpriteComponent> tm = ComponentMapper.getFor(SpriteComponent.class);
     ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
     private SpriteBatch batch;
@@ -54,7 +40,7 @@ public class RenderingEngine extends ViewMap{
     //sort and return all drawable objects is cell
     private void drawCellObjects(int x, int y){
 
-        ImmutableArray<Entity> allDrawables = engine.getEntitiesFor(Family.all(TextureComponent.class, PositionComponent.class).get());
+        ImmutableArray<Entity> allDrawables = engine.getEntitiesFor(Family.all(SpriteComponent.class, PositionComponent.class).get());
         for (int i = 0; i < allDrawables.size(); i++) {
             Entity entity = allDrawables.get(i);
             float objectX = pm.get(entity).x;
@@ -62,7 +48,7 @@ public class RenderingEngine extends ViewMap{
             float offsetX = tm.get(entity).offset.x;
             float offsetY = tm.get(entity).offset.y;
             if((int)objectX == x && (int)objectY == y){
-                draw(tm.get(entity).region, objectX, objectY, offsetX, offsetY);
+                draw(tm.get(entity).sprite, objectX, objectY, offsetX, offsetY);
             }
         }
     }
@@ -85,5 +71,5 @@ public class RenderingEngine extends ViewMap{
         batch.begin();
         batch.draw(texture, renderPosition.x + offsetX, renderPosition.y+offsetY);
         batch.end();
-    }
+    }*/
 }

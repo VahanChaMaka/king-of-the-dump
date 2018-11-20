@@ -1,8 +1,15 @@
 package ru.grishagin.model.map;
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+
 public class MapFactory {
 
-    public static Map loadMap(){
+    public static TiledBasedMap loadMap(){
+        return new TiledBasedMap(new TmxMapLoader().load("maps/entrance.tmx"));
+    }
+
+    /*public static Map loadMap(){
         int xSize = 32;
         int ySize = 32;
         Map map = new Map(xSize, ySize);
@@ -29,5 +36,5 @@ public class MapFactory {
         }
 
         return map;
-    }
+    }*/
 }

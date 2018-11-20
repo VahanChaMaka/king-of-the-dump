@@ -6,6 +6,7 @@ import ru.grishagin.components.PositionComponent;
 
 import java.util.Comparator;
 
+@Deprecated
 public class RenderComparator implements Comparator<Entity> {
     private ComponentMapper<PositionComponent> pm;
 

@@ -7,14 +7,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.grishagin.model.ClickHandler;
 import ru.grishagin.model.GameModel;
-import ru.grishagin.model.map.Map;
-import ru.grishagin.model.map.MapFactory;
-import ru.grishagin.systems.RenderingSystem;
 import ru.grishagin.utils.UIManager;
 
 public class View{
 
-    private ViewMap map;
+    private TiledRenderingEngine map;
     private OrthographicCamera camera;
     private BitmapFont font;
     private SpriteBatch batch;
@@ -28,21 +25,13 @@ public class View{
         font = new BitmapFont();
         batch = new SpriteBatch();
 
-        //map = new ViewMap(GameModel.getInstance().getCurrentMap(), batch);
-        //map = new ViewMap(new Map(), batch);
-        map = new RenderingEngine(batch, GameModel.instance.getCurrentMap(), GameModel.instance.engine);
+        map = new TiledRenderingEngine(GameModel.instance.getCurrentMap().getMap(), GameModel.instance.engine);
 
-        //GameModel.instance.engine.addSystem(new RenderingSystem(batch));
-        //persView = new PersView(batch);
         controller = new MapInputController(camera, map, new ClickHandler(GameModel.instance.engine));
         controller.putInMapBounds();
 
         UIManager.instance.getInputMultiplexer().addProcessor(controller);
         Gdx.input.setInputProcessor(UIManager.instance.getInputMultiplexer());
-    }
-
-    public ViewMap getMap() {
-        return map;
     }
 
     public void draw() {

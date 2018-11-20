@@ -12,6 +12,7 @@ import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.VelocityComponent;
 import ru.grishagin.components.tags.ImpassableComponent;
 import ru.grishagin.model.GameModel;
+import ru.grishagin.model.map.MapPropertiesHelper;
 
 public class MovementSystem extends IteratingSystem {
 
@@ -122,6 +123,6 @@ public class MovementSystem extends IteratingSystem {
         }
 
         //if there is no blocking entities check cell
-        return GameModel.instance.getCurrentMap().getCell(nextCellx, nextCelly).isWalkable();
+        return MapPropertiesHelper.isWalkable(GameModel.instance.getCurrentMap(), nextCellx, nextCelly);
     }
 }

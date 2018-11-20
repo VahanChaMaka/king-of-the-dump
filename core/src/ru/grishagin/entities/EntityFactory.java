@@ -1,6 +1,7 @@
 package ru.grishagin.entities;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ru.grishagin.components.*;
 import ru.grishagin.components.stats.*;
@@ -27,11 +28,12 @@ public class EntityFactory {
         entity.add(new RadDoseComponent());
         entity.add(new ToxicityDoseComponent());
 
-        TextureComponent textureComponent = new TextureComponent(
-                new TextureRegion(AssetManager.instance.getTexture("player.png")), 32, 32);
-        textureComponent.offset.x = -16;
-        textureComponent.offset.y = 16;
-        entity.add(textureComponent);
+        Sprite sprite = new Sprite(AssetManager.instance.getTexture("player.png"));
+        sprite.setSize(32, 32);
+        SpriteComponent spriteComponent = new SpriteComponent(sprite);
+        spriteComponent.offset.x = -16;
+        spriteComponent.offset.y = 16;
+        entity.add(spriteComponent);
 
         return entity;
     }
@@ -39,7 +41,7 @@ public class EntityFactory {
     public static Entity makeChest(int x, int y){
         Entity entity = new Entity();
         entity.add(new PositionComponent(x, y));
-        entity.add(new TextureComponent(new TextureRegion(
+        entity.add(new SpriteComponent(new Sprite(
                 AssetManager.instance.getTexture("tiles/grassland_tiles.png"), 0, 284, 64, 32)));
         entity.add(new InteractiveComponent(new TransferAction()));
         entity.add(new InventoryComponent(1000));
