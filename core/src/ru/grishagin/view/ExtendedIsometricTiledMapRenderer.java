@@ -32,28 +32,6 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
     }
 
     @Override
-    public void renderObject(MapObject object) {
-        if(object instanceof TextureMapObject) {
-            TextureMapObject textureObject = (TextureMapObject) object;
-            //batch.draw(textureObject.getTextureRegion(), textureObject.getX(), textureObject.getY());
-            boolean isoMode = true;
-            Vector3 renderPosition = new Vector3();
-            float x = textureObject.getX();
-            float y = textureObject.getY();
-            if(isoMode) {//Isometric view
-                int posY = -(int) x;
-                int posX = (int) y;
-                renderPosition.x = (posX - posY);
-                renderPosition.y = (posX + posY) / 2;
-            } else {//non-isometric view
-                renderPosition.x = x;
-                renderPosition.y = y;
-            }
-            batch.draw(textureObject.getTextureRegion(), renderPosition.x, renderPosition.y);
-        }
-    }
-
-    @Override
     public void render() {
         beginRender();
         int currentLayer = 0;

@@ -3,6 +3,7 @@ package ru.grishagin.model;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.entities.EntityFactory;
@@ -28,11 +29,9 @@ public class GameModel {
         date = new GregorianCalendar(2030, 5, 3, 19, 32, 18);
 
         engine = new Engine();
+        currentMap = MapFactory.loadMap();
         initSystems();
         initBasicEntities();
-        loadObjects();
-
-        currentMap = MapFactory.loadMap();
     }
 
     private void initSystems(){
@@ -45,11 +44,15 @@ public class GameModel {
         engine.addEntity(EntityFactory.makePlayer(10, 1));
     }
 
-    private void loadObjects(){
-        Entity chest = EntityFactory.makeChest(1, 2);
+    public void loadObjects(){
+        /*Entity chest = EntityFactory.makeChest(1, 2);
         inventorySystem.addItem(chest, ItemFactory.getItem(0));
         inventorySystem.addItem(chest, ItemFactory.getItem(1001));
-        engine.addEntity(chest);
+        engine.addEntity(chest);*/
+
+        for (MapObject object : currentMap.getObjects()) {
+            engine.addEntity(EntityFactory.makeEntity(object, currentMap.getMap()));
+        }
     }
 
     public TiledBasedMap getCurrentMap() {

@@ -1,6 +1,11 @@
 package ru.grishagin.model.map;
 
+import com.badlogic.gdx.maps.MapGroupLayer;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 public class TiledBasedMap {
 
@@ -29,5 +34,22 @@ public class TiledBasedMap {
 
     public boolean isGlobal() {
         return false;
+    }
+
+    public MapObjects getObjects(){
+        MapLayer layer = null;
+        for (int i = 0; i < map.getLayers().size(); i++) {
+            layer = map.getLayers().get(i);
+            //find layer with objects. Logic as in @com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer.renderMapLayer
+            if(!(layer instanceof MapGroupLayer) && !(layer instanceof TiledMapTileLayer)
+                    && !(layer instanceof TiledMapImageLayer)){
+                break;
+            }
+        }
+        if (layer != null){
+            return layer.getObjects();
+        } else{
+            return new MapObjects();
+        }
     }
 }

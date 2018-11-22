@@ -2,6 +2,7 @@ package ru.grishagin;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import ru.grishagin.model.GameModel;
 import ru.grishagin.screens.MainScreen;
 import ru.grishagin.view.View;
 
@@ -11,6 +12,7 @@ public class Game extends com.badlogic.gdx.Game {
 	
 	@Override
 	public void create () {
+		GameModel.instance.loadObjects();
 		screen = new MainScreen();
 		setScreen(screen);
 
