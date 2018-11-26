@@ -142,7 +142,6 @@
  <objectgroup id="3" name="объекты">
   <object id="8" gid="65" x="64" y="2048" width="64" height="64">
    <properties>
-    <property name="action" value="transfer"/>
     <property name="items" value="0,1,101"/>
    </properties>
   </object>

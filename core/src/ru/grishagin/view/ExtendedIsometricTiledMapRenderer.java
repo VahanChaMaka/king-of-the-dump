@@ -4,17 +4,13 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.TextureMapObject;
+import com.badlogic.gdx.maps.MapObject;;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.SpriteComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer {
     private ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
@@ -63,7 +59,7 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
         float posX =  y * 32;
         renderPosition.x = (posX - posY);
         renderPosition.y = (posX + posY) / 2;
-        //spriteComponent.sprite.draw(this.getBatch());
-        this.batch.draw(spriteComponent.sprite, renderPosition.x, renderPosition.y);
+        this.batch.draw(spriteComponent.sprite, renderPosition.x + spriteComponent.offset.x,
+                renderPosition.y + spriteComponent.offset.y);
     }
 }
