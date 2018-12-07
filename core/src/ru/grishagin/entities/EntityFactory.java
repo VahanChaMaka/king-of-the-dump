@@ -59,6 +59,8 @@ public class EntityFactory {
         spriteComponent.offset.y = 16;
         entity.add(spriteComponent);
 
+        entity.add(new ShaderComponent(ShaderType.OUTLINE));
+
         return entity;
     }
 
@@ -90,6 +92,9 @@ public class EntityFactory {
 
             //extract texture from tile directly
             entity.add(new SpriteComponent(new Sprite(((TiledMapTileMapObject)object).getTextureRegion())));
+
+            //TODO: think about it
+            entity.add(new ShaderComponent(ShaderType.OUTLINE));
         }
 
         //fill inventory with specified items

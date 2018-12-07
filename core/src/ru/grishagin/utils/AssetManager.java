@@ -5,8 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.grishagin.components.ShaderType;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,6 +22,7 @@ public class AssetManager {
     private Map<String, TextureRegion> regions = new HashMap<>();
     private Map<String, TextureAtlas> atlases = new HashMap<>();
     private Map<String, Skin> skins = new HashMap<>();
+    private Map<ShaderType, ShaderProgram> shaders = new HashMap<>();
     //TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
 
     private static String TILES_ATLAS = "tiles/tileset";
@@ -149,6 +153,35 @@ public class AssetManager {
         return getSkin(DAYR_UI);
     }
 
+    public ShaderProgram getShader(ShaderType shaderType){
+        if(shaders.containsKey(shaderType)){
+            return shaders.get(shaderType);
+        } else {
+
+            //on this point only default vertex shader is required
+            String vertexShaderPath = Gdx.files.internal("shaders/defaultVertexShader.glsl").readString();
+
+            String fragmentShaderPath = null;
+            switch (shaderType){
+                case OUTLINE:
+                    fragmentShaderPath = Gdx.files.internal("shaders/outlineFragmentShader.glsl").readString();
+                    break;
+                default:
+                    System.out.println("ERROR! Cannot load shader with name \"" + shaderType + "\"!");
+                    return null;
+            }
+
+            ShaderProgram shader = new ShaderProgram(vertexShaderPath, fragmentShaderPath);
+            if (!shader.isCompiled()){
+                System.out.println("Error! Cannot compile shader with name \"" + shaderType + "\"!");
+                System.out.println(shader.getLog());
+                return null;
+            } else {
+                shaders.put(shaderType, shader);
+                return shader;
+            }
+        }
+    }
 
     private AssetManager(){
     }

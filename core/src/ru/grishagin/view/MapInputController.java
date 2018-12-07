@@ -3,7 +3,7 @@ package ru.grishagin.view;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import ru.grishagin.model.ClickHandler;
+import ru.grishagin.model.InputHandler;
 import ru.grishagin.ui.toolbar.BottomToolbar;
 import ru.grishagin.utils.UIManager;
 
@@ -13,15 +13,15 @@ public class MapInputController extends InputAdapter {
     final Vector3 last = new Vector3(-1, -1, -1);
     final Vector3 delta = new Vector3();
 
-    private ClickHandler clickHandler;
+    private InputHandler inputHandler;
     private TiledRenderingEngine map;
 
     private boolean isTouchedDown = false;
 
-    public MapInputController(OrthographicCamera camera, TiledRenderingEngine map, ClickHandler clickHandler) {
+    public MapInputController(OrthographicCamera camera, TiledRenderingEngine map, InputHandler inputHandler) {
         this.camera = camera;
         this.map = map;
-        this.clickHandler = clickHandler;
+        this.inputHandler = inputHandler;
     }
 
     @Override
@@ -118,37 +118,21 @@ public class MapInputController extends InputAdapter {
     }
 
     private void click(int x, int y){
-        camera.unproject(curr.set(x, y+16, 0));//WTF, WHY -16????
+        camera.unproject(curr.set(x, y, 0));//WTF, WHY -16????
         x =(int) curr.x;
         y = (int) curr.y;
 
-        int _x, _y;
-        float tileX, tileY;
-        /*if(GameModel.getInstance().getCurrentMap().isGlobal()) {//non-ISO map
-            tileX = ((float)x)/ViewMap.TILE_X_SIZE;
-            tileY = ((float)y)/ViewMap.TILE_X_SIZE;
-        } else{ //ISO map*/
-            //обратная функция рассчета изометрических координат
-            _x = (x + 2 * y) / 2;
-            _y = (2 * y - x) / 2;
+        inputHandler.onClick(x, y);
+    }
 
-            //yes, tileX = -_y/32. Screen and game coordinates are twisted
-            tileX = -((float)_y)/map.getTileHeight();
-            tileY = ((float)_x)/map.getTileHeight();//some magic
-        //}
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+        int x = (int) worldCoords.x;
+        int y = (int) worldCoords.y;
 
+        inputHandler.onHover(x, y);
 
-
-        ////TEST OUTPUT BLOCK
-        System.out.println("Tile X: " + tileX + ", tile Y: " + tileY);
-        System.out.println("Click on global: " + x + ", " + y);
-        //System.out.println("Pers X:" + GameModel.getInstance().getPrecisePersPositionX() + ", Y: " + GameModel.getInstance().getPrecisePersPositionY());
-//        System.out.println("UnISO: " + _x + ", " + _y);
-//        System.out.println("Game model: " + _x + ", " + (-_y));
-        System.out.println();
-        ////TEST OUTPUT BLOCK END
-
-        //GameController.INSTANCE.movePersTo(tileX, tileY);
-        clickHandler.onClick(tileX, tileY);
+        return true;
     }
 }
