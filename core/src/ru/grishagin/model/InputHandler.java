@@ -9,13 +9,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.grishagin.components.*;
+import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.components.tags.PlayerControlled;
+import ru.grishagin.entities.EntityFactory;
 import ru.grishagin.view.TiledRenderingEngine;
 
 public class InputHandler {
     private ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<ShaderComponent> shm = ComponentMapper.getFor(ShaderComponent.class);
     private ComponentMapper<InteractiveComponent> im = ComponentMapper.getFor(InteractiveComponent.class);
+    private ComponentMapper<HostileTag> hm = ComponentMapper.getFor(HostileTag.class);
 
     private Engine engine;
     private TiledRenderingEngine map;
@@ -35,6 +38,8 @@ public class InputHandler {
                 if(im.get(entity) != null){
                     player.add(new InteractionComponent(entity));
                     isSomeActionHappens = true;
+                } else if(hm.get(entity) != null){//if clicked target is an enemy, attack it
+                    player.add(new AttackTargetComponent(entity));
                 }
             } else {
                 //do nothing
@@ -62,12 +67,14 @@ public class InputHandler {
     //X and Y are world-coords
     public void onHover(float x, float y){
         for (Entity entity : engine.getEntitiesFor(Family.all(SpriteComponent.class).get())) {
-            SpriteComponent spriteComponent = sm.get(entity);
-            if(withinSprite(spriteComponent.sprite, (int)x, (int)y)){
-                shm.get(entity).isActive = true;
-            } else {
-                //turn off outline on other sprites
-                shm.get(entity).isActive = false;
+            if(shm.get(entity) != null) { //not all entities with sprites have attached shader
+                SpriteComponent spriteComponent = sm.get(entity);
+                if (withinSprite(spriteComponent.sprite, (int) x, (int) y)) {
+                    shm.get(entity).isActive = true;
+                } else {
+                    //turn off outline on other sprites
+                    shm.get(entity).isActive = false;
+                }
             }
         }
     }

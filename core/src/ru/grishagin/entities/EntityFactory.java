@@ -11,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import ru.grishagin.components.*;
 import ru.grishagin.components.stats.*;
+import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.components.tags.ImpassableComponent;
 import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.model.GameModel;
@@ -60,6 +61,35 @@ public class EntityFactory {
         entity.add(spriteComponent);
 
         entity.add(new ShaderComponent(ShaderType.OUTLINE));
+
+        return entity;
+    }
+
+    public static Entity makeNPC(){
+        Entity entity = makeBasicNPC();
+
+        entity.add(new SpriteComponent(new Sprite(AssetManager.instance.getTexture("npc/rathound.png"))));
+        entity.add(new HostileTag());
+
+        return postProcessNPC(entity);
+    }
+
+    private static Entity makeBasicNPC(){
+        Entity entity = new Entity();
+
+        entity.add(new PositionComponent(10, 10));
+        entity.add(new HealthComponent(100));
+        entity.add(new ImpassableComponent());
+
+        return entity;
+    }
+
+    private static Entity postProcessNPC(Entity entity){
+        if(entity.getComponent(HostileTag.class) != null){
+            entity.add(new ShaderComponent(ShaderType.OUTLINE));
+        } else if(entity.getComponent(InteractiveComponent.class) != null){
+            entity.add(new ShaderComponent(ShaderType.OUTLINE)); //TODO: add yellow outline
+        }
 
         return entity;
     }

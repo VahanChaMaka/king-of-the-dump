@@ -59,7 +59,7 @@ public class AssetManager {
     public Texture getTexture(String name){
         if(textures.containsKey(name)){
             return textures.get(name);
-        } else {
+        } else { //get texture by filename including path
             Texture newTexture = new Texture(name);
             textures.put(name, newTexture);
             return newTexture;
