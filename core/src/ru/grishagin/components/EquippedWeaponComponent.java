@@ -10,6 +10,7 @@ public class EquippedWeaponComponent implements Component {
 
     public EquippedWeaponComponent(Entity defaultWeapon) {
         this.defaultWeapon = defaultWeapon;
+        this.activeWeapon = defaultWeapon;
     }
 
     public void changeWeapon(Entity weapon){

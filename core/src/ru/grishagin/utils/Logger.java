@@ -7,7 +7,11 @@ public class Logger {
     private Logger(){
     }
 
-    public static void log(String message){
+    public static void warning(String message){
+        System.out.println("Warning! " + message);
+    }
+
+    public static void info(String message){
         System.out.println(message);
     }
 }

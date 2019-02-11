@@ -57,7 +57,7 @@ public class EntityFactory {
         entity.add(new ToxicityDoseComponent());
 
         Entity defaultWeapon = new Entity();
-        defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 1, 1, 1));
+        defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 5, 1, 1));
         entity.add(new EquippedWeaponComponent(defaultWeapon));
         entity.add(new EquippedArmorComponent());//empty armor, 0 defence
 
@@ -95,9 +95,11 @@ public class EntityFactory {
     private static Entity makeBasicNPC(){
         Entity entity = new Entity();
 
+        entity.add(new NameComponent("Rat"));
         entity.add(new PositionComponent(10, 10));
-        entity.add(new HealthComponent(100));
+        entity.add(new HealthComponent(15));
         entity.add(new ImpassableComponent());
+        entity.add(new InventoryComponent(10));
 
         return entity;
     }
@@ -183,7 +185,7 @@ public class EntityFactory {
             case Y:
                 return null;
             default:
-                Logger.log("Warning! Cannot create component \"" + componentName + "\"!");
+                Logger.warning("Cannot create component \"" + componentName + "\"!");
                 return null;
         }
     }

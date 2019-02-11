@@ -37,7 +37,7 @@ public class EquippedArmorComponent implements Component {
         if(suit.getComponent(ArmorComponent.class).type == ArmorComponent.ArmorType.SUIT) {
             this.suit = suit;
         } else {
-            Logger.log("Warning! Trying to wear head armor as suit!");
+            Logger.warning("Trying to wear head armor as suit!");
         }
     }
 
@@ -53,7 +53,7 @@ public class EquippedArmorComponent implements Component {
         if(head.getComponent(ArmorComponent.class).type == ArmorComponent.ArmorType.HEAD) {
             this.head = head;
         } else {
-            Logger.log("Warning! Trying to put a suit on the head!");
+            Logger.warning("Trying to put a suit on the head!");
         }
     }
 }

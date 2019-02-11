@@ -40,7 +40,7 @@ public class CombatSystem extends IteratingSystem {
         if(atm.get(entity) != null){
             Entity attackTarget = atm.get(entity).target;
             if(attackTarget != null){
-                if(wm.get(activeWeapon).range <= SystemHelper.getDistance(entity, attackTarget)){ //if target in weapon range
+                if(wm.get(activeWeapon).range >= SystemHelper.getDistance(entity, attackTarget)){ //if target in weapon range
                     if(equippedWeaponComponent.lastAttack >= attackSpeed) { //if last attack was long ago, a new one can be performed
                         int damage = calculateAttackResult(entity, attackTarget);
                         if (damage > 0) {
@@ -49,6 +49,11 @@ public class CombatSystem extends IteratingSystem {
                             if (targetHealth.health <= 0) {//target is dead
                                 markDead(attackTarget);
                             }
+
+                            Logger.info(entity.getComponent(NameComponent.class).name + " hits " +
+                                    attackTarget.getComponent(NameComponent.class) + " on " + damage +
+                                    ". Remained health is " + targetHealth.health);
+
                         } else if (damage == 0) {
 
                         } else { //negative damage means miss
@@ -56,12 +61,15 @@ public class CombatSystem extends IteratingSystem {
                         }
 
                         equippedWeaponComponent.lastAttack = 0;//mark attack as performed
+
+                        //stop attacking. Player have to click again, NPC should re-add target if it is still requred
+                        entity.remove(AttackTargetComponent.class);
                     }
                 } else {//if not in range come closer
                     entity.add(new DirectionComponent(attackTarget));
                 }
             } else {
-                Logger.log("Warning! Attack target is null!");
+                Logger.warning("Attack target is null!");
             }
         }
     }
@@ -92,11 +100,16 @@ public class CombatSystem extends IteratingSystem {
     }
 
     private void markDead(Entity entity){
+        Logger.info(entity.getComponent(NameComponent.class).name + " is dead");
+
         entity.remove(HealthComponent.class);
         entity.remove(VelocityComponent.class);
         entity.remove(InteractionComponent.class);
 
-        entity.add(new InteractiveComponent(new TransferAction(), 0)); //allow to take a loot
+        //if there is some items, allow to take a loot
+        if(entity.getComponent(InventoryComponent.class) != null) {
+            entity.add(new InteractiveComponent(new TransferAction(), 0));
+        }
     }
 
 }
