@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import ru.grishagin.components.*;
+import ru.grishagin.components.items.ArmorComponent;
+import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.components.stats.*;
 import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.components.tags.ImpassableComponent;
@@ -18,6 +20,7 @@ import ru.grishagin.model.GameModel;
 import ru.grishagin.model.actions.Action;
 import ru.grishagin.model.actions.TransferAction;
 import ru.grishagin.utils.AssetManager;
+import ru.grishagin.utils.Logger;
 
 import java.util.Iterator;
 
@@ -53,6 +56,11 @@ public class EntityFactory {
         entity.add(new RadDoseComponent());
         entity.add(new ToxicityDoseComponent());
 
+        Entity defaultWeapon = new Entity();
+        defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 1, 1, 1));
+        entity.add(new EquippedWeaponComponent(defaultWeapon));
+        entity.add(new EquippedArmorComponent());//empty armor, 0 defence
+
         Sprite sprite = new Sprite(AssetManager.instance.getTexture("player.png"));
         sprite.setSize(32, 32);
         SpriteComponent spriteComponent = new SpriteComponent(sprite);
@@ -70,6 +78,16 @@ public class EntityFactory {
 
         entity.add(new SpriteComponent(new Sprite(AssetManager.instance.getTexture("npc/rathound.png"))));
         entity.add(new HostileTag());
+
+        Entity defaultWeapon = new Entity();
+        defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 1, 1, 1));
+        entity.add(new EquippedWeaponComponent(defaultWeapon));
+
+        Entity suit = new Entity();
+        suit.add(new ArmorComponent(ArmorComponent.ArmorType.SUIT, 1, 0));
+        EquippedArmorComponent equippedArmor = new EquippedArmorComponent();
+        equippedArmor.changeSuit(suit);
+        entity.add(equippedArmor);//empty armor, 0 defence
 
         return postProcessNPC(entity);
     }
@@ -156,8 +174,16 @@ public class EntityFactory {
                 return new InventoryComponent((int)rawComponentData);
             case ITEMS:
                 return null;//items is not a component, but in the same property map
+            //skip some properties from tmx map
+            case GID:
+            case ID:
+            case WIDTH:
+            case HEIGHT:
+            case X:
+            case Y:
+                return null;
             default:
-                System.out.println("Warning! Cannot create component \"" + componentName + "\"!");
+                Logger.log("Warning! Cannot create component \"" + componentName + "\"!");
                 return null;
         }
     }

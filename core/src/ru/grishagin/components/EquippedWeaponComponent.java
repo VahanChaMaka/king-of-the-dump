@@ -3,12 +3,12 @@ package ru.grishagin.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 
-public class ArmedWeaponComponent implements Component {
+public class EquippedWeaponComponent implements Component {
     public final Entity defaultWeapon;
     public Entity activeWeapon;
     public float lastAttack; //time past since last attack
 
-    public ArmedWeaponComponent(Entity defaultWeapon) {
+    public EquippedWeaponComponent(Entity defaultWeapon) {
         this.defaultWeapon = defaultWeapon;
     }
 

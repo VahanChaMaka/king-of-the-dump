@@ -10,4 +10,9 @@ public class InteractiveComponent implements Component {
     public InteractiveComponent(Action action) {
         this.action = action;
     }
+
+    public InteractiveComponent(Action action, int range) {
+        this.action = action;
+        this.range = range;
+    }
 }

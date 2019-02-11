@@ -10,6 +10,7 @@ import ru.grishagin.entities.EntityFactory;
 import ru.grishagin.entities.ItemFactory;
 import ru.grishagin.model.map.MapFactory;
 import ru.grishagin.model.map.TiledBasedMap;
+import ru.grishagin.systems.CombatSystem;
 import ru.grishagin.systems.InteractionSystem;
 import ru.grishagin.systems.InventorySystem;
 import ru.grishagin.systems.MovementSystem;
@@ -22,7 +23,7 @@ public class GameModel {
 
     public final Calendar date;
     public final Engine engine;
-    public final InventorySystem inventorySystem = new InventorySystem();
+    public final InventorySystem inventorySystem = new InventorySystem(); //direct access to the system from different places
     private TiledBasedMap currentMap;
 
     private GameModel(){
@@ -38,6 +39,7 @@ public class GameModel {
         engine.addSystem(inventorySystem);
         engine.addSystem(new MovementSystem());
         engine.addSystem(new InteractionSystem());
+        engine.addSystem(new CombatSystem());
     }
 
     private void initBasicEntities(){
