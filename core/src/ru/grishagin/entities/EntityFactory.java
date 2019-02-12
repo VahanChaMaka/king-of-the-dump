@@ -23,12 +23,19 @@ import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class EntityFactory {
 
     private static final String NAME = "name";
     private static final String ACTION = "action";
     private static final String INVENTORY = "inventory";
+    private static final String HOSTILE = "hostile";
+    private static final String HEALTH = "health";
+    private static final String WEAPON = "weapon";
+    private static final String ARMOR = "armor";
+    private static final String LOOT = "loot";
     private static final String ITEMS = "items";
     private static final String GID = "gid";
     private static final String WIDTH = "width";
@@ -71,6 +78,22 @@ public class EntityFactory {
         entity.add(new ShaderComponent(ShaderType.OUTLINE));
 
         return entity;
+    }
+
+    public static Entity makeNPC(int id, int x, int y){
+        Entity npc = new Entity();
+
+        npc.add(new PositionComponent(x, y));
+        npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getTexture("npc/rathound.png")))); //TODO: resolve sprite by id
+        npc.add(new ImpassableComponent());
+
+        Map<String, Object> npcConfig = AssetManager.instance.readFromJson(ITEMS).get(String.valueOf(id));
+        for (String componentName : npcConfig.keySet()) {
+            Component component = makeComponent(componentName, npcConfig.get(componentName));
+            npc.add(component);
+        }
+
+        return npc;
     }
 
     public static Entity makeNPC(){
@@ -174,6 +197,42 @@ public class EntityFactory {
                 return new InteractiveComponent(makeAction((String) rawComponentData));
             case INVENTORY:
                 return new InventoryComponent((int)rawComponentData);
+            case HOSTILE:
+                return new HostileTag();
+            case WEAPON:
+                return new EquippedWeaponComponent(ItemFactory.getItem((int)rawComponentData));
+            case ARMOR: //armor is stored as array of ids of armor items
+                Entity suit = null;
+                Entity head = null;
+                for (Integer armorId : (List<Integer>) rawComponentData) {//iterate over all listed armors
+                    Entity armorItem = ItemFactory.getItem(armorId);
+                    if(armorItem.getComponent(ArmorComponent.class).type == ArmorComponent.ArmorType.SUIT){
+                        if(suit != null){
+                            Logger.warning("Suit already exists! It is overridden by " + armorId);
+                        }
+                        suit = armorItem;
+                    } else if(armorItem.getComponent(ArmorComponent.class).type == ArmorComponent.ArmorType.HEAD){
+                        if(head != null){
+                            Logger.warning("Head already exists! It is overridden by " + armorId);
+                        }
+                        head = armorItem;
+                    } else {
+                        Logger.warning(armorId + " is not suit or head!");
+                    }
+                }
+
+                //if armor element is not specified or some errors occured, create an empty armor element
+                if(suit == null){
+                    suit = new Entity();
+                    suit.add(new ArmorComponent(ArmorComponent.ArmorType.SUIT, 0, 0));
+                }
+
+                if(head == null){
+                    head = new Entity();
+                    head.add(new ArmorComponent(ArmorComponent.ArmorType.HEAD, 0, 0));
+                }
+
+                return new EquippedArmorComponent(suit, head);
             case ITEMS:
                 return null;//items is not a component, but in the same property map
             //skip some properties from tmx map

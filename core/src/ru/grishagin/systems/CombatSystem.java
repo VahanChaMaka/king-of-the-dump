@@ -27,7 +27,7 @@ public class CombatSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         EquippedWeaponComponent equippedWeaponComponent = ewm.get(entity); //container for weapon entity
-        Entity activeWeapon = equippedWeaponComponent.activeWeapon; //a weapon itself
+        Entity activeWeapon = equippedWeaponComponent.weapon; //a weapon itself
         int attackSpeed = wm.get(activeWeapon).speed;
 
         //for every entity with weapon update last attack time
@@ -75,7 +75,7 @@ public class CombatSystem extends IteratingSystem {
     }
 
     private int calculateAttackResult(Entity attacker, Entity defender){
-        WeaponComponent weapon = wm.get(ewm.get(attacker).activeWeapon);
+        WeaponComponent weapon = wm.get(ewm.get(attacker).weapon);
         Entity headArmor = eam.get(defender).getHead();
         Entity suitArmor = eam.get(defender).getSuit();
 

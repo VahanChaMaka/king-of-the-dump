@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static ru.grishagin.utils.AssetManager.ITEMS;
+
 public class ItemFactory {
-    private static final String ITEMS = "properties/items.json";
     private static final String NAME = "name";
     public static final String ID = "id";
     private static final String DESCRIPTION = "description";

@@ -9,28 +9,25 @@ public class EquippedArmorComponent implements Component {
     private Entity suit;
     private Entity head;
 
-    private Entity defaultSuit;
-    private Entity defaultHead;
-
     public EquippedArmorComponent(){
-        defaultSuit = new Entity();
-        defaultSuit.add(new ArmorComponent(ArmorComponent.ArmorType.SUIT, 0, 0));
+        suit = new Entity();
+        suit.add(new ArmorComponent(ArmorComponent.ArmorType.SUIT, 0, 0));
 
-        defaultHead = new Entity();
-        defaultHead.add(new ArmorComponent(ArmorComponent.ArmorType.HEAD, 0, 0));
+        head = new Entity();
+        head.add(new ArmorComponent(ArmorComponent.ArmorType.HEAD, 0, 0));
     }
 
-    public EquippedArmorComponent(Entity defaultSuit, Entity defaultHead) {
-        this.defaultSuit = defaultSuit;
-        this.defaultHead = defaultHead;
+    public EquippedArmorComponent(Entity suit, Entity head) {
+        this.suit = suit;
+        this.head = head;
     }
 
     public Entity getSuit() {
-        if(suit != null){
-            return suit;
-        } else {
-            return defaultSuit;
-        }
+        return suit;
+    }
+
+    public Entity getHead() {
+        return head;
     }
 
     public void changeSuit(Entity suit) {
@@ -38,14 +35,6 @@ public class EquippedArmorComponent implements Component {
             this.suit = suit;
         } else {
             Logger.warning("Trying to wear head armor as suit!");
-        }
-    }
-
-    public Entity getHead() {
-        if(head != null) {
-            return head;
-        } else {
-            return defaultHead;
         }
     }
 

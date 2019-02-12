@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.grishagin.components.ShaderType;
 
@@ -28,6 +29,10 @@ public class AssetManager {
     private static String TILES_ATLAS = "tiles/tileset";
     private static String ICONS_ATLAS = "ui/icons/icons";
     private static String DAYR_UI = "ui/DayR/DayRSkin";
+
+    //properties files
+    public static final String NPC = "properties/npc.json";
+    public static final String ITEMS = "properties/items.json";
 
     public static final String UI_BACKGROUND = "ui/old_paper.jpg";
 
@@ -127,7 +132,9 @@ public class AssetManager {
 
     public Map<String, Map<String, Object>> readFromJson(String jsonName){
         try {
-            return new ObjectMapper().readValue(Gdx.files.internal(jsonName).read(), HashMap.class);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+            return mapper.readValue(Gdx.files.internal(jsonName).read(), HashMap.class);
         } catch (IOException exception){
             System.out.println("Error while reading " + jsonName + "!");
             throw new RuntimeException(exception);
