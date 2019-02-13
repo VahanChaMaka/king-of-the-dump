@@ -46,6 +46,8 @@ public class EntityFactory {
 
     private static final String TRANSFER_ACTION = "transfer";
 
+    private static final int DEFAULT_MAX_WEIGHT = 100;
+
     private static ComponentMapper<InventoryComponent> im = ComponentMapper.getFor(InventoryComponent.class);
 
     public static Entity makePlayer(int x, int y){
@@ -87,7 +89,7 @@ public class EntityFactory {
         npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getTexture("npc/rathound.png")))); //TODO: resolve sprite by id
         npc.add(new ImpassableComponent());
 
-        Map<String, Object> npcConfig = AssetManager.instance.readFromJson(ITEMS).get(String.valueOf(id));
+        Map<String, Object> npcConfig = AssetManager.instance.readFromJson(AssetManager.NPC).get(String.valueOf(id));
         for (String componentName : npcConfig.keySet()) {
             Component component = makeComponent(componentName, npcConfig.get(componentName));
             npc.add(component);
@@ -199,6 +201,8 @@ public class EntityFactory {
                 return new InventoryComponent((int)rawComponentData);
             case HOSTILE:
                 return new HostileTag();
+            case HEALTH:
+                return new HealthComponent((int)rawComponentData);
             case WEAPON:
                 return new EquippedWeaponComponent(ItemFactory.getItem((int)rawComponentData));
             case ARMOR: //armor is stored as array of ids of armor items
@@ -233,6 +237,13 @@ public class EntityFactory {
                 }
 
                 return new EquippedArmorComponent(suit, head);
+            case LOOT:
+                InventoryComponent inventory = new InventoryComponent(DEFAULT_MAX_WEIGHT);
+                Map<String, Integer> lootIds = (Map<String, Integer>)rawComponentData;
+                for (String lootId : lootIds.keySet()) {
+                    inventory.items.add(ItemFactory.getItem(Integer.valueOf(lootId), lootIds.get(lootId)));
+                }
+                return inventory;
             case ITEMS:
                 return null;//items is not a component, but in the same property map
             //skip some properties from tmx map

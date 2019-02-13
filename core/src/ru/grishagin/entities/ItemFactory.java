@@ -2,19 +2,14 @@ package ru.grishagin.entities;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.utils.ObjectMap;
 import ru.grishagin.components.DescriptionComponent;
 import ru.grishagin.components.NameComponent;
 import ru.grishagin.components.TypeIdComponent;
-import ru.grishagin.components.items.AmountComponent;
-import ru.grishagin.components.items.ConsumableComponent;
-import ru.grishagin.components.items.DestroyableComponent;
-import ru.grishagin.components.items.WeightComponent;
+import ru.grishagin.components.items.*;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.ComponentNotFoundException;
 import ru.grishagin.utils.ObjectNotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +25,14 @@ public class ItemFactory {
     private static final String DESTROYABLE = "destroyable";
     private static final String DESTROYABLE_MANUALLY = "destroyableManually";
     public static final String AMOUNT = "amount";
+    public static final String TYPE = "type";
+    public static final String WEAPON = "weapon";
+    public static final String WEAPON_DAMAGE = "damage";
+    public static final String WEAPON_SPEED = "speed";
+    public static final String WEAPON_RANGE = "range";
+    public static final String ARMOR = "armor";
+    public static final String MELEE_RESISTANCE = "melee";
+    public static final String FIREARM_RESISTANCE = "firearm";
 
     public static Entity getItem(int id){
         return getItem(id, 1);
@@ -107,6 +110,17 @@ public class ItemFactory {
                 return new ConsumableComponent();
             case DESTROYABLE:
                 return new DestroyableComponent(((Map)rawComponentData).containsKey(DESTROYABLE_MANUALLY));
+            case WEAPON:
+                Map<String, Object> weaponData = (Map<String, Object>)rawComponentData;
+                return new WeaponComponent(WeaponComponent.DamageType.valueOf(((String)weaponData.get(TYPE)).toUpperCase()),
+                        (int)weaponData.get(WEAPON_DAMAGE),
+                        (int)weaponData.get(WEAPON_RANGE),
+                        (int)weaponData.get(WEAPON_SPEED));
+            case ARMOR:
+                Map<String, Object> armorData = (Map<String, Object>)rawComponentData;
+                return new ArmorComponent(ArmorComponent.ArmorType.valueOf(((String)armorData.get(TYPE)).toUpperCase()),
+                        (int)armorData.get(MELEE_RESISTANCE),
+                        (int)armorData.get(FIREARM_RESISTANCE));
             default:
                 throw new ComponentNotFoundException("Loading item's components failed! Couldn't load component: \""
                         + componentName + "\"");

@@ -52,7 +52,9 @@ public class GameModel {
         inventorySystem.addItem(chest, ItemFactory.getItem(1001));
         engine.addEntity(chest);*/
 
-        engine.addEntity(EntityFactory.makeNPC());
+        //engine.addEntity(EntityFactory.makeNPC());
+        engine.addEntity(EntityFactory.makeNPC(0, 20, 20));
+        engine.addEntity(EntityFactory.makeNPC(100, 15, 15));
 
         for (MapObject object : currentMap.getObjects()) {
             engine.addEntity(EntityFactory.makeEntity(object, currentMap.getMap()));
