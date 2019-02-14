@@ -86,13 +86,17 @@ public class EntityFactory {
         Entity npc = new Entity();
 
         npc.add(new PositionComponent(x, y));
-        npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getTexture("npc/rathound.png")))); //TODO: resolve sprite by id
+        npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getNPCImage(id))));
         npc.add(new ImpassableComponent());
 
         Map<String, Object> npcConfig = AssetManager.instance.readFromJson(AssetManager.NPC).get(String.valueOf(id));
         for (String componentName : npcConfig.keySet()) {
             Component component = makeComponent(componentName, npcConfig.get(componentName));
             npc.add(component);
+        }
+
+        if(npc.getComponent(HostileTag.class) != null){
+            npc.add(new ShaderComponent(ShaderType.OUTLINE));
         }
 
         return npc;

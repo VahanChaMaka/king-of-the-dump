@@ -119,6 +119,9 @@ public class AssetManager {
         return region;
     }
 
+    public Texture getNPCImage(int id){
+        return getTexture("npc/" + id + "/sprite.png");
+    }
 
     private TextureAtlas getAtlas(String name){
         if (atlases.containsKey(name)){

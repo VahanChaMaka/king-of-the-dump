@@ -4,6 +4,7 @@
     "hostile": true,
     "health": 5,
     "weapon": 300,
+    "armor": [],
     "loot": {
       "104": 1
     }

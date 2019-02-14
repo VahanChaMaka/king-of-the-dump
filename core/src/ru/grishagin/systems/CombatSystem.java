@@ -8,6 +8,7 @@ import ru.grishagin.components.*;
 import ru.grishagin.components.items.ArmorComponent;
 import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.components.stats.HealthComponent;
+import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.model.actions.TransferAction;
 import ru.grishagin.utils.Logger;
 
@@ -40,20 +41,21 @@ public class CombatSystem extends IteratingSystem {
         if(atm.get(entity) != null){
             Entity attackTarget = atm.get(entity).target;
             if(attackTarget != null){
-                if(wm.get(activeWeapon).range >= SystemHelper.getDistance(entity, attackTarget)){ //if target in weapon range
+                float distance = SystemHelper.getDistance(entity, attackTarget);
+                if(wm.get(activeWeapon).range >= distance){ //if target in weapon range
                     if(equippedWeaponComponent.lastAttack >= attackSpeed) { //if last attack was long ago, a new one can be performed
                         int damage = calculateAttackResult(entity, attackTarget);
                         if (damage > 0) {
                             HealthComponent targetHealth = hm.get(attackTarget);
                             targetHealth.health = targetHealth.health - damage;
-                            if (targetHealth.health <= 0) {//target is dead
-                                markDead(attackTarget);
-                            }
 
                             Logger.info(entity.getComponent(NameComponent.class).name + " hits " +
                                     attackTarget.getComponent(NameComponent.class) + " on " + damage +
                                     ". Remained health is " + targetHealth.health);
 
+                            if (targetHealth.health <= 0) {//target is dead
+                                markDead(attackTarget);
+                            }
                         } else if (damage == 0) {
 
                         } else { //negative damage means miss
@@ -105,6 +107,7 @@ public class CombatSystem extends IteratingSystem {
         entity.remove(HealthComponent.class);
         entity.remove(VelocityComponent.class);
         entity.remove(InteractionComponent.class);
+        entity.remove(HostileTag.class);
 
         //if there is some items, allow to take a loot
         if(entity.getComponent(InventoryComponent.class) != null) {

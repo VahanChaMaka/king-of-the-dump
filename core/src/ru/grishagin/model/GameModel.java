@@ -53,8 +53,8 @@ public class GameModel {
         engine.addEntity(chest);*/
 
         //engine.addEntity(EntityFactory.makeNPC());
-        engine.addEntity(EntityFactory.makeNPC(0, 20, 20));
-        engine.addEntity(EntityFactory.makeNPC(100, 15, 15));
+        engine.addEntity(EntityFactory.makeNPC(0, 5, 5));
+        engine.addEntity(EntityFactory.makeNPC(100, 6, 7));
 
         for (MapObject object : currentMap.getObjects()) {
             engine.addEntity(EntityFactory.makeEntity(object, currentMap.getMap()));
