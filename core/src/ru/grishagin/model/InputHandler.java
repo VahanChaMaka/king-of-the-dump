@@ -19,6 +19,7 @@ public class InputHandler {
     private ComponentMapper<ShaderComponent> shm = ComponentMapper.getFor(ShaderComponent.class);
     private ComponentMapper<InteractiveComponent> im = ComponentMapper.getFor(InteractiveComponent.class);
     private ComponentMapper<HostileTag> hm = ComponentMapper.getFor(HostileTag.class);
+    private ComponentMapper<AttackTargetComponent> atm = ComponentMapper.getFor(AttackTargetComponent.class);
 
     private Engine engine;
     private TiledRenderingEngine map;
@@ -40,6 +41,7 @@ public class InputHandler {
                     isSomeActionHappens = true;
                 } else if(hm.get(entity) != null){//if clicked target is an enemy, attack it
                     player.add(new AttackTargetComponent(entity));
+                    isSomeActionHappens = true;
                 }
             } else {
                 //do nothing
@@ -49,6 +51,12 @@ public class InputHandler {
         //is no interaction happens, move player
         //convert from ortho world-coords to iso-game coords
         if(!isSomeActionHappens){
+
+            //if player previously attacked someone, cancel it
+            if(atm.get(player) != null){
+                player.remove(AttackTargetComponent.class);
+            }
+
             y = y - map.getTileHeight()/2; //world-coord and iso-coord center are shifted a little
 
             float _x, _y;
