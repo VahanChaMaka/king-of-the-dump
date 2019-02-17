@@ -70,11 +70,11 @@ public class EntityFactory {
         entity.add(new EquippedWeaponComponent(defaultWeapon));
         entity.add(new EquippedArmorComponent());//empty armor, 0 defence
 
-        Sprite sprite = new Sprite(AssetManager.instance.getTexture("player.png"));
+        Sprite sprite = new Sprite(AssetManager.instance.getTexture("player/0.png"));
         sprite.setSize(32, 32);
         SpriteComponent spriteComponent = new SpriteComponent(sprite);
-        spriteComponent.offset.x = -16;
-        spriteComponent.offset.y = 16;
+        spriteComponent.offset.x = 8;
+        spriteComponent.offset.y = 8;
         entity.add(spriteComponent);
 
         entity.add(new ShaderComponent(ShaderType.OUTLINE));

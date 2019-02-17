@@ -3,6 +3,7 @@ package ru.grishagin.view;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.ShaderComponent;
 import ru.grishagin.components.SpriteComponent;
+import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.ShaderHelper;
 
 import java.util.Map;
@@ -65,6 +67,12 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
         float posX =  y * 32;
         renderPosition.x = (posX - posY);
         renderPosition.y = (posX + posY) / 2;
+
+        //FOR DEVELOPMENT ONLY!
+        Sprite s = new Sprite(AssetManager.instance.getTexture("tiles/red.png"));
+        s.setAlpha(0.5f);
+        batch.draw(s, renderPosition.x, renderPosition.y);
+        ///
 
         batch.end();
 
