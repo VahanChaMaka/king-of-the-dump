@@ -24,6 +24,7 @@ public class GameModel {
     public final Calendar date;
     public final Engine engine;
     public final InventorySystem inventorySystem = new InventorySystem(); //direct access to the system from different places
+    public final MovementSystem movementSystem = new MovementSystem(); //same system for all maps. Call init() to change map
     private TiledBasedMap currentMap;
 
     private GameModel(){
@@ -37,7 +38,8 @@ public class GameModel {
 
     private void initSystems(){
         engine.addSystem(inventorySystem);
-        engine.addSystem(new MovementSystem());
+        engine.addSystem(movementSystem);
+        movementSystem.setMap(currentMap);
         engine.addSystem(new InteractionSystem());
         engine.addSystem(new CombatSystem());
     }
@@ -53,7 +55,7 @@ public class GameModel {
         engine.addEntity(chest);*/
 
         //engine.addEntity(EntityFactory.makeNPC());
-        engine.addEntity(EntityFactory.makeNPC(0, 5, 5));
+        engine.addEntity(EntityFactory.makeNPC(0, 6, 5));
         engine.addEntity(EntityFactory.makeNPC(100, 6, 7));
 
         for (MapObject object : currentMap.getObjects()) {

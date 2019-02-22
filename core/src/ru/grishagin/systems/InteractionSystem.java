@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import ru.grishagin.components.DirectionComponent;
+import ru.grishagin.components.DestinationComponent;
 import ru.grishagin.components.InteractionComponent;
 import ru.grishagin.components.InteractiveComponent;
 import ru.grishagin.components.PositionComponent;
@@ -28,11 +28,11 @@ public class InteractionSystem extends IteratingSystem {
         //check if we are close enough
         if(Math.abs((int)interactionAimPosition.x - (int)interactorPosition.x) > 1
                 || Math.abs((int)interactionAimPosition.y - (int)interactorPosition.y) > 1){ //too far from interaction aim, need to go closer
-            entity.add(new DirectionComponent(interactionAimPosition.x, interactionAimPosition.y));
+            entity.add(new DestinationComponent(interactionAimPosition.x, interactionAimPosition.y));
         } else {
             interactiveMapper.get(interactionAim.aim).action.execute(entity, interactionAim.aim);
             entity.remove(InteractionComponent.class);
-            entity.remove(DirectionComponent.class);
+            entity.remove(DestinationComponent.class);
         }
     }
 }

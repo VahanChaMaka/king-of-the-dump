@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.grishagin.components.*;
 import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.components.tags.PlayerControlled;
-import ru.grishagin.entities.EntityFactory;
 import ru.grishagin.view.TiledRenderingEngine;
 
 public class InputHandler {
@@ -68,7 +67,7 @@ public class InputHandler {
             //yes, tileX = -_y/32. Screen and game coordinates are twisted
             tileX = -_y/map.getTileHeight();
             tileY = _x/map.getTileHeight();
-            player.add(new DirectionComponent(tileX, tileY));
+            player.add(new DestinationComponent((int)tileX, (int)tileY));
         }
     }
 

@@ -68,7 +68,8 @@ public class CombatSystem extends IteratingSystem {
                         entity.remove(AttackTargetComponent.class);
                     }
                 } else {//if not in range come closer
-                    entity.add(new DirectionComponent(attackTarget));
+
+                    entity.add(new DestinationComponent(attackTarget));
                 }
             } else {
                 Logger.warning("Attack target is null!");

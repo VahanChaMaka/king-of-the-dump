@@ -1,128 +1,126 @@
 package ru.grishagin.systems;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.ai.pfa.PathSmoother;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.math.Vector2;
-import ru.grishagin.components.DirectionComponent;
+import ru.grishagin.components.DestinationComponent;
+import ru.grishagin.components.NameComponent;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.VelocityComponent;
-import ru.grishagin.components.tags.ImpassableComponent;
-import ru.grishagin.model.GameModel;
-import ru.grishagin.model.map.MapPropertiesHelper;
+import ru.grishagin.model.map.TiledBasedMap;
+import ru.grishagin.systems.patfinding.*;
+import ru.grishagin.utils.Logger;
 
 public class MovementSystem extends IteratingSystem {
 
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
-    private ComponentMapper<DirectionComponent> dm = ComponentMapper.getFor(DirectionComponent.class);
+    private ComponentMapper<DestinationComponent> dm = ComponentMapper.getFor(DestinationComponent.class);
+
+    TiledGraph<FlatTiledNode> mapGraph;
+    TiledManhattanDistance<FlatTiledNode> heuristic;
+    IndexedAStarPathFinder<FlatTiledNode> pathFinder;
+    PathSmoother<FlatTiledNode, Vector2> pathSmoother;
 
     public MovementSystem(){
-        super(Family.all(DirectionComponent.class, PositionComponent.class, VelocityComponent.class).get());
+        super(Family.all(DestinationComponent.class, PositionComponent.class, VelocityComponent.class).get());
+    }
+
+    public void setMap(TiledBasedMap map){
+        //convert map to graph
+        mapGraph = new FlatTiledGraph();
+        mapGraph.init(map);
+
+        heuristic = new TiledManhattanDistance<FlatTiledNode>();
+        //pathSmoother = new PathSmoother<FlatTiledNode, Vector2>(new TiledRaycastCollisionDetector<FlatTiledNode>());
+        pathFinder = new IndexedAStarPathFinder<FlatTiledNode>(mapGraph, true);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent position = pm.get(entity);
         VelocityComponent velocity = vm.get(entity);
+        DestinationComponent destination = dm.get(entity);
 
-        if(canMakeStep(position, dm.get(entity))) {
-            setVelocity(entity);
-        } else {
+        if(destination.path == null){
+            TiledSmoothableGraphPath path = buildPath(position, destination);
+            destination.path = path;
+            Logger.info("Path for " + entity.getComponent(NameComponent.class) + " is built");
+        }
+
+        if(position.x == destination.x && position.y == destination.y){
             stop(entity);
+        } else {
+            followPath(entity);
         }
 
         position.x += velocity.x*deltaTime;
         position.y += velocity.y*deltaTime;
     }
 
-    private void setVelocity(Entity entity){
+    private void followPath(Entity entity){
         PositionComponent position = pm.get(entity);
-        DirectionComponent direction = dm.get(entity);
         VelocityComponent velocity = vm.get(entity);
+        DestinationComponent destination = dm.get(entity);
 
-        float deltaX = Math.abs(direction.x - position.x);
-        float deltaY = Math.abs(direction.y - position.y);
-        float distance = (float)Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+        FlatTiledNode currentNode = mapGraph.getNode((int)position.x, (int)position.y);
+        for (int i = 0; i < destination.path.nodes.size - 1; i++) { //entity cannot follow path if it has position == destination
+            FlatTiledNode node = destination.path.nodes.get(i);
+            //find node in the path where entity currently is standing on
+            if(node.x == currentNode.x && node.y == currentNode.y){
+                FlatTiledNode nextPathNode = destination.path.nodes.get(i + 1);
 
-        if(distance != 0) {
-            //timer.setScaleFactor(Timer.QUICK_SCALE);//speed up time
+                float deltaX = Math.abs(nextPathNode.x - position.x);
+                float deltaY = Math.abs(nextPathNode.y - position.y);
+                float distance = (float)Math.sqrt(deltaX*deltaX + deltaY*deltaY);
 
-            float sin, cos;
-            sin = deltaY / distance;
-            cos = deltaX / distance;
+                if(distance != 0) {
+                    float sin, cos;
+                    sin = deltaY / distance;
+                    cos = deltaX / distance;
 
-            velocity.x = velocity.speed * cos;
-            velocity.y = velocity.speed * sin;
+                    velocity.x = velocity.speed * cos;
+                    velocity.y = velocity.speed * sin;
 
-            if (Math.abs(direction.x - position.x) > 0.1f) {
-                if (direction.x - position.x < 0) {
-                    velocity.x = -velocity.x;
+                    if (Math.abs(nextPathNode.x - position.x) > 0.1f) {
+                        if (nextPathNode.x - position.x < 0) {
+                            velocity.x = -velocity.x;
+                        }
+                    } else {
+                        position.x = nextPathNode.x;
+                        velocity.x = 0;
+                    }
+
+                    if (Math.abs(nextPathNode.y - position.y) > 0.1f) {
+                        if (nextPathNode.y - position.y < 0) {
+                            velocity.y = -velocity.y;
+                        }
+                    } else {
+                        position.y = nextPathNode.y;
+                        velocity.y = 0;
+                    }
                 }
-            } else {
-                position.x = direction.x;
-                velocity.x = 0;
             }
-
-            if (Math.abs(direction.y - position.y) > 0.1f) {
-                if (direction.y - position.y < 0) {
-                    velocity.y = -velocity.y;
-                }
-            } else {
-                position.y = direction.y;
-                velocity.y = 0;
-            }
-
-            /*if(position.x == direction.x && position.y == direction.y){
-                //pers have stopped, back to normal time
-                timer.setScaleFactor(Timer.NORMAL_SCALE);
-            }*/
-        } else {
-            stop(entity);
         }
     }
 
     private void stop(Entity entity){
-        entity.remove(DirectionComponent.class);
+        entity.remove(DestinationComponent.class);
         VelocityComponent velocity = vm.get(entity);
         velocity.x = 0;
         velocity.y = 0;
     }
 
-    private boolean canMakeStep(PositionComponent position, DirectionComponent direction){
-        int nextCelly;
-        int nextCellx;
+    private TiledSmoothableGraphPath buildPath(PositionComponent position, DestinationComponent destination){
+        FlatTiledNode startNode = mapGraph.getNode((int)position.x, (int)position.y);
+        FlatTiledNode endNode = mapGraph.getNode((int)destination.x, (int)destination.y);
 
-        //calculate next cell to visit
-        if((int)direction.x - (int)position.x > 0){
-            nextCellx = (int)position.x + 1;
-        } else if((int)direction.x - (int)position.x < 0){
-            nextCellx = (int)position.x - 1;
-        } else {
-            nextCellx = (int)position.x;
-        }
-
-        if((int)direction.y - (int)position.y> 0){
-            nextCelly = (int)position.y + 1;
-        } else if((int)direction.y - (int)position.y < 0){
-            nextCelly = (int)position.y - 1;
-        } else {
-            nextCelly = (int)position.y;
-        }
-
-        //is there any entity blocking pass
-        ImmutableArray<Entity> impassableObjects = getEngine().getEntitiesFor(Family.all(ImpassableComponent.class).get());
-        for (int i = 0; i < impassableObjects.size(); i++) {
-            if (pm.get(impassableObjects.get(i)).x == nextCellx &&
-                    pm.get(impassableObjects.get(i)).y == nextCelly){
-                return false;
-            }
-        }
-
-        //if there is no blocking entities check cell
-        return MapPropertiesHelper.isWalkable(GameModel.instance.getCurrentMap(), nextCellx, nextCelly);
+        TiledSmoothableGraphPath<FlatTiledNode> path = new TiledSmoothableGraphPath<FlatTiledNode>();
+        pathFinder.searchNodePath(startNode, endNode, heuristic, path);
+        return path;
     }
 }
