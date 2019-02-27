@@ -16,6 +16,7 @@ import ru.grishagin.systems.patfinding.*;
 import ru.grishagin.utils.Logger;
 
 public class MovementSystem extends IteratingSystem {
+    private static final float STOP_PRECISION = 0.1f;
 
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
@@ -49,10 +50,10 @@ public class MovementSystem extends IteratingSystem {
         if(destination.path == null){
             TiledSmoothableGraphPath path = buildPath(position, destination);
             destination.path = path;
-            Logger.info("Path for " + entity.getComponent(NameComponent.class) + " is built");
+            Logger.info("Path for " + entity.getComponent(NameComponent.class) + " is built. Destination is " + destination.x + ", " + destination.y);
         }
 
-        if(position.x == destination.x && position.y == destination.y){
+        if(Math.abs(position.x - destination.x) < STOP_PRECISION && Math.abs(position.y - destination.y) < STOP_PRECISION){
             stop(entity);
         } else {
             followPath(entity);
