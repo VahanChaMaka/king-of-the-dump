@@ -19,6 +19,7 @@ import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.model.actions.Action;
 import ru.grishagin.model.actions.TransferAction;
+import ru.grishagin.model.map.MapPropertiesHelper;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
 
@@ -41,8 +42,8 @@ public class EntityFactory {
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
     private static final String ID = "id";
-    private static final String X = "x";
-    private static final String Y = "y";
+    public static final String X = "x";
+    public static final String Y = "y";
 
     private static final String TRANSFER_ACTION = "transfer";
 
@@ -158,8 +159,7 @@ public class EntityFactory {
     public static Entity makeEntity(MapObject object, TiledMap map){
         Entity entity = new Entity();
 
-        Vector2 position = new Vector2((float)object.getProperties().get(X)/32 - 1, //items is misplaced a little
-                (float)object.getProperties().get(Y)/32);
+        Vector2 position = MapPropertiesHelper.convertObjectMapCoordsToInternal(object);
         entity.add(new PositionComponent(position));
 
         //make components from specific properties
