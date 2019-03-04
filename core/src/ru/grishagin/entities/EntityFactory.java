@@ -85,6 +85,7 @@ public class EntityFactory {
     public static Entity makeNPC(int id, int x, int y){
         Entity npc = new Entity();
 
+        npc.add(new TypeIdComponent(id));
         npc.add(new PositionComponent(x, y));
         npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getNPCImage(id))));
         npc.add(new ImpassableComponent());

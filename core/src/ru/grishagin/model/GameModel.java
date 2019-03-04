@@ -3,6 +3,7 @@ package ru.grishagin.model;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import ru.grishagin.components.tags.PlayerControlled;
@@ -10,10 +11,8 @@ import ru.grishagin.entities.EntityFactory;
 import ru.grishagin.entities.ItemFactory;
 import ru.grishagin.model.map.MapFactory;
 import ru.grishagin.model.map.TiledBasedMap;
-import ru.grishagin.systems.CombatSystem;
-import ru.grishagin.systems.InteractionSystem;
-import ru.grishagin.systems.InventorySystem;
-import ru.grishagin.systems.MovementSystem;
+import ru.grishagin.model.messages.MessageType;
+import ru.grishagin.systems.*;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -42,6 +41,10 @@ public class GameModel {
         movementSystem.setMap(currentMap);
         engine.addSystem(new InteractionSystem());
         engine.addSystem(new CombatSystem());
+
+        AnimationSystem animationSystem = new AnimationSystem();
+        engine.addSystem(animationSystem);
+        MessageManager.getInstance().addListener(animationSystem, MessageType.DEATH); //subscribe on death messages
     }
 
     private void initBasicEntities(){

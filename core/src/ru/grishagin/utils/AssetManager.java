@@ -26,6 +26,8 @@ public class AssetManager {
     private Map<ShaderType, ShaderProgram> shaders = new HashMap<>();
     //TextureAtlas tilesAtlas = new TextureAtlas("tiles/tileset.atlas");
 
+    private static final String PNG = ".png";
+
     private static String TILES_ATLAS = "tiles/tileset";
     private static String ICONS_ATLAS = "ui/icons/icons";
     private static String DAYR_UI = "ui/DayR/DayRSkin";
@@ -35,6 +37,9 @@ public class AssetManager {
     public static final String ITEMS = "properties/items.json";
 
     public static final String UI_BACKGROUND = "ui/old_paper.jpg";
+
+    //entities states
+    public static final String DEAD = "dead";
 
     public TextureRegion getTileTexture(int id) {
         TextureRegion region = null;
@@ -121,6 +126,16 @@ public class AssetManager {
 
     public Texture getNPCImage(int id){
         return getTexture("npc/" + id + "/sprite.png");
+    }
+
+    public Texture getNPCImage(int id, String state){
+        switch (state){
+            case DEAD:
+                return getTexture("npc/" + id + "/" + DEAD + PNG);
+            default:
+                Logger.warning("There is no image for state '" + state + "' for " + id);
+                return getNPCImage(id);
+        }
     }
 
     private TextureAtlas getAtlas(String name){

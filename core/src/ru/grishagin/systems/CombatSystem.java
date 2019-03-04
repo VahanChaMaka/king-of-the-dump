@@ -4,12 +4,14 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.ai.msg.MessageManager;
 import ru.grishagin.components.*;
 import ru.grishagin.components.items.ArmorComponent;
 import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.components.stats.HealthComponent;
 import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.model.actions.TransferAction;
+import ru.grishagin.model.messages.MessageType;
 import ru.grishagin.utils.Logger;
 
 public class CombatSystem extends IteratingSystem {
@@ -114,6 +116,8 @@ public class CombatSystem extends IteratingSystem {
         if(entity.getComponent(InventoryComponent.class) != null) {
             entity.add(new InteractiveComponent(new TransferAction(), 0));
         }
+
+        MessageManager.getInstance().dispatchMessage(MessageType.DEATH, entity);
     }
 
 }
