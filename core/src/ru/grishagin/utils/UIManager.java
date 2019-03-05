@@ -11,6 +11,7 @@ import ru.grishagin.model.GameModel;
 import ru.grishagin.ui.CentralPanel;
 import ru.grishagin.ui.menu.InventoryMenu;
 import ru.grishagin.ui.menu.TransferMenu;
+import ru.grishagin.ui.toolbar.Console;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,6 +86,10 @@ public class UIManager {
         TransferMenu menu = new TransferMenu(target, player);
         centralPanel.setActor(menu);
         setMenuOpened(true);
+    }
+
+    public void printMessageInConsole(String message){
+        ((Console)UIcomponents.get(CONSOLE)).printMessage(message);
     }
 
     /*public ActionProgressBar getProgressBar(){

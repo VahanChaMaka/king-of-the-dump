@@ -18,6 +18,7 @@ import ru.grishagin.components.tags.ImpassableComponent;
 import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.model.actions.Action;
+import ru.grishagin.model.actions.OpenAction;
 import ru.grishagin.model.actions.TransferAction;
 import ru.grishagin.model.map.MapPropertiesHelper;
 import ru.grishagin.utils.AssetManager;
@@ -46,6 +47,7 @@ public class EntityFactory {
     public static final String Y = "y";
 
     private static final String TRANSFER_ACTION = "transfer";
+    private static final String OPEN_ACTION = "open";
 
     private static final int DEFAULT_MAX_WEIGHT = 100;
 
@@ -269,6 +271,8 @@ public class EntityFactory {
         switch (actionName) {
             case TRANSFER_ACTION:
                 return new TransferAction();
+            case OPEN_ACTION:
+                return new OpenAction();
             default:
                 System.out.println("Warning! Cannot create action \"" + actionName + "\"!");
                 return null;
