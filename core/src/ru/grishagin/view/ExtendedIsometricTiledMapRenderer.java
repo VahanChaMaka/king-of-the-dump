@@ -71,7 +71,7 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
         //FOR DEVELOPMENT ONLY!
         Sprite s = new Sprite(AssetManager.instance.getTexture("tiles/red.png"));
         s.setAlpha(0.5f);
-        batch.draw(s, renderPosition.x, renderPosition.y);
+        //batch.draw(s, renderPosition.x, renderPosition.y);
         ///
 
         batch.end();

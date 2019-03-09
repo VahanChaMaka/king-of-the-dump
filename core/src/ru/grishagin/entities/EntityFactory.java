@@ -39,6 +39,7 @@ public class EntityFactory {
     private static final String ARMOR = "armor";
     private static final String LOOT = "loot";
     private static final String ITEMS = "items";
+    private static final String IMPASSABLE = "impassable";
     private static final String GID = "gid";
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
@@ -69,7 +70,7 @@ public class EntityFactory {
         entity.add(new ToxicityDoseComponent());
 
         Entity defaultWeapon = new Entity();
-        defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 5, 1, 1));
+        defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 4, 1, 1));
         entity.add(new EquippedWeaponComponent(defaultWeapon));
         entity.add(new EquippedArmorComponent());//empty armor, 0 defence
 
@@ -253,6 +254,8 @@ public class EntityFactory {
                 return inventory;
             case ITEMS:
                 return null;//items is not a component, but in the same property map
+            case IMPASSABLE:
+                return new ImpassableComponent();
             //skip some properties from tmx map
             case GID:
             case ID:

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.math.Vector2;
@@ -121,6 +122,16 @@ public class MovementSystem extends IteratingSystem {
         FlatTiledNode endNode = mapGraph.getNode((int)destination.x, (int)destination.y);
 
         TiledSmoothableGraphPath<FlatTiledNode> path = new TiledSmoothableGraphPath<FlatTiledNode>();
+
+        //if end node is unavailable, build path for the closest available
+        if(endNode.getType() == TileNodeType.IMPASSABLE){
+            mapGraph.changeNodeType(endNode.getIndex(), TileNodeType.NORMAL);
+            pathFinder.searchNodePath(startNode, endNode, heuristic, path);
+            endNode = path.nodes.get(path.nodes.size - 2);//previous before last (impassable) node
+            mapGraph.changeNodeType(mapGraph.getNode((int)destination.x, (int)destination.y).getIndex(), TileNodeType.IMPASSABLE);//change type back
+            path.clear();
+        }
+
         pathFinder.searchNodePath(startNode, endNode, heuristic, path);
         return path;
     }

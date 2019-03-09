@@ -93,9 +93,31 @@ public class FlatTiledGraph implements TiledGraph<FlatTiledNode> {
         return fromNode.getConnections();
     }
 
+    @Override
+    public void changeNodeType(int nodeIndex, TileNodeType type){
+        FlatTiledNode node = getNode(nodeIndex);
+        node.setType(type);
+
+        //rebuild neighbours connections
+        for (Connection<FlatTiledNode> connection : node.getConnections()) {
+            rebuildConnections(connection.getToNode());
+        }
+    }
+
+    private void rebuildConnections(FlatTiledNode node){
+        node.getConnections().clear();
+
+        int x = node.x;
+        int y = node.y;
+        if (x > 0) addConnection(node, -1, 0);
+        if (y > 0) addConnection(node, 0, -1);
+        if (x < width - 1) addConnection(node, 1, 0);
+        if (y < height - 1) addConnection(node, 0, 1);
+    }
+
     private void addConnection (FlatTiledNode n, int xOffset, int yOffset) {
         FlatTiledNode target = getNode(n.x + xOffset, n.y + yOffset);
-        if (target.type == TileNodeType.NORMAL){
+        if (target.getType() == TileNodeType.NORMAL){
             n.getConnections().add(new FlatTiledConnection(this, n, target));
         }
     }

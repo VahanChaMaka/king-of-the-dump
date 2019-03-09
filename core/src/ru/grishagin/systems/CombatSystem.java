@@ -22,6 +22,8 @@ public class CombatSystem extends IteratingSystem {
     private ComponentMapper<WeaponComponent> wm = ComponentMapper.getFor(WeaponComponent.class);
     private ComponentMapper<ArmorComponent> am = ComponentMapper.getFor(ArmorComponent.class);
     private ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
+    private ComponentMapper<DestinationComponent> dm = ComponentMapper.getFor(DestinationComponent.class);
+    private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
     public CombatSystem() {
         super(Family.all(PositionComponent.class, HealthComponent.class, EquippedWeaponComponent.class, EquippedArmorComponent.class).get());
@@ -45,6 +47,7 @@ public class CombatSystem extends IteratingSystem {
             if(attackTarget != null){
                 float distance = SystemHelper.getDistance(entity, attackTarget);
                 if(wm.get(activeWeapon).range >= distance){ //if target in weapon range
+                    entity.remove(DestinationComponent.class);
                     if(equippedWeaponComponent.lastAttack >= attackSpeed) { //if last attack was long ago, a new one can be performed
                         int damage = calculateAttackResult(entity, attackTarget);
                         if (damage > 0) {
@@ -70,8 +73,12 @@ public class CombatSystem extends IteratingSystem {
                         entity.remove(AttackTargetComponent.class);
                     }
                 } else {//if not in range come closer
-
-                    entity.add(new DestinationComponent(attackTarget));
+                    DestinationComponent currentDestination = dm.get(entity);
+                    if(currentDestination == null ||
+                            currentDestination.x != pm.get(attackTarget).x ||
+                            currentDestination.y != pm.get(attackTarget).y) {
+                        entity.add(new DestinationComponent(attackTarget));
+                    }
                 }
             } else {
                 Logger.warning("Attack target is null!");

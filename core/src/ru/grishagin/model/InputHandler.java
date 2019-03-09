@@ -31,6 +31,13 @@ public class InputHandler {
     //X and Y are world-coords
     public void onClick(float x, float y){
         Entity player = engine.getEntitiesFor(Family.all(PlayerControlled.class).get()).first();
+
+        //clear current movement info
+        player.remove(DestinationComponent.class);
+        VelocityComponent currentVelocity = player.getComponent(VelocityComponent.class);
+        currentVelocity.x = 0;
+        currentVelocity.y = 0;
+
         boolean isSomeActionHappens = false;//flag to indicate there is no interactable object on this coords
         for (Entity entity : engine.getEntitiesFor(Family.all(SpriteComponent.class).get())) {
             SpriteComponent spriteComponent = sm.get(entity);

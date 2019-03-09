@@ -13,7 +13,7 @@ public abstract class TiledNode<N extends TiledNode<N>> {
     /** The y coordinate of this tile */
     public final int y;
 
-    public final TileNodeType type;
+    private TileNodeType type;
 
     protected Array<Connection<N>> connections;
 
@@ -25,6 +25,14 @@ public abstract class TiledNode<N extends TiledNode<N>> {
     }
 
     public abstract int getIndex ();
+
+    public TileNodeType getType() {
+        return type;
+    }
+
+    void setType(TileNodeType type) {
+        this.type = type;
+    }
 
     public Array<Connection<N>> getConnections () {
         return this.connections;
