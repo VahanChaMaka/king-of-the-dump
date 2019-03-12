@@ -41,6 +41,9 @@ public class AnimationSystem extends IteratingSystem implements Telegraph {
                 sm.get(entity).sprite = new Sprite(AssetManager.instance.getNPCImage(tm.get(entity).id, AssetManager.DEAD));
                 Logger.info(entity.getComponent(NameComponent.class).name + "'s sprite changed to another");
                 break;
+            case MessageType.CLOSED:
+                System.out.println(sm.get(entity).sprite);
+                break;
             default:
                 Logger.info("Can't change sprite for event '" + eventType + "'!");
         }

@@ -40,6 +40,7 @@ public class EntityFactory {
     private static final String LOOT = "loot";
     private static final String ITEMS = "items";
     private static final String IMPASSABLE = "impassable";
+    private static final String CLOSED = "closed";
     private static final String GID = "gid";
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
@@ -256,6 +257,8 @@ public class EntityFactory {
                 return null;//items is not a component, but in the same property map
             case IMPASSABLE:
                 return new ImpassableComponent();
+            case CLOSED:
+                return new ClosedComponent(true);
             //skip some properties from tmx map
             case GID:
             case ID:

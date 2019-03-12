@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
@@ -12,11 +14,14 @@ import ru.grishagin.components.DestinationComponent;
 import ru.grishagin.components.NameComponent;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.VelocityComponent;
+import ru.grishagin.components.tags.DoorTag;
+import ru.grishagin.components.tags.ImpassableComponent;
 import ru.grishagin.model.map.TiledBasedMap;
+import ru.grishagin.model.messages.MessageType;
 import ru.grishagin.systems.patfinding.*;
 import ru.grishagin.utils.Logger;
 
-public class MovementSystem extends IteratingSystem {
+public class MovementSystem extends IteratingSystem implements Telegraph {
     private static final float STOP_PRECISION = 0.1f;
 
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -130,9 +135,38 @@ public class MovementSystem extends IteratingSystem {
             endNode = path.nodes.get(path.nodes.size - 2);//previous before last (impassable) node
             mapGraph.changeNodeType(mapGraph.getNode((int)destination.x, (int)destination.y).getIndex(), TileNodeType.IMPASSABLE);//change type back
             path.clear();
+
+            destination.x = endNode.x;
+            destination.y = endNode.y;
         }
 
         pathFinder.searchNodePath(startNode, endNode, heuristic, path);
         return path;
+    }
+
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        if(msg.extraInfo != null){
+            Entity entity = (Entity)msg.extraInfo;
+            PositionComponent position = pm.get(entity);
+            FlatTiledNode node = mapGraph.getNode((int)position.x, (int)position.y);
+
+            switch (msg.message){
+                case MessageType.CLOSED:
+                case MessageType.OPENED:
+                    ImpassableComponent impassableComponent = entity.getComponent(ImpassableComponent.class);
+                    DoorTag isDoor = entity.getComponent(DoorTag.class);
+                    if(isDoor != null){//make sure it is a door
+                        if(impassableComponent == null){
+                            entity.add(new ImpassableComponent());
+                        } else {
+                            entity.remove(ImpassableComponent.class);
+                        }
+                    }
+                    mapGraph.changeNodeType(node.getIndex(), TileNodeType.IMPASSABLE);
+                    break;
+            }
+        }
+        return true;
     }
 }

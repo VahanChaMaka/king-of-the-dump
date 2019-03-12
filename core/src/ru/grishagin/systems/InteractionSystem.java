@@ -10,6 +10,7 @@ import ru.grishagin.components.InteractiveComponent;
 import ru.grishagin.components.PositionComponent;
 
 public class InteractionSystem extends IteratingSystem {
+    private static final float RANGE = 1.1f;
 
     private ComponentMapper<InteractiveComponent> interactiveMapper = ComponentMapper.getFor(InteractiveComponent.class);
     private ComponentMapper<InteractionComponent> interactionMapper = ComponentMapper.getFor(InteractionComponent.class);
@@ -28,11 +29,10 @@ public class InteractionSystem extends IteratingSystem {
         DestinationComponent interactorDestination = dm.get(entity);
 
         //check if we are close enough
-        if(Math.abs((int)interactionAimPosition.x - (int)interactorPosition.x) > 1
-                || Math.abs((int)interactionAimPosition.y - (int)interactorPosition.y) > 1){ //too far from interaction aim, need to go closer
+        float distance = SystemHelper.getDistance(entity, interactionAim.aim);
+        if(distance > RANGE){ //too far from interaction aim, need to go closer
             //add new destination if it doesn't exist
-            if(interactorDestination == null ||
-                    interactorDestination.x != interactionAimPosition.x || interactorDestination.y != interactionAimPosition.y){
+            if(interactorDestination == null){
                 entity.add(new DestinationComponent(interactionAimPosition.x, interactionAimPosition.y));
             }
         } else {

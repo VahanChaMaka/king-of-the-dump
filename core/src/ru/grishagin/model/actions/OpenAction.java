@@ -2,12 +2,12 @@ package ru.grishagin.model.actions;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.ai.msg.MessageManager;
-import ru.grishagin.components.ClosedComponent;
-import ru.grishagin.components.InventoryComponent;
-import ru.grishagin.components.LockedComponent;
-import ru.grishagin.components.NameComponent;
+import com.badlogic.gdx.math.Vector2;
+import ru.grishagin.components.*;
 import ru.grishagin.components.tags.ImpassableComponent;
+import ru.grishagin.model.GameModel;
 import ru.grishagin.model.messages.MessageType;
 import ru.grishagin.ui.toolbar.Console;
 import ru.grishagin.utils.Logger;
@@ -24,7 +24,7 @@ public class OpenAction implements Action {
 
         if(closed != null){
             if(closed.isClosed){
-                if(locked.isLocked){
+                if(locked != null && locked.isLocked){
                     UIManager.instance.printMessageInConsole("Заперто!");
                     return;
                 }
@@ -47,7 +47,7 @@ public class OpenAction implements Action {
             }
 
             closed.isClosed = !closed.isClosed;
-            Logger.info(target, " is " + closed.isClosed + " now");
+            Logger.info(target, " is closed=" + closed.isClosed + " now");
         } else {
             Logger.warning(target, "Can't close/open it!");
         }

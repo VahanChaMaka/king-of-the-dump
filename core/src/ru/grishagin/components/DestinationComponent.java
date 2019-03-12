@@ -10,9 +10,8 @@ import ru.grishagin.systems.patfinding.TiledSmoothableGraphPath;
 //End point of entity's journey
 //
 public class DestinationComponent implements Component {
-    //x and y are final to make sure new path will be created
-    public final float x;
-    public final float y;
+    public float x;
+    public float y;
 
     public TiledSmoothableGraphPath<FlatTiledNode> path;
 
