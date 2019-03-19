@@ -37,14 +37,20 @@ public class GameModel {
 
     private void initSystems(){
         engine.addSystem(inventorySystem);
+
         engine.addSystem(movementSystem);
         movementSystem.setMap(currentMap);
+        MessageManager.getInstance().addListener(movementSystem, MessageType.CLOSED);
+        MessageManager.getInstance().addListener(movementSystem, MessageType.OPENED);
+
         engine.addSystem(new InteractionSystem());
         engine.addSystem(new CombatSystem());
 
         AnimationSystem animationSystem = new AnimationSystem();
         engine.addSystem(animationSystem);
         MessageManager.getInstance().addListener(animationSystem, MessageType.DEATH); //subscribe on death messages
+        MessageManager.getInstance().addListener(animationSystem, MessageType.CLOSED);
+        MessageManager.getInstance().addListener(animationSystem, MessageType.OPENED);
     }
 
     private void initBasicEntities(){

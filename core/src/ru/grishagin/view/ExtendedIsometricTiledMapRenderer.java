@@ -51,7 +51,8 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
                     }
                 } else {
                     for (MapObject object : layer.getObjects()) {
-                        renderObject(object);
+                        //seems like it doesn't do anything
+                        //renderObject(object);
                     }
                 }
             }

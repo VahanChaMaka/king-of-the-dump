@@ -9,10 +9,12 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.grishagin.components.*;
 import ru.grishagin.components.items.ArmorComponent;
 import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.components.stats.*;
+import ru.grishagin.components.tags.DoorTag;
 import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.components.tags.ImpassableComponent;
 import ru.grishagin.components.tags.PlayerControlled;
@@ -24,6 +26,8 @@ import ru.grishagin.model.map.MapPropertiesHelper;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +45,8 @@ public class EntityFactory {
     private static final String ITEMS = "items";
     private static final String IMPASSABLE = "impassable";
     private static final String CLOSED = "closed";
+    private static final String DOOR = "door";
+    private static final String STATE_IDS = "stateIds";
     private static final String GID = "gid";
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
@@ -259,6 +265,19 @@ public class EntityFactory {
                 return new ImpassableComponent();
             case CLOSED:
                 return new ClosedComponent(true);
+            case DOOR:
+                return new DoorTag();
+            case STATE_IDS:
+                String convertedJSON = ((String)rawComponentData).replaceAll("&quot;", "\""); //return normal quotes to json string
+                NextStatesIds nextStatesIds;
+                try{
+                    ObjectMapper mapper = new ObjectMapper();
+                    nextStatesIds = new NextStatesIds(mapper.readValue(convertedJSON, HashMap.class));
+                } catch (IOException e){
+                    Logger.warning("Can't parse " + rawComponentData + ":\n" + e.toString());
+                    nextStatesIds = new NextStatesIds();
+                }
+                return nextStatesIds;
             //skip some properties from tmx map
             case GID:
             case ID:

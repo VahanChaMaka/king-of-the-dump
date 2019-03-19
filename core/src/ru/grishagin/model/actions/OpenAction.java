@@ -33,16 +33,10 @@ public class OpenAction implements Action {
                 if(target.getComponent(InventoryComponent.class) != null){
                     TransferAction transferAction = new TransferAction();
                     transferAction.execute(source, target);
-                } else {// some kind of a door
-                    target.remove(ImpassableComponent.class);
                 }
 
                 MessageManager.getInstance().dispatchMessage(MessageType.OPENED, target);
             } else {
-                //not sure if it is acceptable to make all opened entites is impassible
-                //containers are expected to be closed after UI closing
-                target.add(new ImpassableComponent());
-
                 MessageManager.getInstance().dispatchMessage(MessageType.CLOSED, target);
             }
 

@@ -159,11 +159,12 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
                     if(isDoor != null){//make sure it is a door
                         if(impassableComponent == null){
                             entity.add(new ImpassableComponent());
+                            mapGraph.changeNodeType(node.getIndex(), TileNodeType.IMPASSABLE);
                         } else {
                             entity.remove(ImpassableComponent.class);
+                            mapGraph.changeNodeType(node.getIndex(), TileNodeType.NORMAL);
                         }
                     }
-                    mapGraph.changeNodeType(node.getIndex(), TileNodeType.IMPASSABLE);
                     break;
             }
         }
