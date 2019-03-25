@@ -17,22 +17,25 @@ import ru.grishagin.components.SpriteComponent;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.ShaderHelper;
 
-import java.util.Map;
+import java.util.*;
 
 public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer {
     private ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<ShaderComponent> shm = ComponentMapper.getFor(ShaderComponent.class);
 
-    private ImmutableArray<Entity> spriteEntities;
+    private DepthComparator<Entity> comparator;
+
+    private List<Entity> spriteEntities = new ArrayList<>();
 
     public ExtendedIsometricTiledMapRenderer(TiledMap map) {
         super(map);
+        comparator = new DepthComparator<>();
     }
 
     public void setSpriteEntities(ImmutableArray<Entity> spriteEntities) {
-        //TODO: consider some sorting
-        this.spriteEntities = spriteEntities;
+        this.spriteEntities = Arrays.asList(spriteEntities.toArray());
+        Collections.sort(this.spriteEntities, comparator);
     }
 
     @Override
