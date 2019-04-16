@@ -1,5 +1,6 @@
 package ru.grishagin.utils;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -32,6 +33,12 @@ public class ShaderHelper {
                 1f / spriteComponent.sprite.getTexture().getHeight()));
         shader.setUniformf("u_offset", 1f);
         shader.setUniformf("u_step", Math.min(1f, spriteComponent.sprite.getTexture().getWidth() / 70f));
-        shader.setUniformf("u_color", new Vector3(1f, 0, 0));
+        if(properties.containsKey(ShaderComponent.COLOR)) {
+            shader.setUniformf("u_color", ((Color)properties.get(ShaderComponent.COLOR)));
+            //shader.setUniformf("u_color", new Vector3(1f, 0, 0));
+        } else {
+            Logger.warning("Shader's color is not defined!");
+            shader.setUniformf("u_color", new Vector3(1f, 1f, 1f));
+        }
     }
 }

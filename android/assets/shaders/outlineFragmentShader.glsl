@@ -9,7 +9,7 @@ uniform sampler2D u_texture;
 uniform vec2 u_viewportInverse;
 
 // Color of the outline
-uniform vec3 u_color;
+uniform vec4 u_color;
 
 // Thickness of the outline
 uniform float u_offset;
@@ -44,7 +44,8 @@ void main() {
    if (!allin)
    {
       //alpha = 0.0;
-      gl_FragColor = vec4(u_color,alpha);
+      gl_FragColor = u_color;
+      gl_FragColor.a = alpha;
    } else {
         gl_FragColor = texture2D(u_texture, v_texCoords);
    }

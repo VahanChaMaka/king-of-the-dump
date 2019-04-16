@@ -3,6 +3,7 @@ package ru.grishagin.entities;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -27,10 +28,7 @@ import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EntityFactory {
 
@@ -88,7 +86,7 @@ public class EntityFactory {
         spriteComponent.offset.y = 8;
         entity.add(spriteComponent);
 
-        entity.add(new ShaderComponent(ShaderType.OUTLINE));
+        //entity.add(new ShaderComponent(ShaderType.OUTLINE));
 
         return entity;
     }
@@ -108,13 +106,13 @@ public class EntityFactory {
         }
 
         if(npc.getComponent(HostileTag.class) != null){
-            npc.add(new ShaderComponent(ShaderType.OUTLINE));
+            npc.add(new ShaderComponent(ShaderType.OUTLINE, Collections.singletonMap(ShaderComponent.COLOR, Color.RED)));
         }
 
         return npc;
     }
 
-    public static Entity makeNPC(){
+    /*public static Entity makeNPC(){
         Entity entity = makeBasicNPC();
 
         entity.add(new SpriteComponent(new Sprite(AssetManager.instance.getTexture("npc/rathound.png"))));
@@ -153,7 +151,7 @@ public class EntityFactory {
         }
 
         return entity;
-    }
+    }*/
 
     public static Entity makeChest(int x, int y){
         Entity entity = new Entity();
@@ -183,8 +181,12 @@ public class EntityFactory {
             //extract texture from tile directly
             entity.add(new SpriteComponent(new Sprite(((TiledMapTileMapObject)object).getTextureRegion())));
 
-            //TODO: think about it
-            entity.add(new ShaderComponent(ShaderType.OUTLINE));
+            //mark enemies with red outline and interactive element with yellow
+            if(entity.getComponent(HostileTag.class) != null) {
+                entity.add(new ShaderComponent(ShaderType.OUTLINE, Collections.singletonMap(ShaderComponent.COLOR, Color.RED)));
+            } else if(entity.getComponent(InteractiveComponent.class) != null){
+                entity.add(new ShaderComponent(ShaderType.OUTLINE, Collections.singletonMap(ShaderComponent.COLOR, Color.YELLOW)));
+            }
         }
 
         //fill inventory with specified items

@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Component;
 import java.util.Map;
 
 public class ShaderComponent implements Component {
+    public static final String COLOR = "color";
+
     //default shader should be null
     public ShaderType shaderType = null;
     public Map<String, Object> shaderProperties;

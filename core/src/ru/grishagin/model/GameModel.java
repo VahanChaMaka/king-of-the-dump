@@ -51,6 +51,10 @@ public class GameModel {
         MessageManager.getInstance().addListener(animationSystem, MessageType.DEATH); //subscribe on death messages
         MessageManager.getInstance().addListener(animationSystem, MessageType.CLOSED);
         MessageManager.getInstance().addListener(animationSystem, MessageType.OPENED);
+
+        ShaderSystem shaderSystem = new ShaderSystem();
+        engine.addSystem(shaderSystem);
+        MessageManager.getInstance().addListener(shaderSystem, MessageType.DEATH);
     }
 
     private void initBasicEntities(){
