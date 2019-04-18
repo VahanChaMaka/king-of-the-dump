@@ -3,6 +3,7 @@
  <image source="grassland/objects.png" width="1024" height="128"/>
  <tile id="0">
   <properties>
+   <property name="action" value="transfer"/>
    <property name="impassable" type="bool" value="true"/>
    <property name="inventory" type="int" value="100"/>
    <property name="name" value="Chest"/>
