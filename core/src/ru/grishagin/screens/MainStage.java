@@ -45,6 +45,7 @@ public class MainStage extends Stage {
     public void act(float delta) {
         //GameController.INSTANCE.update(delta);
         GameModel.instance.engine.update(delta);
+        UIManager.instance.update(delta);
         super.act(delta);
     }
 

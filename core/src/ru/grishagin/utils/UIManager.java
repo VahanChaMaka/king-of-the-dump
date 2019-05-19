@@ -12,6 +12,7 @@ import ru.grishagin.ui.CentralPanel;
 import ru.grishagin.ui.menu.InventoryMenu;
 import ru.grishagin.ui.menu.TransferMenu;
 import ru.grishagin.ui.toolbar.Console;
+import ru.grishagin.ui.toolbar.StatPanel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,16 +99,16 @@ public class UIManager {
             progressBar.setVisible(false); //invisible by default because bar could be showed later
         }
         return progressBar;
-    }
+    }*/
 
     //updates all global time changing UI components
     public void update(float delta){
-        if(progressBar != null && progressBar.isVisible()) {
+        /*if(progressBar != null && progressBar.isVisible()) {
             progressBar.setValue(progressBar.getValue() + delta);
-        }
+        }*/
 
         //TODO: think about interface with update() method
         ((StatPanel)getPanel(STAT_PANEL)).updateStat();
         ((Console)getPanel(CONSOLE)).update();
-    }*/
+    }
 }

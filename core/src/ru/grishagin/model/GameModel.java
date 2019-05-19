@@ -45,6 +45,7 @@ public class GameModel {
 
         engine.addSystem(new InteractionSystem());
         engine.addSystem(new CombatSystem());
+        engine.addSystem(new AISystem());
 
         AnimationSystem animationSystem = new AnimationSystem();
         engine.addSystem(animationSystem);
@@ -69,7 +70,7 @@ public class GameModel {
 
         //engine.addEntity(EntityFactory.makeNPC());
         engine.addEntity(EntityFactory.makeNPC(0, 6, 5));
-        engine.addEntity(EntityFactory.makeNPC(100, 6, 7));
+        engine.addEntity(EntityFactory.makeNPC(100, 15, 7));
 
         for (MapObject object : currentMap.getObjects()) {
             engine.addEntity(EntityFactory.makeEntity(object, currentMap.getMap()));

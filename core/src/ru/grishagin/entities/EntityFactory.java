@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.grishagin.components.*;
+import ru.grishagin.components.ai.AgentComponent;
 import ru.grishagin.components.items.ArmorComponent;
 import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.components.stats.*;
@@ -76,7 +77,7 @@ public class EntityFactory {
         entity.add(new ToxicityDoseComponent());
 
         entity.add(new CombatSkillsComponent()
-                .setSkill(WeaponComponent.DamageType.MELEE, 20)
+                .setSkill(WeaponComponent.DamageType.MELEE, 50)
                 .setSkill(WeaponComponent.DamageType.FIREARM, 10));
 
         Entity defaultWeapon = new Entity();
@@ -110,8 +111,11 @@ public class EntityFactory {
             npc.add(component);
         }
 
+        npc.add(new VelocityComponent(5f));
+
         if(npc.getComponent(HostileTag.class) != null){
             npc.add(new ShaderComponent(ShaderType.OUTLINE, Collections.singletonMap(ShaderComponent.COLOR, Color.RED)));
+            npc.add(new AgentComponent());//give it AI
         }
 
         return npc;
