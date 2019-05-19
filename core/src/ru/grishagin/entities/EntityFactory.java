@@ -37,6 +37,7 @@ public class EntityFactory {
     private static final String INVENTORY = "inventory";
     private static final String HOSTILE = "hostile";
     private static final String HEALTH = "health";
+    private static final String SKILLS = "skills";
     private static final String WEAPON = "weapon";
     private static final String ARMOR = "armor";
     private static final String LOOT = "loot";
@@ -73,6 +74,10 @@ public class EntityFactory {
         entity.add(new FatigueComponent());
         entity.add(new RadDoseComponent());
         entity.add(new ToxicityDoseComponent());
+
+        entity.add(new CombatSkillsComponent()
+                .setSkill(WeaponComponent.DamageType.MELEE, 20)
+                .setSkill(WeaponComponent.DamageType.FIREARM, 10));
 
         Entity defaultWeapon = new Entity();
         defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 4, 1, 1));
@@ -220,6 +225,14 @@ public class EntityFactory {
                 return new HostileTag();
             case HEALTH:
                 return new HealthComponent((int)rawComponentData);
+            case SKILLS:
+                Map<String, Integer> skillsData = (Map<String, Integer>)rawComponentData;
+                CombatSkillsComponent combatSkillsComponent = new CombatSkillsComponent();
+                for (String skillName : skillsData.keySet()) {
+                    combatSkillsComponent.setSkill(WeaponComponent.DamageType.valueOf(skillName.toUpperCase()),
+                            skillsData.get(skillName));
+                }
+                return combatSkillsComponent;
             case WEAPON:
                 return new EquippedWeaponComponent(ItemFactory.getItem((int)rawComponentData));
             case ARMOR: //armor is stored as array of ids of armor items

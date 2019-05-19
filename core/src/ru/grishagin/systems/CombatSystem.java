@@ -8,6 +8,7 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import ru.grishagin.components.*;
 import ru.grishagin.components.items.ArmorComponent;
 import ru.grishagin.components.items.WeaponComponent;
+import ru.grishagin.components.stats.CombatSkillsComponent;
 import ru.grishagin.components.stats.HealthComponent;
 import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.model.actions.TransferAction;
@@ -17,13 +18,14 @@ import ru.grishagin.utils.Logger;
 public class CombatSystem extends IteratingSystem {
 
     private ComponentMapper<AttackTargetComponent> atm = ComponentMapper.getFor(AttackTargetComponent.class);
-    private ComponentMapper<EquippedWeaponComponent> ewm = ComponentMapper.getFor(EquippedWeaponComponent.class);
+    private static ComponentMapper<EquippedWeaponComponent> ewm = ComponentMapper.getFor(EquippedWeaponComponent.class);
     private ComponentMapper<EquippedArmorComponent> eam = ComponentMapper.getFor(EquippedArmorComponent.class);
-    private ComponentMapper<WeaponComponent> wm = ComponentMapper.getFor(WeaponComponent.class);
+    private static ComponentMapper<WeaponComponent> wm = ComponentMapper.getFor(WeaponComponent.class);
     private ComponentMapper<ArmorComponent> am = ComponentMapper.getFor(ArmorComponent.class);
     private ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
     private ComponentMapper<DestinationComponent> dm = ComponentMapper.getFor(DestinationComponent.class);
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private static ComponentMapper<CombatSkillsComponent> csm = ComponentMapper.getFor(CombatSkillsComponent.class);
 
     public CombatSystem() {
         super(Family.all(PositionComponent.class, HealthComponent.class, EquippedWeaponComponent.class, EquippedArmorComponent.class).get());
@@ -64,7 +66,9 @@ public class CombatSystem extends IteratingSystem {
                         } else if (damage == 0) {
 
                         } else { //negative damage means miss
-
+                            Logger.info(entity.getComponent(NameComponent.class).name + " missed " +
+                                    attackTarget.getComponent(NameComponent.class) + " with hit chance " +
+                                    getSuccessAttackChance(entity, attackTarget));
                         }
 
                         equippedWeaponComponent.lastAttack = 0;//mark attack as performed
@@ -92,6 +96,11 @@ public class CombatSystem extends IteratingSystem {
         Entity suitArmor = eam.get(defender).getSuit();
 
         int appliedDamage = 0;
+
+        //check miss
+        if(getSuccessAttackChance(attacker, defender) < Math.random()*101){
+            return -1;//attacker missed
+        }
 
         if(weapon.damageType == WeaponComponent.DamageType.MELEE){
             int fullMeleeResistance = am.get(suitArmor).meleeResistance + am.get(headArmor).meleeResistance;
@@ -125,6 +134,18 @@ public class CombatSystem extends IteratingSystem {
         }
 
         MessageManager.getInstance().dispatchMessage(MessageType.DEATH, entity);
+    }
+
+    /**
+     * @return success percentage
+     */
+    public static int getSuccessAttackChance(Entity attacker, Entity defender){
+        WeaponComponent weapon = wm.get(ewm.get(attacker).weapon);
+        int skill = csm.get(attacker).getSkill(weapon.damageType);
+
+        //TODO: think about interesting calculation
+        return skill;
+
     }
 
 }
