@@ -16,10 +16,14 @@ import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.VelocityComponent;
 import ru.grishagin.components.tags.DoorTag;
 import ru.grishagin.components.tags.ImpassableComponent;
+import ru.grishagin.components.tags.PlayerControlled;
+import ru.grishagin.model.GameModel;
 import ru.grishagin.model.map.TiledBasedMap;
 import ru.grishagin.model.messages.MessageType;
 import ru.grishagin.systems.patfinding.*;
 import ru.grishagin.utils.Logger;
+
+import static ru.grishagin.model.map.TiledBasedMap.ROOF_LAYER;
 
 public class MovementSystem extends IteratingSystem implements Telegraph {
     private static final float STOP_PRECISION = 0.1f;
@@ -67,6 +71,10 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
 
         position.x += velocity.x*deltaTime;
         position.y += velocity.y*deltaTime;
+
+        if(entity.getComponent(PlayerControlled.class) != null){
+            showHideRoof(position);
+        }
     }
 
     private void followPath(Entity entity){
@@ -142,6 +150,16 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
 
         pathFinder.searchNodePath(startNode, endNode, heuristic, path);
         return path;
+    }
+
+    //roof layer has vertical offset
+    private void showHideRoof(PositionComponent playerPosition){
+        TiledBasedMap currentMap = GameModel.instance.getCurrentMap();
+        if(currentMap.hasObject(playerPosition.x, playerPosition.y, ROOF_LAYER)){
+            currentMap.setLayerVisibility(ROOF_LAYER, false);
+        } else {
+            currentMap.setLayerVisibility(ROOF_LAYER, true);
+        }
     }
 
     @Override
