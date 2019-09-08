@@ -19,6 +19,9 @@ import ru.grishagin.utils.ShaderHelper;
 
 import java.util.*;
 
+import static ru.grishagin.model.map.TiledBasedMap.TILE_HEIGHT;
+import static ru.grishagin.model.map.TiledBasedMap.TILE_WIDTH;
+
 public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer {
     private ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -64,11 +67,12 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
     }
 
     private void drawSprite(SpriteComponent spriteComponent, PositionComponent position, ShaderComponent shaderComponent){
+        int tileHeight = (int)map.getProperties().get(TILE_HEIGHT);
         Vector2 renderPosition = new Vector2();
         float x = position.x;
         float y = position.y;
-        float posY = - x * 32;
-        float posX =  y * 32;
+        float posY = - x * tileHeight;
+        float posX =  y * tileHeight;
         renderPosition.x = (posX - posY);
         renderPosition.y = (posX + posY) / 2;
 

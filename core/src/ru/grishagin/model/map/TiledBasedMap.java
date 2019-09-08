@@ -18,8 +18,8 @@ public class TiledBasedMap {
 
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
-    private static final String TILE_WIDTH = "tilewidth";
-    private static final String TILE_HEIGHT = "tileheight";
+    public static final String TILE_WIDTH = "tilewidth";
+    public static final String TILE_HEIGHT = "tileheight";
 
     private TiledMap map;
 

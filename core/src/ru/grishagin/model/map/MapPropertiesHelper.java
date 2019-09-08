@@ -3,12 +3,15 @@ package ru.grishagin.model.map;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 
 import static ru.grishagin.entities.EntityFactory.X;
 import static ru.grishagin.entities.EntityFactory.Y;
+import static ru.grishagin.model.map.TiledBasedMap.TILE_HEIGHT;
+import static ru.grishagin.model.map.TiledBasedMap.TILE_WIDTH;
 
 public class MapPropertiesHelper {
 
@@ -21,7 +24,7 @@ public class MapPropertiesHelper {
             //iterate over objects in the layer
             for (MapObject object: layer.getObjects()){
                 //check position
-                Vector2 position = convertObjectMapCoordsToInternal(object);
+                Vector2 position = convertObjectMapCoordsToInternal(object, map.getMap());
                 if((int)position.x == x && (int)position.y == y){
                     //check class  of the object
                     if(object instanceof TiledMapTileMapObject){
@@ -52,9 +55,10 @@ public class MapPropertiesHelper {
 
 
     //convert pixel coord from Tiled into cell-coordinates
-    public static Vector2 convertObjectMapCoordsToInternal(MapObject object){
-        Vector2 internalPosition = new Vector2((float)object.getProperties().get(X)/32 - 1, //items is misplaced a little
-                (float)object.getProperties().get(Y)/32);
+    public static Vector2 convertObjectMapCoordsToInternal(MapObject object, TiledMap map){
+        int tileHeight = (int)map.getProperties().get(TILE_HEIGHT);
+        Vector2 internalPosition = new Vector2((float)object.getProperties().get(X)/tileHeight - 1, //items is misplaced a little
+                (float)object.getProperties().get(Y)/tileHeight);
         return internalPosition;
     }
 }

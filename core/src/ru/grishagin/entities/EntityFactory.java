@@ -177,7 +177,7 @@ public class EntityFactory {
     public static Entity makeEntity(MapObject object, TiledMap map){
         Entity entity = new Entity();
 
-        Vector2 position = MapPropertiesHelper.convertObjectMapCoordsToInternal(object);
+        Vector2 position = MapPropertiesHelper.convertObjectMapCoordsToInternal(object, map);
         entity.add(new PositionComponent(position));
 
         //make components from specific properties
