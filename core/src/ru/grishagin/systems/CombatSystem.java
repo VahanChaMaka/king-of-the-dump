@@ -75,6 +75,8 @@ public class CombatSystem extends IteratingSystem {
 
                         //stop attacking. Player have to click again, NPC should re-add target if it is still requred
                         entity.remove(AttackTargetComponent.class);
+
+                        MessageManager.getInstance().dispatchMessage(MessageType.ATTACK, activeWeapon);
                     }
                 } else {//if not in range come closer
                     DestinationComponent currentDestination = dm.get(entity);

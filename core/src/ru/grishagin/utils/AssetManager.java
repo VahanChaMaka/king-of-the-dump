@@ -1,6 +1,7 @@
 package ru.grishagin.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -214,6 +215,10 @@ public class AssetManager {
                 return shader;
             }
         }
+    }
+
+    public Sound getSound(String soundName){
+        return Gdx.audio.newSound(Gdx.files.internal("sound/" + soundName + ".wav"));
     }
 
     private AssetManager(){

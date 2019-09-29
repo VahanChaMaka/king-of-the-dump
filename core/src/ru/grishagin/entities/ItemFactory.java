@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import ru.grishagin.components.DescriptionComponent;
 import ru.grishagin.components.NameComponent;
+import ru.grishagin.components.SoundComponent;
 import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.components.items.*;
 import ru.grishagin.utils.AssetManager;
@@ -33,6 +34,10 @@ public class ItemFactory {
     public static final String ARMOR = "armor";
     public static final String MELEE_RESISTANCE = "melee";
     public static final String FIREARM_RESISTANCE = "firearm";
+
+
+    public static final String SOUND = "sound";
+    public static final String ATTACK = "attack";
 
     public static Entity getItem(int id){
         return getItem(id, 1);
@@ -121,6 +126,10 @@ public class ItemFactory {
                 return new ArmorComponent(ArmorComponent.ArmorType.valueOf(((String)armorData.get(TYPE)).toUpperCase()),
                         (int)armorData.get(MELEE_RESISTANCE),
                         (int)armorData.get(FIREARM_RESISTANCE));
+
+            case SOUND:
+                Map<String, String> soundData =(Map<String, String>)rawComponentData;
+                return new SoundComponent(soundData);
             default:
                 throw new ComponentNotFoundException("Loading item's components failed! Couldn't load component: \""
                         + componentName + "\"");

@@ -82,6 +82,7 @@ public class EntityFactory {
 
         Entity defaultWeapon = new Entity();
         defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 4, 1, 1));
+        defaultWeapon.add(new SoundComponent(Collections.singletonMap("3", "weapon-swing6")));
         entity.add(new EquippedWeaponComponent(defaultWeapon));
         entity.add(new EquippedArmorComponent());//empty armor, 0 defence
 

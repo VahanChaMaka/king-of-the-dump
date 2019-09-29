@@ -56,6 +56,11 @@ public class GameModel {
         ShaderSystem shaderSystem = new ShaderSystem();
         engine.addSystem(shaderSystem);
         MessageManager.getInstance().addListener(shaderSystem, MessageType.DEATH);
+
+        SoundSystem soundSystem = new SoundSystem();
+        MessageManager.getInstance().addListeners(soundSystem, MessageType.DEATH,
+                MessageType.ATTACK);
+        engine.addSystem(soundSystem);
     }
 
     private void initBasicEntities(){
