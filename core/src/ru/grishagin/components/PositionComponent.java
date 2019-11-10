@@ -16,4 +16,8 @@ public class PositionComponent implements Component {
         this.x = position.x;
         this.y = position.y;
     }
+
+    public Vector2 getPosition(){
+        return new Vector2(x, y);
+    }
 }

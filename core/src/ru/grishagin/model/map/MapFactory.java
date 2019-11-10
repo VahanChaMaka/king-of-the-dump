@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 public class MapFactory {
 
     public static TiledBasedMap loadMap(){
-        return new TiledBasedMap(new TmxMapLoader().load("maps/start.tmx"));
+        return new TiledBasedMap(new TmxMapLoader().load("maps/demo.tmx"));
     }
 
     /*public static Map loadMap(){

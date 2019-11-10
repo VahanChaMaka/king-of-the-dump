@@ -47,18 +47,11 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
         int currentLayer = 0;
         for (MapLayer layer : map.getLayers()) {
             if (layer.isVisible()) {
-                if (layer instanceof TiledMapTileLayer) {
-                    renderTileLayer((TiledMapTileLayer)layer);
-                    currentLayer++;
-                    for (Entity entity : spriteEntities) {
-                        if(currentLayer == sm.get(entity).renderingOrder){
-                            drawSprite(sm.get(entity), pm.get(entity), shm.get(entity));
-                        }
-                    }
-                } else {
-                    for (MapObject object : layer.getObjects()) {
-                        //seems like it doesn't do anything
-                        //renderObject(object);
+                renderMapLayer(layer);
+                currentLayer++;
+                for (Entity entity : spriteEntities) {
+                    if(currentLayer == sm.get(entity).renderingOrder){
+                        drawSprite(sm.get(entity), pm.get(entity), shm.get(entity));
                     }
                 }
             }

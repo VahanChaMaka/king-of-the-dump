@@ -5,10 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.entities.EntityFactory;
-import ru.grishagin.entities.ItemFactory;
 import ru.grishagin.model.map.MapFactory;
 import ru.grishagin.model.map.TiledBasedMap;
 import ru.grishagin.model.messages.MessageType;
@@ -64,7 +63,7 @@ public class GameModel {
     }
 
     private void initBasicEntities(){
-        engine.addEntity(EntityFactory.makePlayer(10, 1));
+
     }
 
     public void loadObjects(){
@@ -74,11 +73,16 @@ public class GameModel {
         engine.addEntity(chest);*/
 
         //engine.addEntity(EntityFactory.makeNPC());
-        engine.addEntity(EntityFactory.makeNPC(0, 6, 5));
-        engine.addEntity(EntityFactory.makeNPC(100, 15, 7));
+        //engine.addEntity(EntityFactory.makeNPC(0, 6, 5));
+        //engine.addEntity(EntityFactory.makeNPC(100, 15, 7));
 
         for (MapObject object : currentMap.getObjects()) {
             engine.addEntity(EntityFactory.makeEntity(object, currentMap.getMap()));
+        }
+
+        //spawn NPCs and player
+        for (RectangleMapObject spawner: currentMap.getSpawners()){
+            engine.addEntity(EntityFactory.spawn(spawner, currentMap.getMap()));
         }
     }
 

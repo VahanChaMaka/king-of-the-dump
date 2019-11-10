@@ -3,8 +3,7 @@ package ru.grishagin.systems.patfinding;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.utils.Array;
-import ru.grishagin.model.GameModel;
-import ru.grishagin.model.map.MapPropertiesHelper;
+import ru.grishagin.model.map.TiledMapHelper;
 import ru.grishagin.model.map.TiledBasedMap;
 
 public class FlatTiledGraph implements TiledGraph<FlatTiledNode> {
@@ -43,7 +42,7 @@ public class FlatTiledGraph implements TiledGraph<FlatTiledNode> {
             for (int y = 0; y < height; y++) {
                 //resolve types, can be other types in future
                 TileNodeType nodeType;
-                if(MapPropertiesHelper.isWalkable(map, x, y)){
+                if(TiledMapHelper.isWalkable(map, x, y)){
                     nodeType = TileNodeType.NORMAL;
                 } else {
                     nodeType = TileNodeType.IMPASSABLE;

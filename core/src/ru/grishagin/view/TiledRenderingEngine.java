@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import ru.grishagin.components.SpriteComponent;
-import ru.grishagin.model.map.TiledBasedMap;
 
 public class TiledRenderingEngine{
 

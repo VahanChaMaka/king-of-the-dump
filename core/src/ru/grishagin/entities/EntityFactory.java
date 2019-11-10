@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
@@ -24,7 +25,7 @@ import ru.grishagin.model.GameModel;
 import ru.grishagin.model.actions.Action;
 import ru.grishagin.model.actions.OpenAction;
 import ru.grishagin.model.actions.TransferAction;
-import ru.grishagin.model.map.MapPropertiesHelper;
+import ru.grishagin.model.map.TiledMapHelper;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
 
@@ -53,6 +54,7 @@ public class EntityFactory {
     private static final String ID = "id";
     public static final String X = "x";
     public static final String Y = "y";
+    public static final String NPC_ID = "npcId";
 
     private static final String TRANSFER_ACTION = "transfer";
     private static final String OPEN_ACTION = "open";
@@ -61,11 +63,11 @@ public class EntityFactory {
 
     private static ComponentMapper<InventoryComponent> im = ComponentMapper.getFor(InventoryComponent.class);
 
-    public static Entity makePlayer(int x, int y){
+    public static Entity makePlayer(Vector2 position){
         Entity entity = new Entity();
         entity.add(new NameComponent("Player"));
         entity.add(new PlayerControlled());
-        entity.add(new PositionComponent(x, y));
+        entity.add(new PositionComponent(position));
         entity.add(new VelocityComponent(5f));
         entity.add(new InventoryComponent(100000));
 
@@ -98,11 +100,21 @@ public class EntityFactory {
         return entity;
     }
 
-    public static Entity makeNPC(int id, int x, int y){
+    public static Entity spawn(RectangleMapObject spawner, TiledMap map){
+        int id = (int)spawner.getProperties().get(NPC_ID);
+        Vector2 position = TiledMapHelper.convertObjectMapCoordsToInternal(spawner, map);
+        if(id == -1){
+            return makePlayer(position);
+        } else {
+            return makeNPC(id, position);
+        }
+    }
+
+    public static Entity makeNPC(int id, Vector2 position){
         Entity npc = new Entity();
 
         npc.add(new TypeIdComponent(id));
-        npc.add(new PositionComponent(x, y));
+        npc.add(new PositionComponent(position));
         npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getNPCImage(id))));
         npc.add(new ImpassableComponent());
 
@@ -178,7 +190,7 @@ public class EntityFactory {
     public static Entity makeEntity(MapObject object, TiledMap map){
         Entity entity = new Entity();
 
-        Vector2 position = MapPropertiesHelper.convertObjectMapCoordsToInternal(object, map);
+        Vector2 position = TiledMapHelper.convertObjectMapCoordsToInternal(object, map);
         entity.add(new PositionComponent(position));
 
         //make components from specific properties
@@ -298,8 +310,9 @@ public class EntityFactory {
                     nextStatesIds = new NextStatesIds();
                 }
                 return nextStatesIds;
-            //skip some properties from tmx map
             case GID:
+                return new TileGIdComponent((int)rawComponentData);
+            //skip some properties from tmx map
             case ID:
             case WIDTH:
             case HEIGHT:

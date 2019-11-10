@@ -4,9 +4,11 @@ import com.badlogic.gdx.maps.MapGroupLayer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.utils.Array;
 import ru.grishagin.utils.Logger;
 
 import static ru.grishagin.entities.EntityFactory.X;
@@ -15,6 +17,7 @@ import static ru.grishagin.entities.EntityFactory.Y;
 public class TiledBasedMap {
 
     public static final String ROOF_LAYER = "roof";
+    public static final String SPAWNERS_LAYER = "spawners";
 
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
@@ -57,6 +60,15 @@ public class TiledBasedMap {
             return layer.getObjects();
         } else{
             return new MapObjects();
+        }
+    }
+
+    public Array<RectangleMapObject> getSpawners(){
+        MapLayer spawnersLayer = map.getLayers().get(SPAWNERS_LAYER);
+        if(spawnersLayer != null){
+            return spawnersLayer.getObjects().getByType(RectangleMapObject.class);
+        } else {
+            return new Array<>(0);
         }
     }
 

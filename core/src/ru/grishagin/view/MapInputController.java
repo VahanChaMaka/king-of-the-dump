@@ -118,7 +118,7 @@ public class MapInputController extends InputAdapter {
     }
 
     private void click(int x, int y){
-        camera.unproject(curr.set(x, y, 0));//WTF, WHY -16????
+        camera.unproject(curr.set(x, y, 0));
         x =(int) curr.x;
         y = (int) curr.y;
 

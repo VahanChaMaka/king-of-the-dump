@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.grishagin.components.ShaderType;
@@ -139,12 +136,6 @@ public class AssetManager {
                 Logger.warning("There is no image for state '" + state + "' for " + id);
                 return getNPCImage(id);
         }
-    }
-
-    public TextureRegion getTextureFromTSX(TiledMap map, Integer objectId){
-        TiledMapTileSet tileSet = map.getTileSets().getTileSet("myObjects");
-        int globalId = (int)tileSet.getProperties().get("firstgid") + objectId; //id is stored in global format. Need to convert local to global
-        return tileSet.getTile(globalId).getTextureRegion();
     }
 
     private TextureAtlas getAtlas(String name){

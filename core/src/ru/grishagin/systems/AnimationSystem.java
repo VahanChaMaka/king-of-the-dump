@@ -12,6 +12,7 @@ import ru.grishagin.components.NextStatesIds;
 import ru.grishagin.components.SpriteComponent;
 import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.model.GameModel;
+import ru.grishagin.model.map.TiledMapHelper;
 import ru.grishagin.model.messages.MessageType;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
@@ -45,12 +46,12 @@ public class AnimationSystem extends IteratingSystem implements Telegraph {
                 Logger.info(entity.getComponent(NameComponent.class).name + "'s sprite changed to another");
                 break;
             case MessageType.CLOSED:
-                sm.get(entity).sprite = new Sprite(AssetManager.instance.getTextureFromTSX(GameModel.instance.getCurrentMap().getMap(),
-                        states.states.get("closed")));
+                sm.get(entity).sprite = new Sprite(TiledMapHelper.getStateTextureRegion(GameModel.instance.getCurrentMap().getMap(),
+                        states.states.get("closed"), entity));
                 break;
             case MessageType.OPENED:
-                sm.get(entity).sprite = new Sprite(AssetManager.instance.getTextureFromTSX(GameModel.instance.getCurrentMap().getMap(),
-                        states.states.get("opened")));
+                sm.get(entity).sprite = new Sprite(TiledMapHelper.getStateTextureRegion(GameModel.instance.getCurrentMap().getMap(),
+                        states.states.get("opened"), entity));
                 break;
             default:
                 Logger.info("Can't change sprite for event '" + eventType + "'!");
