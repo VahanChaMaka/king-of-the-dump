@@ -95,6 +95,9 @@ public class EntityFactory {
         spriteComponent.offset.y = 8;
         entity.add(spriteComponent);
 
+        GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(0));
+        GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(600));
+
         //entity.add(new ShaderComponent(ShaderType.OUTLINE));
 
         return entity;

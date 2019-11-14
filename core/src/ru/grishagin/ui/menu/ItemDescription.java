@@ -8,9 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import ru.grishagin.components.DescriptionComponent;
-import ru.grishagin.components.NameComponent;
-import ru.grishagin.components.TypeIdComponent;
+import ru.grishagin.components.*;
 import ru.grishagin.components.items.*;
 import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.entities.ItemFactory;
@@ -19,6 +17,7 @@ import ru.grishagin.model.map.MapFactory;
 import ru.grishagin.systems.InventorySystem;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.LayoutUtils;
+import ru.grishagin.utils.Logger;
 import ru.grishagin.utils.UIManager;
 
 import java.util.Map;
@@ -73,11 +72,13 @@ public class ItemDescription extends Container {
      * A bread could be thrown away (general Item) and could be eaten (as Food)
      */
     private void addItemActionsButtons(){
+        final boolean isOwnerPlayer = owner.getComponent(PlayerControlled.class) != null;
+
         TextButton throwOrPickButton = new TextButton("", AssetManager.instance.getDefaultSkin());
-        if(owner.getComponent(PlayerControlled.class) != null){
-            throwOrPickButton.setText("Забрать");
-        } else if(transferTarget != null) {
+        if( isOwnerPlayer && transferTarget != null){
             throwOrPickButton.setText("Положить");
+        } else if(transferTarget != null && transferTarget.getComponent(PlayerControlled.class) != null ) {
+            throwOrPickButton.setText("Забрать");
         } else {
             throwOrPickButton.setText("Выбросить");
             //TODO: set transferTarget to current cell!
@@ -163,6 +164,42 @@ public class ItemDescription extends Container {
             layout.add(componentsAfterDestroyLabel);
             layout.row();
             LayoutUtils.applyButtonSize(layout.add(destroyButton));
+        }
+
+        //TODO: equip not only from inventory, but from everywhere
+        //TODO: unequip
+        if (isOwnerPlayer && (item.getComponent(WeaponComponent.class) != null || item.getComponent(ArmorComponent.class) != null)){
+            TextButton equipButton = new TextButton("Надеть", AssetManager.instance.getDefaultSkin());
+            equipButton.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    EquippedArmorComponent equippedArmorComponent = owner.getComponent(EquippedArmorComponent.class);
+                    ArmorComponent armorToEquip = item.getComponent(ArmorComponent.class);
+                    if(armorToEquip != null){
+                        if(armorToEquip.type == ArmorComponent.ArmorType.HEAD) {
+                            equippedArmorComponent.changeHead(item);
+                        } else if(armorToEquip.type == ArmorComponent.ArmorType.SUIT){
+                            equippedArmorComponent.changeSuit(item);
+                        } else {
+                            Logger.warning(item, "Trying to equip unknown type of armor!");
+                        }
+                        parent.update();
+                        return;
+                    }
+
+                    EquippedWeaponComponent equippedWeaponComponent = owner.getComponent(EquippedWeaponComponent.class);
+                    WeaponComponent weaponToEquip = item.getComponent(WeaponComponent.class);
+                    if(weaponToEquip != null){
+                        equippedWeaponComponent.weapon = item;
+                        parent.update();
+                        return;
+                    }
+
+                    Logger.warning(item, "Trying to equip hell knows what");
+                }
+            });
+            layout.row();
+            LayoutUtils.applyButtonSize(layout.add(equipButton));
         }
 
         /*if(item.getName().equals("Грязная вода")){

@@ -1,31 +1,31 @@
 package ru.grishagin.ui.menu;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import ru.grishagin.components.EquippedArmorComponent;
+import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.model.GameModel;
+import ru.grishagin.utils.AssetManager;
 
 import java.util.List;
 
 /**
  * Created by Admin on 14.09.2017.
  */
-public class InventoryMenu extends BasicMenu {
+public class InventoryMenu extends BasicMenu implements ItemInfoSupport {
 
     private List<Entity> items;
     //private ItemType filter = ItemType.ALL;
     private int page = 1;
 
     private ItemsGrid itemsGrid;
+    private Container itemInfo = new Container();
 
     public InventoryMenu(List<Entity> items){
         super();
         this.items = items;
         createMainLayout();
-    }
-
-    public void setDiscoveryPanel(){
-        rightContainer.setActor(new DiscoveryPanel());
-        rightContainer.fill();
     }
 
     public void setItemInfoPanel(Entity item){
@@ -42,7 +42,9 @@ public class InventoryMenu extends BasicMenu {
     protected Table createLeftPanel(){
         Table layout = super.createLeftPanel();
 
-        itemsGrid = new ItemsGrid(GameModel.instance.getPlayer(), null, null);
+        layout.add(itemInfo);
+
+        itemsGrid = new ItemsGrid(GameModel.instance.getPlayer(), null, this);
         layout.add(itemsGrid).expand().fill().pad(5);
 
         return layout;
@@ -60,6 +62,53 @@ public class InventoryMenu extends BasicMenu {
         }*/
 
         return toolbar;
+    }
+
+    @Override
+    protected Table createRightPanel() {
+        return createEquipPanel();
+    }
+
+    private Table createEquipPanel(){
+        EquippedArmorComponent equip = GameModel.instance.getPlayer().getComponent(EquippedArmorComponent.class);
+        Table equipLayout = new Table();
+        equipLayout.debugAll();
+        equipLayout.pad(10);
+
+        equipLayout.row();
+
+        Label headLabel = new Label("Шляпа", AssetManager.instance.getDefaultSkin());
+        equipLayout.add(headLabel);
+        Entity head = equip.getHead();
+        //typedIdComponent == null means it's default head without icon
+        if(head.getComponent(TypeIdComponent.class) == null){
+            head = null;
+        }
+        Actor equippedHeadIcon = ItemIcon.getItemIcon(head);
+        equipLayout.add(equippedHeadIcon);
+
+        equipLayout.row();
+
+        Label bodyLabel = new Label("Тело", AssetManager.instance.getDefaultSkin());
+        equipLayout.add(bodyLabel);
+        Entity suit = equip.getSuit();
+        if(suit.getComponent(TypeIdComponent.class) == null){
+            suit = null;
+        }
+        Actor equippedBodyIcon = ItemIcon.getItemIcon(suit);
+        equipLayout.add(equippedBodyIcon);
+
+        return equipLayout;
+    }
+
+    @Override
+    public void showInfo(Entity item, Entity owner, Entity target) {
+        itemInfo.setActor(new ItemDescription(item, owner, target, this));
+    }
+
+    @Override
+    public void update() {
+
     }
 
     /*private Button createFilterButton(ItemType itemType){
