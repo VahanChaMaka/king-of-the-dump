@@ -1,11 +1,15 @@
 package ru.grishagin.ui.menu;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.msg.MessageManager;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import ru.grishagin.components.EquippedArmorComponent;
 import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.model.GameModel;
+import ru.grishagin.model.messages.MessageType;
 import ru.grishagin.utils.AssetManager;
 
 import java.util.List;
@@ -13,19 +17,23 @@ import java.util.List;
 /**
  * Created by Admin on 14.09.2017.
  */
-public class InventoryMenu extends BasicMenu implements ItemInfoSupport {
+public class InventoryMenu extends BasicMenu {
 
-    private List<Entity> items;
     //private ItemType filter = ItemType.ALL;
     private int page = 1;
 
     private ItemsGrid itemsGrid;
     private Container itemInfo = new Container();
 
-    public InventoryMenu(List<Entity> items){
+    public InventoryMenu(){
         super();
-        this.items = items;
         createMainLayout();
+
+        MessageManager.getInstance().addListener(msg -> {
+            updateItemGrid();
+            rightContainer.setActor(createRightPanel());
+            return true;
+        }, MessageType.UI_UPDATE);
     }
 
     public void setItemInfoPanel(Entity item){
@@ -42,9 +50,7 @@ public class InventoryMenu extends BasicMenu implements ItemInfoSupport {
     protected Table createLeftPanel(){
         Table layout = super.createLeftPanel();
 
-        layout.add(itemInfo);
-
-        itemsGrid = new ItemsGrid(GameModel.instance.getPlayer(), null, this);
+        itemsGrid = new ItemsGrid(GameModel.instance.getPlayer(), null);
         layout.add(itemsGrid).expand().fill().pad(5);
 
         return layout;
@@ -84,7 +90,7 @@ public class InventoryMenu extends BasicMenu implements ItemInfoSupport {
         if(head.getComponent(TypeIdComponent.class) == null){
             head = null;
         }
-        Actor equippedHeadIcon = ItemIcon.getItemIcon(head);
+        Actor equippedHeadIcon = ItemIcon.getItemIcon(head, PanelType.EQUIP_PANEL, null);
         equipLayout.add(equippedHeadIcon);
 
         equipLayout.row();
@@ -95,20 +101,10 @@ public class InventoryMenu extends BasicMenu implements ItemInfoSupport {
         if(suit.getComponent(TypeIdComponent.class) == null){
             suit = null;
         }
-        Actor equippedBodyIcon = ItemIcon.getItemIcon(suit);
+        Actor equippedBodyIcon = ItemIcon.getItemIcon(suit, PanelType.EQUIP_PANEL, null);
         equipLayout.add(equippedBodyIcon);
 
         return equipLayout;
-    }
-
-    @Override
-    public void showInfo(Entity item, Entity owner, Entity target) {
-        itemInfo.setActor(new ItemDescription(item, owner, target, this));
-    }
-
-    @Override
-    public void update() {
-
     }
 
     /*private Button createFilterButton(ItemType itemType){

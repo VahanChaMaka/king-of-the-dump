@@ -12,8 +12,10 @@ import com.badlogic.gdx.utils.Align;
 import ru.grishagin.components.InventoryComponent;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.ui.CentralPanel;
+import ru.grishagin.ui.ContextMenu;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.LayoutUtils;
+import ru.grishagin.utils.Logger;
 import ru.grishagin.utils.UIManager;
 import ru.grishagin.ui.menu.*;
 
@@ -73,8 +75,7 @@ public class BottomToolbar extends Container {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 CentralPanel centralPanel = (CentralPanel) (UIManager.instance.getPanel(UIManager.CENTRAL_PANEL));
-                InventoryMenu menu = new InventoryMenu(GameModel.instance.getPlayer().getComponent(InventoryComponent.class).items);//TODO: consider to add it in the UI manager rather than create new instance
-                menu.setPersInfoPanel();
+                InventoryMenu menu = new InventoryMenu();//TODO: consider to add it in the UI manager rather than create new instance
                 centralPanel.setActor(menu);
                 UIManager.instance.setMenuOpened(true);
                 checkButton(BottomToolbar.INVENTORY_BTN_NAME);

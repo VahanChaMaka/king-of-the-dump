@@ -11,6 +11,7 @@ import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.ComponentNotFoundException;
 import ru.grishagin.utils.ObjectNotFoundException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -134,6 +135,12 @@ public class ItemFactory {
                 throw new ComponentNotFoundException("Loading item's components failed! Couldn't load component: \""
                         + componentName + "\"");
         }
+    }
+
+    public static Entity getDefaultPlayerWeapon(){
+        return new Entity()
+                .add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 4, 1, 1))
+                .add(new SoundComponent(Collections.singletonMap("3", "weapon-swing6")));
     }
 
 }

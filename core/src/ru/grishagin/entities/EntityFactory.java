@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.grishagin.components.*;
 import ru.grishagin.components.ai.AgentComponent;
 import ru.grishagin.components.items.ArmorComponent;
+import ru.grishagin.components.items.OwnerComponent;
 import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.components.stats.*;
 import ru.grishagin.components.tags.DoorTag;
@@ -82,10 +83,7 @@ public class EntityFactory {
                 .setSkill(WeaponComponent.DamageType.MELEE, 50)
                 .setSkill(WeaponComponent.DamageType.FIREARM, 10));
 
-        Entity defaultWeapon = new Entity();
-        defaultWeapon.add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 4, 1, 1));
-        defaultWeapon.add(new SoundComponent(Collections.singletonMap("3", "weapon-swing6")));
-        entity.add(new EquippedWeaponComponent(defaultWeapon));
+        entity.add(new EquippedWeaponComponent(ItemFactory.getDefaultPlayerWeapon()));
         entity.add(new EquippedArmorComponent());//empty armor, 0 defence
 
         Sprite sprite = new Sprite(AssetManager.instance.getTexture("player/0.png"));
@@ -133,6 +131,8 @@ public class EntityFactory {
             npc.add(new ShaderComponent(ShaderType.OUTLINE, Collections.singletonMap(ShaderComponent.COLOR, Color.RED)));
             npc.add(new AgentComponent());//give it AI
         }
+
+        fixInventory(npc);
 
         return npc;
     }
@@ -346,6 +346,16 @@ public class EntityFactory {
                 GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(Integer.parseInt(itemId)));
             } catch (NumberFormatException e){
                 System.out.println("Error! Wrong format of item id: " + itemId);
+            }
+        }
+    }
+
+    //assign an owner to every item
+    //Owner is not assigned on item creation step because entity has not instantiated yet
+    private static void fixInventory(Entity npc){
+        if(im.has(npc)){
+            for (Entity item : im.get(npc).items) {
+                item.add(new OwnerComponent(npc));
             }
         }
     }

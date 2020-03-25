@@ -4,9 +4,18 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import ru.grishagin.components.EquippedArmorComponent;
+import ru.grishagin.components.EquippedWeaponComponent;
 import ru.grishagin.components.InventoryComponent;
 import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.components.items.AmountComponent;
+import ru.grishagin.components.items.ArmorComponent;
+import ru.grishagin.components.items.OwnerComponent;
+import ru.grishagin.components.items.WeaponComponent;
+import ru.grishagin.components.tags.PlayerControlled;
+import ru.grishagin.entities.ItemFactory;
+import ru.grishagin.model.GameModel;
+import ru.grishagin.utils.Logger;
 
 import java.util.List;
 
@@ -37,6 +46,7 @@ public class InventorySystem extends IteratingSystem {
 
         //if there is no such item add it
         items.add(item);
+        item.add(new OwnerComponent(target));
     }
 
     public void destroyItem(Entity target){
@@ -60,8 +70,8 @@ public class InventorySystem extends IteratingSystem {
     }
 
     //delete item completely. Not destroy, not throw out. Just delete
-    public void deleteItem(Entity source, int id, int amount){
-        List<Entity> items = im.get(source).items;
+    public void deleteItem(Entity owner, int id, int amount){
+        List<Entity> items = im.get(owner).items;
         for (int i = 0; i < items.size(); i++) {
             if(tm.get(items.get(i)).id == id){
                 int presentAmount = am.get(items.get(i)).amount;
@@ -78,5 +88,55 @@ public class InventorySystem extends IteratingSystem {
                 break;
             }
         }
+    }
+
+    public void equipItem(Entity item){
+        Entity owner = item.getComponent(OwnerComponent.class).owner;
+        final boolean isOwnerByPlayer = owner.getComponent(PlayerControlled.class) != null;
+        Entity player = GameModel.instance.getPlayer();
+        EquippedArmorComponent equippedArmorComponent = player.getComponent(EquippedArmorComponent.class);
+        EquippedWeaponComponent equippedWeaponComponent = player.getComponent(EquippedWeaponComponent.class);
+
+        //remove item from inventory
+        int itemId = item.getComponent(TypeIdComponent.class).id;
+        deleteItem(owner, itemId, 1);
+
+        if (!isOwnerByPlayer) {
+            //TODO: transfer to inventory
+        }
+
+        ArmorComponent armorToEquip = item.getComponent(ArmorComponent.class);
+        if (armorToEquip != null) {
+            if (armorToEquip.type == ArmorComponent.ArmorType.HEAD) {
+                equippedArmorComponent.changeHead(item);
+            } else if (armorToEquip.type == ArmorComponent.ArmorType.SUIT) {
+                equippedArmorComponent.changeSuit(item);
+            } else {
+                Logger.warning(item, "Trying to equip unknown type of armor!");
+            }
+            return;
+        }
+
+        WeaponComponent weaponToEquip = item.getComponent(WeaponComponent.class);
+        if (weaponToEquip != null) {
+            equippedWeaponComponent.weapon = item;
+        }
+    }
+
+    public void takeOffItem(Entity item){
+        Entity player = GameModel.instance.getPlayer();
+        EquippedArmorComponent equippedArmorComponent = player.getComponent(EquippedArmorComponent.class);
+        EquippedWeaponComponent equippedWeaponComponent = player.getComponent(EquippedWeaponComponent.class);
+
+        if(equippedArmorComponent.getHead() == item){
+            equippedArmorComponent.changeHead(new Entity().add(new ArmorComponent(ArmorComponent.ArmorType.HEAD, 0, 0)));
+        } else if(equippedArmorComponent.getSuit() == item){
+            equippedArmorComponent.changeHead(new Entity().add(new ArmorComponent(ArmorComponent.ArmorType.SUIT, 0, 0)));
+        } else if(equippedWeaponComponent.weapon == item){
+            equippedWeaponComponent.weapon = ItemFactory.getDefaultPlayerWeapon();
+        }
+
+        //return item to inventory
+        addItem(player, item);
     }
 }

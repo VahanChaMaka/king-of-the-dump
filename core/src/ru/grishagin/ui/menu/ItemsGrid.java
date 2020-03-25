@@ -25,16 +25,13 @@ public class ItemsGrid extends Table {
 
     private static final int ITEM_GRID_SIZE = 4;
 
-    private ItemInfoSupport parent;
-
     private Entity owner;
     private Entity transferTarget;
     private int page = 1;
 
-    public ItemsGrid(Entity owner, Entity transferTarget, ItemInfoSupport parent) {
+    public ItemsGrid(Entity owner, Entity transferTarget) {
         this.owner = owner;
         this.transferTarget = transferTarget;
-        this.parent = parent;
         update();
     }
 
@@ -57,24 +54,18 @@ public class ItemsGrid extends Table {
         for (; i < sizeOnPage; i++) {
             Entity item = itemsToShow.get(i);
 
-            Actor icon = ItemIcon.getItemIcon(item);
+            Actor icon = ItemIcon.getItemIcon(item, PanelType.ITEMS_GRID, transferTarget);
 
             if(i%ITEM_GRID_SIZE == 0 && i != 0){
                 row();
             }
 
             add(icon).size(64, 64);
-            icon.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    parent.showInfo(item, owner, transferTarget);
-                }
-            });
         }
 
         //fill empty cells
         for (; i < ITEM_GRID_SIZE*ITEM_GRID_SIZE*page; i++){
-            Actor icon = ItemIcon.getItemIcon(null);
+            Actor icon = ItemIcon.getItemIcon(null, PanelType.ITEMS_GRID, transferTarget);
 
             if(i%ITEM_GRID_SIZE == 0 && i != 0){
                 row();

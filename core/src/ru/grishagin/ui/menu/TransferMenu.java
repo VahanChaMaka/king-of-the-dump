@@ -2,13 +2,15 @@ package ru.grishagin.ui.menu;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import ru.grishagin.components.InventoryComponent;
+import ru.grishagin.model.messages.MessageType;
 
-public class TransferMenu extends MenuFrame implements ItemInfoSupport{
+public class TransferMenu extends MenuFrame{
 
     private ComponentMapper<InventoryComponent> im = ComponentMapper.getFor(InventoryComponent.class);
 
@@ -28,14 +30,24 @@ public class TransferMenu extends MenuFrame implements ItemInfoSupport{
 
         setupContent();
         layout.debugAll();
+
+        MessageManager.getInstance().addListener(msg -> {
+            playerItems.clear();
+            playerItems.update();
+
+            targetItems.clear();
+            targetItems.update();
+
+            return true;
+        }, MessageType.UI_UPDATE);
     }
 
     @Override
     protected Actor createContent() {
         itemInfo.fill();
 
-        playerItems = new ItemsGrid(target, player, this);
-        targetItems = new ItemsGrid(player, target, this);
+        playerItems = new ItemsGrid(target, player);
+        targetItems = new ItemsGrid(player, target);
 
         layout = new Table();
 
@@ -44,17 +56,5 @@ public class TransferMenu extends MenuFrame implements ItemInfoSupport{
         layout.add(targetItems).expand().fill();
 
         return layout;
-    }
-
-    @Override
-    public void showInfo(Entity item, Entity owner, Entity target) {
-        itemInfo.setActor(new ItemDescription(item, owner, target, this));
-    }
-
-    @Override
-    public void update() {
-        playerItems.update();
-        targetItems.update();
-        itemInfo.clear();
     }
 }

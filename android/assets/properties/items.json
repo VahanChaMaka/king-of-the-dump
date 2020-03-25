@@ -2,7 +2,7 @@
   //consumables
   "0": {
     "name": "Грязная вода",
-    "description": "",
+    "description": "Не стоит это пить",
     "weight": 500,
     "consumable": {
 
@@ -11,7 +11,7 @@
 
   "1": {
     "name": "Чистая вода",
-    "description": "",
+    "description": "Просто вода",
     "weight": 500,
     "consumable": {
 
@@ -100,7 +100,7 @@
 
   "600": {
     "name": "Ушанка",
-    "description": "",
+    "description": "Немного защищает голову от холодного оружия",
     "armor": {
       "type": "head",
       "melee": 1,

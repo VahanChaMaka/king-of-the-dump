@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import ru.grishagin.ui.toolbar.BottomToolbar;
@@ -18,8 +19,7 @@ public class BasicMenu extends MenuFrame {
 
     protected Table leftPanel;
     protected Table itemsFilterToolbar;
-    protected Table rightPanel;
-    protected Container rightContainer = new Container();
+    protected Container<WidgetGroup> rightContainer = new Container<>();
 
     public BasicMenu(){
         debugAll();
@@ -35,8 +35,8 @@ public class BasicMenu extends MenuFrame {
         leftPanel = createLeftPanel();
         add(leftPanel).fill().expand().pad(10);
 
-        rightPanel = createRightPanel();
-        add(rightPanel).fill().right().top().width(300).expandY();
+        rightContainer.setActor(createRightPanel());
+        add(rightContainer).fill().right().top().width(300).expandY();
     }
 
     protected Table createLeftPanel(){

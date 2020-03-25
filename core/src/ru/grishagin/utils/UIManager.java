@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import ru.grishagin.components.InventoryComponent;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.ui.CentralPanel;
+import ru.grishagin.ui.ItemInfoPopup;
 import ru.grishagin.ui.menu.InventoryMenu;
 import ru.grishagin.ui.menu.TransferMenu;
 import ru.grishagin.ui.toolbar.Console;
@@ -23,6 +24,7 @@ public class UIManager {
     private InputMultiplexer inputMultiplexer = new InputMultiplexer();
     private Map<String, Stage> stages = new HashMap<>();
     //ActionProgressBar progressBar;
+    private ItemInfoPopup itemInfoPopup;
 
     private boolean isMenuOpened = false;
     private boolean isInputDisabled = false;
@@ -110,5 +112,28 @@ public class UIManager {
         //TODO: think about interface with update() method
         ((StatPanel)getPanel(STAT_PANEL)).updateStat();
         ((Console)getPanel(CONSOLE)).update();
+
+        for (WidgetGroup value : UIcomponents.values()) {
+            value.invalidateHierarchy();
+        }
+    }
+
+    public ItemInfoPopup showItemInfoPopup(Entity item){
+        if(itemInfoPopup == null){
+            itemInfoPopup = new ItemInfoPopup();
+        }
+
+        if(!itemInfoPopup.isOpened()){
+            itemInfoPopup.setItem(item);
+            itemInfoPopup.show();
+        }
+
+        return itemInfoPopup;
+    }
+
+    public void hideItemInfoPopup(){
+        if(itemInfoPopup != null) {
+            itemInfoPopup.hide();
+        }
     }
 }

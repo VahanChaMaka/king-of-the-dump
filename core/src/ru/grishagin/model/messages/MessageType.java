@@ -5,4 +5,6 @@ public interface MessageType {
     int CLOSED = 1;
     int OPENED = 2;
     int ATTACK = 3;
+
+    int UI_UPDATE = 100;
 }
