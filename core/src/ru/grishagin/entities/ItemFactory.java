@@ -138,9 +138,7 @@ public class ItemFactory {
     }
 
     public static Entity getDefaultPlayerWeapon(){
-        return new Entity()
-                .add(new WeaponComponent(WeaponComponent.DamageType.MELEE, 4, 1, 1))
-                .add(new SoundComponent(Collections.singletonMap("3", "weapon-swing6")));
+        return ItemFactory.getItem(301);
     }
 
 }

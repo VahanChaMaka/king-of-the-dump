@@ -7,6 +7,7 @@ import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import ru.grishagin.components.EquippedArmorComponent;
+import ru.grishagin.components.EquippedWeaponComponent;
 import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.model.messages.MessageType;
@@ -103,6 +104,13 @@ public class InventoryMenu extends BasicMenu {
         }
         Actor equippedBodyIcon = ItemIcon.getItemIcon(suit, PanelType.EQUIP_PANEL, null);
         equipLayout.add(equippedBodyIcon);
+
+        equipLayout.row();
+
+        Label weaponLabel = new Label("Оружие", AssetManager.instance.getDefaultSkin());
+        equipLayout.add(weaponLabel);
+        Entity weapon = GameModel.instance.getPlayer().getComponent(EquippedWeaponComponent.class).weapon;
+        equipLayout.add(ItemIcon.getItemIcon(weapon, PanelType.EQUIP_PANEL, null));
 
         return equipLayout;
     }
