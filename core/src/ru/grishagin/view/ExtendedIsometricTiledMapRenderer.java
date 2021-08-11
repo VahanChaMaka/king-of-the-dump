@@ -1,26 +1,29 @@
 package ru.grishagin.view;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import ru.grishagin.components.FloatingTextComponent;
 import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.ShaderComponent;
 import ru.grishagin.components.SpriteComponent;
 import ru.grishagin.utils.AssetManager;
+import ru.grishagin.utils.FontGenerator;
 import ru.grishagin.utils.ShaderHelper;
 
 import java.util.*;
 
 import static ru.grishagin.model.map.TiledBasedMap.TILE_HEIGHT;
-import static ru.grishagin.model.map.TiledBasedMap.TILE_WIDTH;
 
 public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer {
     private ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
@@ -29,20 +32,21 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
 
     private DepthComparator<Entity> comparator;
 
-    private List<Entity> spriteEntities = new ArrayList<>();
+    private Engine engine;
 
-    public ExtendedIsometricTiledMapRenderer(TiledMap map) {
+    public ExtendedIsometricTiledMapRenderer(TiledMap map, Engine engine) {
         super(map);
+        this.engine = engine;
         comparator = new DepthComparator<>();
-    }
-
-    public void setSpriteEntities(ImmutableArray<Entity> spriteEntities) {
-        this.spriteEntities = Arrays.asList(spriteEntities.toArray());
-        Collections.sort(this.spriteEntities, comparator);
     }
 
     @Override
     public void render() {
+        List<Entity> spriteEntities = Arrays.asList(
+                engine.getEntitiesFor(Family.all(SpriteComponent.class).get())
+                        .toArray(Entity.class));
+        Collections.sort(spriteEntities, comparator);
+
         beginRender();
         int currentLayer = 0;
         for (MapLayer layer : map.getLayers()) {
@@ -56,18 +60,14 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
                 }
             }
         }
+
+        renderText();
+
         endRender();
     }
 
     private void drawSprite(SpriteComponent spriteComponent, PositionComponent position, ShaderComponent shaderComponent){
-        int tileHeight = (int)map.getProperties().get(TILE_HEIGHT);
-        Vector2 renderPosition = new Vector2();
-        float x = position.x;
-        float y = position.y;
-        float posY = - x * tileHeight;
-        float posX =  y * tileHeight;
-        renderPosition.x = (posX - posY);
-        renderPosition.y = (posX + posY) / 2;
+        Vector2 renderPosition = getRenderPosition(position);
 
         //FOR DEVELOPMENT ONLY!
         Sprite s = new Sprite(AssetManager.instance.getTexture("tiles/red.png"));
@@ -97,5 +97,29 @@ public class ExtendedIsometricTiledMapRenderer extends IsometricTiledMapRenderer
                 renderPosition.y + spriteComponent.offset.y);*/
 
         getBatch().setShader(null);
+    }
+
+    private void renderText(){
+        BitmapFont font = FontGenerator.generate(8, Color.BLACK);
+        ImmutableArray<Entity> textEntities = engine.getEntitiesFor(Family.all(FloatingTextComponent.class, PositionComponent.class).get());
+        for (Entity text : textEntities) {
+            FloatingTextComponent textComponent = text.getComponent(FloatingTextComponent.class);
+            Vector2 renderPosition = getRenderPosition(text.getComponent(PositionComponent.class));
+            renderPosition = renderPosition.add(textComponent.getOffset());
+            font.draw(getBatch(), textComponent.getText(), renderPosition.x, renderPosition.y);
+        }
+    }
+
+    private Vector2 getRenderPosition(PositionComponent position){
+        int tileHeight = (int)map.getProperties().get(TILE_HEIGHT);
+        Vector2 renderPosition = new Vector2();
+        float x = position.x;
+        float y = position.y;
+        float posY = - x * tileHeight;
+        float posX =  y * tileHeight;
+        renderPosition.x = (posX - posY);
+        renderPosition.y = (posX + posY) / 2;
+
+        return renderPosition;
     }
 }

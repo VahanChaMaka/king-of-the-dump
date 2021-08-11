@@ -16,4 +16,9 @@ public class FlatTiledNode extends TiledNode<FlatTiledNode> {
     public int getIndex() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }

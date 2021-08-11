@@ -7,10 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import ru.grishagin.components.NameComponent;
-import ru.grishagin.components.NextStatesIds;
-import ru.grishagin.components.SpriteComponent;
-import ru.grishagin.components.TypeIdComponent;
+import ru.grishagin.components.*;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.model.map.TiledMapHelper;
 import ru.grishagin.model.messages.MessageType;
@@ -20,20 +17,41 @@ import ru.grishagin.utils.Logger;
 public class AnimationSystem extends IteratingSystem implements Telegraph {
     private ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<TypeIdComponent> tm = ComponentMapper.getFor(TypeIdComponent.class);
+    private ComponentMapper<AnimationComponent> am = ComponentMapper.getFor(AnimationComponent.class);
 
     public AnimationSystem() {
-        super(Family.all(SpriteComponent.class).get()); //TODO: add animation component
+        super(Family.all(AnimationComponent.class,
+                        OrientationComponent.class)
+                .get());
     }
 
     @Override
-    protected void processEntity(com.badlogic.ashley.core.Entity entity, float deltaTime) {
+    protected void processEntity(Entity entity, float deltaTime) {
         //play animation here
+        AnimationComponent animationComponent = am.get(entity);
+        SpriteComponent spriteComponent = sm.get(entity);
+
+        animationComponent.timer += deltaTime;
+        //not the greatest idea to create a new sprite every time
+        spriteComponent.sprite = new Sprite(animationComponent.runningAnimation.getKeyFrame(animationComponent.timer));
     }
 
     @Override
     public boolean handleMessage(Telegram msg) {
         if(msg.extraInfo != null){
-            changeSprite((Entity)msg.extraInfo, msg.message);
+            Entity entity = (Entity) msg.extraInfo;
+
+            if(msg.message == MessageType.START_MVMNT || msg.message == MessageType.ORIENTATION_CHANGE){
+                int typeId = entity.getComponent(TypeIdComponent.class).id;
+                OrientationComponent.Orientation orientation = entity.getComponent(OrientationComponent.class).orientation;
+                entity.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(typeId, AssetManager.WALKING, orientation)));
+            } else if(msg.message == MessageType.STOP_MVMNT) {
+                int typeId = entity.getComponent(TypeIdComponent.class).id;
+                OrientationComponent.Orientation orientation = entity.getComponent(OrientationComponent.class).orientation;
+                entity.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(typeId, AssetManager.IDLE, orientation)));
+            } else {
+                changeSprite(entity, msg.message);
+            }
         }
         return true;
     }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.grishagin.components.OrientationComponent;
 import ru.grishagin.components.ShaderType;
 
 import java.io.IOException;
@@ -40,6 +41,12 @@ public class AssetManager {
 
     //entities states
     public static final String DEAD = "dead";
+    public static final String WALKING = "mv";
+    public static final String IDLE = "id";
+
+    //some constants
+    private static final int FRAME_WIDTH = 96;
+    private static final int FRAME_HEIGHT = 105; //wtf
 
     public TextureRegion getTileTexture(int id) {
         TextureRegion region = null;
@@ -135,6 +142,31 @@ public class AssetManager {
             default:
                 Logger.warning("There is no image for state '" + state + "' for " + id);
                 return getNPCImage(id);
+        }
+    }
+
+    public TextureRegion[] getNPCAnimation(int id, String state, OrientationComponent.Orientation orientation){
+        Texture texture = getTexture("npc/" + id + "/" + state + PNG);
+        TextureRegion[][] frames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+        switch (orientation){
+            case N:
+                return frames[0];
+            case NE:
+                return frames[1];
+            case E:
+                return frames[2];
+            case SE:
+                return frames[3];
+            case S:
+                return frames[4];
+            case SW:
+                return frames[5];
+            case W:
+                return frames[6];
+            case NW:
+                return frames[7];
+            default: //wtf
+                return frames[0];
         }
     }
 

@@ -16,7 +16,7 @@ public class Logger {
 
     public static void warning(Entity entity, String message){
         if(entity.getComponent(NameComponent.class) != null){
-            warning(entity.getComponent(NameComponent.class).name + ": ");
+            warning(entity.getComponent(NameComponent.class).name + ": " + message);
         } else {
             warning(message);
         }

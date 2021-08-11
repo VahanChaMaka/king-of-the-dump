@@ -11,6 +11,7 @@ import ru.grishagin.components.PositionComponent;
 import ru.grishagin.components.SpriteComponent;
 import ru.grishagin.view.RenderComparator;
 
+@Deprecated
 public class RenderingSystem extends SortedIteratingSystem {
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<SpriteComponent> tm = ComponentMapper.getFor(SpriteComponent.class);

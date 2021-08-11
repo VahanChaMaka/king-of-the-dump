@@ -67,6 +67,7 @@ public class EntityFactory {
     public static Entity makePlayer(Vector2 position){
         Entity entity = new Entity();
         entity.add(new NameComponent("Player"));
+        entity.add(new TypeIdComponent(100));
         entity.add(new PlayerControlled());
         entity.add(new PositionComponent(position));
         entity.add(new VelocityComponent(5f));
@@ -93,8 +94,12 @@ public class EntityFactory {
         spriteComponent.offset.y = 8;
         entity.add(spriteComponent);
 
+        entity.add(new OrientationComponent(OrientationComponent.Orientation.N));
+        entity.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(100, AssetManager.IDLE, OrientationComponent.Orientation.N)));
+
         GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(0));
         GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(600));
+        GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(311));
 
         //entity.add(new ShaderComponent(ShaderType.OUTLINE));
 
@@ -118,6 +123,8 @@ public class EntityFactory {
         npc.add(new PositionComponent(position));
         npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getNPCImage(id))));
         npc.add(new ImpassableComponent());
+        npc.add(new OrientationComponent(OrientationComponent.Orientation.N));
+        npc.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(id, AssetManager.IDLE, OrientationComponent.Orientation.N)));
 
         Map<String, Object> npcConfig = AssetManager.instance.readFromJson(AssetManager.NPC).get(String.valueOf(id));
         for (String componentName : npcConfig.keySet()) {

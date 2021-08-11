@@ -17,8 +17,10 @@ public class DepthComparator<T extends Entity> implements Comparator<T> {
         if(o1Position != null && o2Position != null){
             if(o1Position.x > o2Position.x) {
                 return 1;
-            } else {
+            } else if(o1Position.x < o2Position.x){
                 return -1;
+            } else{
+                return 0;
             }
         } else {
             Logger.warning(o1, "Trying to sort entities without position!");

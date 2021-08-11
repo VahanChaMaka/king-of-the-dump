@@ -1,19 +1,14 @@
 package ru.grishagin.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
-import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.math.Vector2;
-import ru.grishagin.components.DestinationComponent;
-import ru.grishagin.components.NameComponent;
-import ru.grishagin.components.PositionComponent;
-import ru.grishagin.components.VelocityComponent;
+import ru.grishagin.components.*;
 import ru.grishagin.components.tags.DoorTag;
 import ru.grishagin.components.tags.ImpassableComponent;
 import ru.grishagin.components.tags.PlayerControlled;
@@ -41,6 +36,24 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
         super(Family.all(DestinationComponent.class, PositionComponent.class, VelocityComponent.class).get());
     }
 
+    @Override
+    public void addedToEngine(Engine engine) {
+        super.addedToEngine(engine);
+
+        engine.addEntityListener(getFamily(), new EntityListener() {
+            @Override
+            public void entityAdded(Entity entity) {
+                MessageManager.getInstance().dispatchMessage(MessageType.START_MVMNT, entity);
+            }
+
+            @Override
+            public void entityRemoved(Entity entity) {
+                //entity leaves movement family - dispatch stop message (to stop movement animation)
+                MessageManager.getInstance().dispatchMessage(MessageType.STOP_MVMNT, entity);
+            }
+        });
+    }
+
     public void setMap(TiledBasedMap map){
         //convert map to graph
         mapGraph = new FlatTiledGraph();
@@ -57,6 +70,9 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
         VelocityComponent velocity = vm.get(entity);
         DestinationComponent destination = dm.get(entity);
 
+        velocity.x = 0;
+        velocity.y = 0;
+
         if(destination.path == null){
             TiledSmoothableGraphPath path = buildPath(position, destination);
             destination.path = path;
@@ -65,12 +81,16 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
 
         if(Math.abs(position.x - destination.x) < STOP_PRECISION && Math.abs(position.y - destination.y) < STOP_PRECISION){
             stop(entity);
+            position.x = destination.x;
+            position.y = destination.y;
         } else {
             followPath(entity);
         }
 
         position.x += velocity.x*deltaTime;
         position.y += velocity.y*deltaTime;
+
+        setOrientation(entity, velocity.x, velocity.y);
 
         if(entity.getComponent(PlayerControlled.class) != null){
             showHideRoof(position);
@@ -83,11 +103,16 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
         DestinationComponent destination = dm.get(entity);
 
         FlatTiledNode currentNode = mapGraph.getNode((int)position.x, (int)position.y);
-        for (int i = 0; i < destination.path.nodes.size - 1; i++) { //entity cannot follow path if it has position == destination
+        for (int i = 0; i < destination.path.nodes.size; i++) { //entity cannot follow path if it has position == destination
             FlatTiledNode node = destination.path.nodes.get(i);
             //find node in the path where entity currently is standing on
             if(node.x == currentNode.x && node.y == currentNode.y){
-                FlatTiledNode nextPathNode = destination.path.nodes.get(i + 1);
+                FlatTiledNode nextPathNode;
+                if(i == destination.path.nodes.size - 1){
+                    nextPathNode = destination.path.nodes.peek();
+                } else {
+                    nextPathNode = destination.path.nodes.get(i + 1);
+                }
 
                 float deltaX = Math.abs(nextPathNode.x - position.x);
                 float deltaY = Math.abs(nextPathNode.y - position.y);
@@ -149,6 +174,13 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
         }
 
         pathFinder.searchNodePath(startNode, endNode, heuristic, path);
+
+        DebugSystem drawer = getEngine().getSystem(DebugSystem.class);
+        drawer.clear();
+        for (FlatTiledNode node : path) {
+            drawer.addRect(new Vector2(node.x, node.y));
+        }
+
         return path;
     }
 
@@ -159,6 +191,50 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
             currentMap.setLayerVisibility(ROOF_LAYER, false);
         } else {
             currentMap.setLayerVisibility(ROOF_LAYER, true);
+        }
+    }
+
+    //orientation in screen coordinates
+    private void setOrientation(Entity entity, float velocityX, float velocityY){
+        OrientationComponent.Orientation orientation;
+        if(velocityX > 0){
+            if(velocityY > 0) {
+                orientation = OrientationComponent.Orientation.E;
+            } else if(velocityY < 0){
+                orientation = OrientationComponent.Orientation.S;
+            } else {
+                orientation = OrientationComponent.Orientation.SE;
+            }
+        } else if (velocityX < 0){
+            if(velocityY > 0) {
+                orientation = OrientationComponent.Orientation.N;
+            } else if(velocityY < 0){
+                orientation = OrientationComponent.Orientation.W;
+            } else {
+                orientation = OrientationComponent.Orientation.NW;
+            }
+        } else {
+            if(velocityY > 0) {
+                orientation = OrientationComponent.Orientation.NE;
+            } else if(velocityY < 0){
+                orientation = OrientationComponent.Orientation.SW;
+            } else {
+                //orientation remains the same
+                return;
+            }
+        }
+
+        Logger.info(orientation.toString());
+
+        OrientationComponent orientationComponent = entity.getComponent(OrientationComponent.class);
+        if(orientationComponent != null){
+            OrientationComponent.Orientation oldOrientation = orientationComponent.orientation;
+            orientationComponent.orientation = orientation;
+            if(oldOrientation != orientation){
+                MessageManager.getInstance().dispatchMessage(MessageType.ORIENTATION_CHANGE, entity);
+            }
+        } else {
+            entity.add(new OrientationComponent(orientation));
         }
     }
 

@@ -1,10 +1,9 @@
 package ru.grishagin.view;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import ru.grishagin.components.SpriteComponent;
+import ru.grishagin.systems.DebugSystem;
 
 public class TiledRenderingEngine{
 
@@ -14,8 +13,11 @@ public class TiledRenderingEngine{
 
     public TiledRenderingEngine(TiledMap map, Engine engine) {
         this.map = map;
-        renderer = new ExtendedIsometricTiledMapRenderer(map);
+        renderer = new ExtendedIsometricTiledMapRenderer(map, engine);
         this.engine = engine;
+
+        DebugSystem drawer = engine.getSystem(DebugSystem.class);
+        drawer.drawGrid();
     }
 
     public int getHeight() {
@@ -42,7 +44,6 @@ public class TiledRenderingEngine{
 
     public void draw(OrthographicCamera camera){
         renderer.setView(camera);
-        renderer.setSpriteEntities(engine.getEntitiesFor(Family.all(SpriteComponent.class).get()));
         renderer.render();
     }
 }

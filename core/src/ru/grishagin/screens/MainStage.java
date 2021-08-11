@@ -11,9 +11,13 @@ import ru.grishagin.utils.UIManager;
 
 public class MainStage extends Stage {
 
+    private final float TIME_STEP = 1f/60;
+
     private Container centralPanel;
 
     private Container bottomToolbar;
+
+    private float accumulator = 0;
 
     public MainStage(Viewport viewPort){
         super(viewPort);
@@ -43,10 +47,15 @@ public class MainStage extends Stage {
 
     @Override
     public void act(float delta) {
-        //GameController.INSTANCE.update(delta);
-        GameModel.instance.engine.update(delta);
-        UIManager.instance.update(delta);
-        super.act(delta);
+        //limit maximum delta
+        float frameTime = Math.min(delta, 0.25f);
+        accumulator += frameTime;
+        while (accumulator >= TIME_STEP) {
+            GameModel.instance.engine.update(TIME_STEP);
+            UIManager.instance.update(TIME_STEP);
+            super.act(TIME_STEP);
+            accumulator -= TIME_STEP;
+        }
     }
 
     @Override
