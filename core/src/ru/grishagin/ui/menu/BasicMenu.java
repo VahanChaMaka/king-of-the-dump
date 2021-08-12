@@ -64,7 +64,6 @@ public class BasicMenu extends MenuFrame {
         itemInfoPanel.pad(10);
 
         itemInfoPanel.row();
-        itemInfoPanel.add(rightContainer).expand().fill();
 
         return itemInfoPanel;
     }
