@@ -10,7 +10,6 @@ buildscript {
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.0.13'
         classpath 'org.gretty:gretty:3.0.2'
-        classpath 'com.android.tools.build:gradle:4.0.0'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
     }
 }
@@ -53,7 +52,7 @@ project(":desktop") {
     }
 }
 
-project(":android") {
+/*project(":android") {
     apply plugin: "com.android.application"
 
     configurations { natives }
@@ -121,7 +120,7 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
 
     }
-}
+}*/
 
 project(":core") {
     apply plugin: "java-library"

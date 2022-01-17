@@ -12,8 +12,8 @@ public class DesktopLauncher {
 		new LwjglApplication(new Game(), config);
 
 		String inputDir = "tmp_sources";
-		String outputDir = "tiles";
-		String packFileName = "tileset";
+		String outputDir = "ui/icons";
+		String packFileName = "icons";
 		//TexturePacker.process(inputDir, outputDir, packFileName);
 	}
 }

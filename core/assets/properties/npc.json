@@ -1,0 +1,29 @@
+{
+  "0": {
+    "name": "Крыса",
+    "hostile": true,
+    "health": 5,
+    "skills": {
+      "melee": 10,
+      "firearm": 0
+    },
+    "weapon": 300,
+    "armor": [],
+    "loot": {
+      "104": 1
+    }
+  },
+
+  //humans
+  "100": {
+    "name": "Дикий бомж",
+    "hostile": true,
+    "health": 20,
+    "skills": {
+      "melee": 20,
+      "firearm": 10
+    },
+    "weapon": 311,
+    "armor": [500, 600]
+  }
+}
