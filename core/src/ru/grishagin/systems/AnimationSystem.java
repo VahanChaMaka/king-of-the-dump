@@ -66,6 +66,10 @@ public class AnimationSystem extends IteratingSystem implements Telegraph {
         NextStatesIds states = entity.getComponent(NextStatesIds.class);
         switch (eventType){
             case MessageType.DEATH:
+                //remove animation to set static dead sprite
+                if(am.has(entity)){
+                    entity.remove(AnimationComponent.class);
+                }
                 sm.get(entity).sprite = new Sprite(AssetManager.instance.getNPCImage(tm.get(entity).id, AssetManager.DEAD));
                 Logger.info(entity.getComponent(NameComponent.class).name + "'s sprite changed to another");
                 break;
