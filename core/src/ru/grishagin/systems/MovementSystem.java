@@ -74,9 +74,15 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
         velocity.y = 0;
 
         if(destination.path == null){
-            TiledSmoothableGraphPath path = buildPath(position, destination);
-            destination.path = path;
-            Logger.info("Path for " + entity.getComponent(NameComponent.class) + " is built. Destination is " + destination.x + ", " + destination.y);
+            TiledSmoothableGraphPath<FlatTiledNode> path = buildPath(position, destination);
+            if(path.nodes.notEmpty()){
+                destination.path = path;
+                Logger.info("Path for " + entity.getComponent(NameComponent.class) + " is built. Destination is " + destination.x + ", " + destination.y);
+            } else{
+                //empty path means destination is not accessible
+                stop(entity);
+                return;
+            }
         }
 
         if(Math.abs(position.x - destination.x) < STOP_PRECISION && Math.abs(position.y - destination.y) < STOP_PRECISION){
@@ -155,7 +161,7 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
         velocity.y = 0;
     }
 
-    private TiledSmoothableGraphPath buildPath(PositionComponent position, DestinationComponent destination){
+    private TiledSmoothableGraphPath<FlatTiledNode> buildPath(PositionComponent position, DestinationComponent destination){
         FlatTiledNode startNode = mapGraph.getNode((int)position.x, (int)position.y);
         FlatTiledNode endNode = mapGraph.getNode((int)destination.x, (int)destination.y);
 
