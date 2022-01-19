@@ -33,7 +33,13 @@ public class AnimationSystem extends IteratingSystem implements Telegraph {
 
         animationComponent.timer += deltaTime;
         //not the greatest idea to create a new sprite every time
+        float xPos = spriteComponent.sprite.getX();
+        float yPos = spriteComponent.sprite.getY();
+
         spriteComponent.sprite = new Sprite(animationComponent.runningAnimation.getKeyFrame(animationComponent.timer));
+        //set new frame sprite position same as old
+        spriteComponent.sprite.setX(xPos);
+        spriteComponent.sprite.setY(yPos);
     }
 
     @Override
