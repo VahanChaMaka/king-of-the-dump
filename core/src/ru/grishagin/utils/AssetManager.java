@@ -241,7 +241,7 @@ public class AssetManager {
     }
 
     public Sound getSound(String soundName){
-        return Gdx.audio.newSound(Gdx.files.internal("sound/" + soundName + ".wav"));
+        return Gdx.audio.newSound(Gdx.files.internal("sound/" + soundName));
     }
 
     private AssetManager(){

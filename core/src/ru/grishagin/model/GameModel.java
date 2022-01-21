@@ -61,7 +61,7 @@ public class GameModel {
 
         SoundSystem soundSystem = new SoundSystem();
         MessageManager.getInstance().addListeners(soundSystem, MessageType.DEATH,
-                MessageType.ATTACK);
+                MessageType.ATTACK, MessageType.OPENED, MessageType.CLOSED);
         engine.addSystem(soundSystem);
 
         engine.addSystem(new DebugSystem());

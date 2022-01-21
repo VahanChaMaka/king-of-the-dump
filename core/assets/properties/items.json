@@ -58,7 +58,7 @@
       "range": 1
     },
     "sound":{
-      "3": "rat-squeak"
+      "3": "rat-squeak.wav"
     }
   },
 
@@ -83,7 +83,7 @@
       "range": 1
     },
     "sound": {
-      "3": "weapon-swing6"
+      "3": "weapon-swing6.wav"
     }
   },
 

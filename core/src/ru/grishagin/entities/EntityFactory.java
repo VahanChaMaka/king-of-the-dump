@@ -53,6 +53,7 @@ public class EntityFactory {
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
     private static final String ID = "id";
+    public static final String SOUND = "sound";
     public static final String X = "x";
     public static final String Y = "y";
     public static final String NPC_ID = "npcId";
@@ -310,18 +311,11 @@ public class EntityFactory {
             case DOOR:
                 return new DoorTag();
             case STATE_IDS:
-                String convertedJSON = ((String)rawComponentData).replaceAll("&quot;", "\""); //return normal quotes to json string
-                NextStatesIds nextStatesIds;
-                try{
-                    ObjectMapper mapper = new ObjectMapper();
-                    nextStatesIds = new NextStatesIds(mapper.readValue(convertedJSON, HashMap.class));
-                } catch (IOException e){
-                    Logger.warning("Can't parse " + rawComponentData + ":\n" + e.toString());
-                    nextStatesIds = new NextStatesIds();
-                }
-                return nextStatesIds;
+                return new NextStatesIds((Map<String, Integer>)readJsonProperty((String)rawComponentData));
             case GID:
                 return new TileGIdComponent((int)rawComponentData);
+            case SOUND:
+                return new SoundComponent((Map<String, String>)readJsonProperty((String)rawComponentData));
             //skip some properties from tmx map
             case ID:
             case WIDTH:
@@ -364,6 +358,18 @@ public class EntityFactory {
             for (Entity item : im.get(npc).items) {
                 item.add(new OwnerComponent(npc));
             }
+        }
+    }
+
+    private static HashMap<?, ?> readJsonProperty(String rawJson) {
+        //return normal quotes to json string
+        String convertedJSON = ((String)rawJson).replaceAll("&quot;", "\"");
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(convertedJSON, HashMap.class);
+        } catch (IOException e){
+            Logger.warning("Can't parse " + rawJson + ":\n" + e.toString());
+            return new HashMap<>();
         }
     }
 }
