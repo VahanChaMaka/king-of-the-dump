@@ -230,7 +230,7 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
             }
         }
 
-        Logger.info(orientation.toString());
+        //Logger.info(orientation.toString());
 
         OrientationComponent orientationComponent = entity.getComponent(OrientationComponent.class);
         if(orientationComponent != null){

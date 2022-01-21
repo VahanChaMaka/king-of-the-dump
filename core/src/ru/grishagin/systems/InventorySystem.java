@@ -4,9 +4,16 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.grishagin.components.EquippedArmorComponent;
 import ru.grishagin.components.EquippedWeaponComponent;
+import ru.grishagin.components.InteractiveComponent;
 import ru.grishagin.components.InventoryComponent;
+import ru.grishagin.components.PositionComponent;
+import ru.grishagin.components.ShaderComponent;
+import ru.grishagin.components.ShaderType;
+import ru.grishagin.components.SpriteComponent;
 import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.components.items.AmountComponent;
 import ru.grishagin.components.items.ArmorComponent;
@@ -15,8 +22,10 @@ import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.components.tags.PlayerControlled;
 import ru.grishagin.entities.ItemFactory;
 import ru.grishagin.model.GameModel;
+import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
 
+import java.util.Collections;
 import java.util.List;
 
 public class InventorySystem extends IteratingSystem {
@@ -70,10 +79,10 @@ public class InventorySystem extends IteratingSystem {
     }
 
     //delete item completely. Not destroy, not throw out. Just delete
-    public void deleteItem(Entity owner, int id, int amount){
+    public void deleteItem(Entity owner, int itemId, int amount){
         List<Entity> items = im.get(owner).items;
         for (int i = 0; i < items.size(); i++) {
-            if(tm.get(items.get(i)).id == id){
+            if(tm.get(items.get(i)).id == itemId){
                 int presentAmount = am.get(items.get(i)).amount;
                 if(presentAmount > amount){ //if items in inventory is more than to remove, just change amount
                     am.get(items.get(i)).amount = presentAmount - amount;
@@ -138,5 +147,19 @@ public class InventorySystem extends IteratingSystem {
 
         //return item to inventory
         addItem(player, item);
+    }
+
+    public void dropItem(Entity owner, Entity item) {
+        deleteItem(owner, tm.get(item).id, 1);
+
+        item.add(new PositionComponent(owner.getComponent(PositionComponent.class).getPosition()));
+        item.add(new SpriteComponent(new Sprite(
+                AssetManager.instance.getTexture("maps/grassland/objects.png"), 256, 0, 64, 64)));
+        item.add(new InteractiveComponent((player, groundItem) -> {
+            item.remove(SpriteComponent.class);
+            item.remove(PositionComponent.class);
+            addItem(GameModel.instance.getPlayer(), item);
+        }, 0));
+        item.add(new ShaderComponent(ShaderType.OUTLINE, Collections.singletonMap(ShaderComponent.COLOR, Color.YELLOW)));
     }
 }

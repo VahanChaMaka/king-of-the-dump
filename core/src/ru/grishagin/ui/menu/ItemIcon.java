@@ -125,7 +125,7 @@ public class ItemIcon extends Actor {
             }
 
             actions.add(new MenuAction("Выбросить", () -> {
-                //TODO: implement
+                GameModel.instance.inventorySystem.dropItem(owner, item);
             }));
         } else {
             actions.add(new MenuAction("Взять", () -> {

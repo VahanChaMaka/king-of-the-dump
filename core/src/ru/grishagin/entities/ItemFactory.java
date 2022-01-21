@@ -7,6 +7,7 @@ import ru.grishagin.components.NameComponent;
 import ru.grishagin.components.SoundComponent;
 import ru.grishagin.components.TypeIdComponent;
 import ru.grishagin.components.items.*;
+import ru.grishagin.model.GameModel;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.ComponentNotFoundException;
 import ru.grishagin.utils.ObjectNotFoundException;
@@ -68,6 +69,9 @@ public class ItemFactory {
         } catch (Exception e){
             System.out.println("Warning! Couldn't parse item: " + e.getMessage());
         }
+
+        GameModel.instance.engine.addEntity(newItem);
+
         return newItem;
     }
 
