@@ -31,15 +31,21 @@ public class AnimationSystem extends IteratingSystem implements Telegraph {
         AnimationComponent animationComponent = am.get(entity);
         SpriteComponent spriteComponent = sm.get(entity);
 
-        animationComponent.timer += deltaTime;
-        //not the greatest idea to create a new sprite every time
-        float xPos = spriteComponent.sprite.getX();
-        float yPos = spriteComponent.sprite.getY();
+        Sprite nextFrame = new Sprite(animationComponent.runningAnimation.getKeyFrame(animationComponent.timer));
 
-        spriteComponent.sprite = new Sprite(animationComponent.runningAnimation.getKeyFrame(animationComponent.timer));
-        //set new frame sprite position same as old
-        spriteComponent.sprite.setX(xPos);
-        spriteComponent.sprite.setY(yPos);
+        if(spriteComponent != null) {
+            animationComponent.timer += deltaTime;
+            //not the greatest idea to create a new sprite every time
+            float xPos = spriteComponent.sprite.getX();
+            float yPos = spriteComponent.sprite.getY();
+
+            spriteComponent.sprite = nextFrame;
+            //set new frame sprite position same as old
+            spriteComponent.sprite.setX(xPos);
+            spriteComponent.sprite.setY(yPos);
+        } else{
+            entity.add(new SpriteComponent(nextFrame));
+        }
     }
 
     @Override

@@ -88,13 +88,6 @@ public class EntityFactory {
         entity.add(new EquippedWeaponComponent(ItemFactory.getDefaultPlayerWeapon()));
         entity.add(new EquippedArmorComponent());//empty armor, 0 defence
 
-        Sprite sprite = new Sprite(AssetManager.instance.getTexture("player/0.png"));
-        sprite.setSize(32, 32);
-        SpriteComponent spriteComponent = new SpriteComponent(sprite);
-        spriteComponent.offset.x = 8;
-        spriteComponent.offset.y = 8;
-        entity.add(spriteComponent);
-
         entity.add(new OrientationComponent(OrientationComponent.Orientation.N));
         entity.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(100, AssetManager.IDLE, OrientationComponent.Orientation.N)));
 
@@ -122,7 +115,6 @@ public class EntityFactory {
 
         npc.add(new TypeIdComponent(id));
         npc.add(new PositionComponent(position));
-        npc.add(new SpriteComponent(new Sprite(AssetManager.instance.getNPCImage(id))));
         npc.add(new ImpassableComponent());
         npc.add(new OrientationComponent(OrientationComponent.Orientation.N));
         npc.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(id, AssetManager.IDLE, OrientationComponent.Orientation.N)));
