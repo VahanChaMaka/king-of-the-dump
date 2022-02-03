@@ -10,9 +10,15 @@ public class AnimationComponent implements Component {
 
     public final Animation<TextureRegion> runningAnimation;
     public float timer = 0;
+    //do nothing until animation is finished
+    public boolean isBlocking;
 
     public AnimationComponent(TextureRegion[] frames) {
+        this(frames, Animation.PlayMode.LOOP);
+    }
+
+    public AnimationComponent(TextureRegion[] frames, Animation.PlayMode playMode) {
         this.runningAnimation = new Animation<>(FRAME_DURATION, frames);
-        runningAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        runningAnimation.setPlayMode(playMode);
     }
 }

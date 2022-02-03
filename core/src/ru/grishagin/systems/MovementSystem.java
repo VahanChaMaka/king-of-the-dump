@@ -201,7 +201,7 @@ public class MovementSystem extends IteratingSystem implements Telegraph {
     }
 
     //orientation in screen coordinates
-    private void setOrientation(Entity entity, float velocityX, float velocityY){
+    public static void setOrientation(Entity entity, float velocityX, float velocityY){
         OrientationComponent.Orientation orientation;
         if(velocityX > 0){
             if(velocityY > 0) {

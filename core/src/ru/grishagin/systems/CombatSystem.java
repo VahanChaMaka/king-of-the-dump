@@ -73,10 +73,11 @@ public class CombatSystem extends IteratingSystem {
 
                         equippedWeaponComponent.lastAttack = 0;//mark attack as performed
 
-                        //stop attacking. Player have to click again, NPC should re-add target if it is still requred
+                        //stop attacking. Player has to click again, NPC should re-add target if
+                        // it is still required
                         entity.remove(AttackTargetComponent.class);
 
-                        MessageManager.getInstance().dispatchMessage(MessageType.ATTACK, activeWeapon);
+                        MessageManager.getInstance().dispatchMessage(MessageType.ATTACK, entity);
                     }
                 } else {//if not in range come closer
                     DestinationComponent currentDestination = dm.get(entity);

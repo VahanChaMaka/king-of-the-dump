@@ -40,13 +40,14 @@ public class AssetManager {
     public static final String UI_BACKGROUND = "ui/old_paper.jpg";
 
     //entities states
-    public static final String DEAD = "dead";
+    public static final String ATTACK_1 = "a1";
+    public static final String DEAD = "di";
     public static final String WALKING = "mv";
     public static final String IDLE = "id";
 
     //some constants
-    private static final int FRAME_WIDTH = 96;
-    private static final int FRAME_HEIGHT = 105; //wtf
+    private static final int FRAME_WIDTH = 144; //one and half tile width
+    private static final int FRAME_HEIGHT = 144;
 
     public TextureRegion getTileTexture(int id) {
         TextureRegion region = null;

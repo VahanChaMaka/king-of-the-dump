@@ -54,6 +54,7 @@ public class GameModel {
         MessageManager.getInstance().addListener(animationSystem, MessageType.ORIENTATION_CHANGE);
         MessageManager.getInstance().addListener(animationSystem, MessageType.STOP_MVMNT);
         MessageManager.getInstance().addListener(animationSystem, MessageType.START_MVMNT);
+        MessageManager.getInstance().addListener(animationSystem, MessageType.ATTACK);
 
         ShaderSystem shaderSystem = new ShaderSystem();
         engine.addSystem(shaderSystem);

@@ -6,8 +6,9 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.audio.Sound;
+import ru.grishagin.components.EquippedWeaponComponent;
 import ru.grishagin.components.SoundComponent;
-import ru.grishagin.components.TypeIdComponent;
+import ru.grishagin.model.messages.MessageType;
 import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.Logger;
 
@@ -23,6 +24,11 @@ public class SoundSystem extends EntitySystem implements Telegraph {
     }
 
     private void playSound(Entity entity, int eventType){
+        //for attack event get equipped weapon
+        if (eventType == MessageType.ATTACK) {
+            entity = entity.getComponent(EquippedWeaponComponent.class).weapon;
+        }
+        //for other events use entity itself
         SoundComponent soundComponent = sm.get(entity);
         if(soundComponent != null){
             if(soundComponent.get(eventType) != null){

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.grishagin.components.*;
 import ru.grishagin.components.tags.HostileTag;
 import ru.grishagin.components.tags.PlayerControlled;
+import ru.grishagin.systems.MovementSystem;
 import ru.grishagin.view.TiledRenderingEngine;
 
 public class InputHandler {
@@ -19,6 +20,7 @@ public class InputHandler {
     private ComponentMapper<InteractiveComponent> im = ComponentMapper.getFor(InteractiveComponent.class);
     private ComponentMapper<HostileTag> hm = ComponentMapper.getFor(HostileTag.class);
     private ComponentMapper<AttackTargetComponent> atm = ComponentMapper.getFor(AttackTargetComponent.class);
+    private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
     private Engine engine;
     private TiledRenderingEngine map;
@@ -31,6 +33,11 @@ public class InputHandler {
     //X and Y are world-coords
     public void onClick(float x, float y){
         Entity player = engine.getEntitiesFor(Family.all(PlayerControlled.class).get()).first();
+
+        //if blocking animation is playing, do nothing
+        if (player.getComponent(AnimationComponent.class).isBlocking) {
+            return;
+        }
 
         //clear current movement info
         player.remove(DestinationComponent.class);
@@ -49,6 +56,11 @@ public class InputHandler {
                     player.add(new AttackTargetComponent(entity));
                     isSomeActionHappens = true;
                 }
+
+                PositionComponent entityPosition = pm.get(entity);
+                PositionComponent playerPosition = pm.get(player);
+                MovementSystem.setOrientation(player, entityPosition.x - playerPosition.x,
+                        entityPosition.y - playerPosition.y);
             } else {
                 //do nothing
             }
@@ -92,7 +104,7 @@ public class InputHandler {
             }
         }
     }
-    
+
     private Entity getEntity(float x, float y){
         ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(PositionComponent.class, InteractiveComponent.class).get());
         ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);

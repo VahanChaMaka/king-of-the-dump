@@ -43,6 +43,11 @@ public class AISystem extends IteratingSystem {
                 AttackTargetComponent attackTargetComponent = atm.get(entity);
                 if(attackTargetComponent == null){
                     entity.add(new AttackTargetComponent(player));
+
+                    PositionComponent entityPosition = pm.get(entity);
+                    PositionComponent playerPosition = pm.get(player);
+                    MovementSystem.setOrientation(entity, playerPosition.x - entityPosition.x,
+                            playerPosition.y - entityPosition.y);
                 }
 
         }

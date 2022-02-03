@@ -67,6 +67,7 @@ public class EntityFactory {
 
     public static Entity makePlayer(Vector2 position){
         Entity entity = new Entity();
+        entity.add(new IdComponent());
         entity.add(new NameComponent("Player"));
         entity.add(new TypeIdComponent(100));
         entity.add(new PlayerControlled());
@@ -113,6 +114,7 @@ public class EntityFactory {
     public static Entity makeNPC(int id, Vector2 position){
         Entity npc = new Entity();
 
+        npc.add(new IdComponent());
         npc.add(new TypeIdComponent(id));
         npc.add(new PositionComponent(position));
         npc.add(new ImpassableComponent());
@@ -192,6 +194,8 @@ public class EntityFactory {
 
     public static Entity makeEntity(MapObject object, TiledMap map){
         Entity entity = new Entity();
+
+        entity.add(new IdComponent());
 
         Vector2 position = TiledMapHelper.convertObjectMapCoordsToInternal(object, map);
         entity.add(new PositionComponent(position));
