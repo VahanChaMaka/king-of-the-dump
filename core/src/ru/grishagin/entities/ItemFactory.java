@@ -12,7 +12,6 @@ import ru.grishagin.utils.AssetManager;
 import ru.grishagin.utils.ComponentNotFoundException;
 import ru.grishagin.utils.ObjectNotFoundException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +29,7 @@ public class ItemFactory {
     public static final String AMOUNT = "amount";
     public static final String TYPE = "type";
     public static final String WEAPON = "weapon";
+    public static final String DAMAGE_TYPE = "damageType";
     public static final String WEAPON_DAMAGE = "damage";
     public static final String WEAPON_SPEED = "speed";
     public static final String WEAPON_RANGE = "range";
@@ -67,7 +67,8 @@ public class ItemFactory {
                 }
             }
         } catch (Exception e){
-            System.out.println("Warning! Couldn't parse item: " + e.getMessage());
+            System.out.println("Warning! Couldn't parse item: ");
+            e.printStackTrace();
         }
 
         GameModel.instance.engine.addEntity(newItem);
@@ -122,13 +123,16 @@ public class ItemFactory {
                 return new DestroyableComponent(((Map)rawComponentData).containsKey(DESTROYABLE_MANUALLY));
             case WEAPON:
                 Map<String, Object> weaponData = (Map<String, Object>)rawComponentData;
-                return new WeaponComponent(WeaponComponent.DamageType.valueOf(((String)weaponData.get(TYPE)).toUpperCase()),
+                return new WeaponComponent(
+                        WeaponComponent.Type.valueOf(((String) weaponData.get(TYPE)).toUpperCase()),
+                        WeaponComponent.DamageType.valueOf(((String)weaponData.get(DAMAGE_TYPE)).toUpperCase()),
                         (int)weaponData.get(WEAPON_DAMAGE),
                         (int)weaponData.get(WEAPON_RANGE),
                         (int)weaponData.get(WEAPON_SPEED));
             case ARMOR:
                 Map<String, Object> armorData = (Map<String, Object>)rawComponentData;
-                return new ArmorComponent(ArmorComponent.ArmorType.valueOf(((String)armorData.get(TYPE)).toUpperCase()),
+                return new ArmorComponent(ArmorComponent.ArmorType.valueOf(((String)armorData.get(
+                        TYPE)).toUpperCase()),
                         (int)armorData.get(MELEE_RESISTANCE),
                         (int)armorData.get(FIREARM_RESISTANCE));
 

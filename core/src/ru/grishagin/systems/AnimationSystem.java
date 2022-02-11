@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import ru.grishagin.components.*;
+import ru.grishagin.components.items.WeaponComponent;
 import ru.grishagin.model.GameModel;
 import ru.grishagin.model.map.TiledMapHelper;
 import ru.grishagin.model.messages.MessageType;
@@ -83,31 +84,41 @@ public class AnimationSystem extends IteratingSystem implements Telegraph {
             OrientationComponent orientationComponent =
                     entity.getComponent(OrientationComponent.class);
 
+            WeaponComponent.Type weaponType = null;
+            if(entity.getComponent(EquippedWeaponComponent.class) != null) {
+                weaponType =
+                        entity.getComponent(EquippedWeaponComponent.class)
+                                .weapon
+                                .getComponent(WeaponComponent.class).type;
+            }
+
             if (typeIdComponent != null && orientationComponent != null) {
                 int typeId = typeIdComponent.id;
                 OrientationComponent.Orientation orientation = orientationComponent.orientation;
                 if (msg.message == MessageType.START_MVMNT) {
-                    setAnimation(entity, typeId, AssetManager.WALKING, orientation);
+                    setAnimation(entity, typeId, weaponType, AssetManager.WALKING, orientation,
+                            Animation.PlayMode.LOOP);
                 } else if (msg.message == MessageType.ORIENTATION_CHANGE) {
                     var v = entity.getComponent(VelocityComponent.class);
                     if (v.x == 0 & v.y == 0) {
-                        setAnimation(entity, typeId, AssetManager.IDLE, orientation);
+                        setAnimation(entity, typeId, weaponType, AssetManager.IDLE, orientation,
+                                Animation.PlayMode.LOOP);
                     } else {
-                        setAnimation(entity, typeId, AssetManager.WALKING, orientation);
+                        setAnimation(entity, typeId, weaponType, AssetManager.WALKING,
+                                orientation, Animation.PlayMode.LOOP);
                     }
                 } else if (msg.message == MessageType.STOP_MVMNT) {
-                    setAnimation(entity, typeId, AssetManager.IDLE, orientation);
+                    setAnimation(entity, typeId, weaponType, AssetManager.IDLE, orientation,
+                            Animation.PlayMode.LOOP);
                 } else if (msg.message == MessageType.DEATH) {
-                    entity.add(new AnimationComponent(
-                            AssetManager.instance.getNPCAnimation(typeId, AssetManager.DEAD,
-                                    orientation), Animation.PlayMode.NORMAL));
+                    setAnimation(entity, typeId, weaponType, AssetManager.DEAD,
+                            orientation, Animation.PlayMode.NORMAL);
                     animationStates.remove(entityId);
                 } else if (msg.message == MessageType.ATTACK) {
-                    AnimationComponent animation = new AnimationComponent(
-                            AssetManager.instance.getNPCAnimation(typeId, AssetManager.ATTACK_1,
-                                    orientation), Animation.PlayMode.NORMAL);
+                    var animation =
+                            setAnimation(entity, typeId, weaponType, AssetManager.ATTACK_1,
+                                    orientation, Animation.PlayMode.NORMAL);
                     animation.isBlocking = true;
-                    entity.add(animation);
                     //put to the map to replace with idle animation later
                     animationStates.put(entityId, msg.message);
                 } else {
@@ -135,9 +146,24 @@ public class AnimationSystem extends IteratingSystem implements Telegraph {
         }
     }
 
-    private void setAnimation(Entity entity, int typeId, String animationName,
-                              OrientationComponent.Orientation orientation) {
-        entity.add(new AnimationComponent(
-                AssetManager.instance.getNPCAnimation(typeId, animationName, orientation)));
+    private AnimationComponent setAnimation(Entity entity, int typeId,
+                              WeaponComponent.Type weaponType,
+                              String animationName,
+                              OrientationComponent.Orientation orientation,
+                              Animation.PlayMode playMode) {
+        //map weapon type to file extension
+        String weaponTextureName =
+                switch (weaponType) {
+                    case HANDS -> null;
+                    case KNIFE -> AssetManager.KNIFE;
+                    case PISTOL -> AssetManager.PISTOL;
+                };
+
+        var newAnimation = new AnimationComponent(
+                AssetManager.instance.getNPCAnimation(typeId, animationName, weaponTextureName,
+                        orientation), playMode);
+        entity.add(newAnimation);
+
+        return newAnimation;
     }
 }

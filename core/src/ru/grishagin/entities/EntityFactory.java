@@ -90,7 +90,8 @@ public class EntityFactory {
         entity.add(new EquippedArmorComponent());//empty armor, 0 defence
 
         entity.add(new OrientationComponent(OrientationComponent.Orientation.N));
-        entity.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(100, AssetManager.IDLE, OrientationComponent.Orientation.N)));
+        entity.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(100,
+                AssetManager.IDLE, null, OrientationComponent.Orientation.N)));
 
         GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(0));
         GameModel.instance.inventorySystem.addItem(entity, ItemFactory.getItem(600));
@@ -119,7 +120,8 @@ public class EntityFactory {
         npc.add(new PositionComponent(position));
         npc.add(new ImpassableComponent());
         npc.add(new OrientationComponent(OrientationComponent.Orientation.N));
-        npc.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(id, AssetManager.IDLE, OrientationComponent.Orientation.N)));
+        npc.add(new AnimationComponent(AssetManager.instance.getNPCAnimation(id,
+                AssetManager.IDLE, null, OrientationComponent.Orientation.N)));
 
         Map<String, Object> npcConfig = AssetManager.instance.readFromJson(AssetManager.NPC).get(String.valueOf(id));
         for (String componentName : npcConfig.keySet()) {

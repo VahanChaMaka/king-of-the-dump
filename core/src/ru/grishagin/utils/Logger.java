@@ -10,6 +10,10 @@ public class Logger {
     private Logger(){
     }
 
+    public static void error(Exception e) {
+        e.printStackTrace();
+    }
+
     public static void warning(String message){
         System.out.println("Warning! " + message);
     }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AnimationComponent implements Component {
 
-    private final float FRAME_DURATION = 0.05f;
+    private final float FRAME_DURATION = 0.08f;
 
     public final Animation<TextureRegion> runningAnimation;
     public float timer = 0;

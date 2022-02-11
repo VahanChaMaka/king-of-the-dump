@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.grishagin.components.OrientationComponent;
@@ -44,6 +45,10 @@ public class AssetManager {
     public static final String DEAD = "di";
     public static final String WALKING = "mv";
     public static final String IDLE = "id";
+
+    //equipped weapon
+    public static final String KNIFE = "k";
+    public static final String PISTOL = "p";
 
     //some constants
     private static final int FRAME_WIDTH = 144; //one and half tile width
@@ -146,29 +151,40 @@ public class AssetManager {
         }
     }
 
-    public TextureRegion[] getNPCAnimation(int id, String state, OrientationComponent.Orientation orientation){
-        Texture texture = getTexture("npc/" + id + "/" + state + PNG);
-        TextureRegion[][] frames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-        switch (orientation){
-            case N:
-                return frames[0];
-            case NE:
-                return frames[1];
-            case E:
-                return frames[2];
-            case SE:
-                return frames[3];
-            case S:
-                return frames[4];
-            case SW:
-                return frames[5];
-            case W:
-                return frames[6];
-            case NW:
-                return frames[7];
-            default: //wtf
-                return frames[0];
+    public TextureRegion[] getNPCAnimation(int id, String state,
+                                           String equippedWeapon,
+                                           OrientationComponent.Orientation orientation){
+        var pathBuilder = new StringBuilder("npc/");
+        pathBuilder.append(id)
+                .append("/")
+                .append(state);
+        if(equippedWeapon != null) {
+            pathBuilder.append("_")
+                    .append(equippedWeapon);
         }
+        pathBuilder.append(PNG);
+
+        Texture texture;
+        try {
+            texture = getTexture(pathBuilder.toString());
+        } catch (GdxRuntimeException e) {
+            Logger.error(e);
+            //set idle as fallback texture
+            texture = getTexture("npc/" + id + "/" + IDLE + PNG);
+        }
+        TextureRegion[][] frames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+        return switch (orientation) {
+            case N -> frames[0];
+            case NE -> frames[1];
+            case E -> frames[2];
+            case SE -> frames[3];
+            case S -> frames[4];
+            case SW -> frames[5];
+            case W -> frames[6];
+            case NW -> frames[7];
+            default -> //wtf
+                    frames[0];
+        };
     }
 
     private TextureAtlas getAtlas(String name){
