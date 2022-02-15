@@ -2,16 +2,14 @@ package ru.grishagin.utils;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import ru.grishagin.components.InventoryComponent;
-import ru.grishagin.model.GameModel;
 import ru.grishagin.ui.CentralPanel;
 import ru.grishagin.ui.ItemInfoPopup;
 import ru.grishagin.ui.menu.InventoryMenu;
 import ru.grishagin.ui.menu.TransferMenu;
+import ru.grishagin.ui.toolbar.BottomToolbar;
 import ru.grishagin.ui.toolbar.Console;
 import ru.grishagin.ui.toolbar.StatPanel;
 
@@ -135,5 +133,18 @@ public class UIManager {
         if(itemInfoPopup != null) {
             itemInfoPopup.hide();
         }
+    }
+
+    public void openInventoryWindow() {
+        if(isMenuOpened) {
+            setMenuOpened(false);
+            ((BottomToolbar)UIManager.instance.getPanel(UIManager.BOTTOM_TOOLBAR)).checkButton((BottomToolbar.UNCHECK_ALL));
+            return;
+        }
+        CentralPanel centralPanel = (CentralPanel) (UIManager.instance.getPanel(UIManager.CENTRAL_PANEL));
+        InventoryMenu menu = new InventoryMenu();//TODO: consider to add it in the UI manager rather than create new instance
+        centralPanel.setActor(menu);
+        UIManager.instance.setMenuOpened(true);
+        ((BottomToolbar)UIManager.instance.getPanel(UIManager.BOTTOM_TOOLBAR)).checkButton((BottomToolbar.INVENTORY_BTN_NAME));
     }
 }

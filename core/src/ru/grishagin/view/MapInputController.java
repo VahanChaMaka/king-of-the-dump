@@ -135,4 +135,13 @@ public class MapInputController extends InputAdapter {
 
         return true;
     }
+
+    @Override
+    public boolean keyUp(int keycode) {
+       if (keycode == 37) {
+           UIManager.instance.openInventoryWindow();
+           return true;
+       }
+       return false;
+    }
 }

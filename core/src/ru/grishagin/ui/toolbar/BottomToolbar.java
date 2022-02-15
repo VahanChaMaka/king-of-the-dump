@@ -74,11 +74,7 @@ public class BottomToolbar extends Container {
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                CentralPanel centralPanel = (CentralPanel) (UIManager.instance.getPanel(UIManager.CENTRAL_PANEL));
-                InventoryMenu menu = new InventoryMenu();//TODO: consider to add it in the UI manager rather than create new instance
-                centralPanel.setActor(menu);
-                UIManager.instance.setMenuOpened(true);
-                checkButton(BottomToolbar.INVENTORY_BTN_NAME);
+                UIManager.instance.openInventoryWindow();
             }
         });
         buttons.put(INVENTORY_BTN_NAME, button);
